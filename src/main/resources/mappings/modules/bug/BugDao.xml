@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.bug.dao.BugDao">
+    
+	<sql id="bugColumns">
+		a.id AS "id",
+		a.bug_type AS "bugType",
+		a.bug_status AS "bugStatus",
+		a.bug_level AS "bugLevel",
+		a.name AS "name",
+		a.summary AS "summary",
+		a.description AS "description",
+		a.del_flag AS "delFlag",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.bug_version_id AS "bugVersion.id",
+		a.bug_project_id AS "bugProject.id"
+	</sql>
+	
+	<sql id="bugJoins">
+	</sql>
+    
+	<select id="get" resultType="Bug">
+		SELECT 
+			<include refid="bugColumns"/>
+		FROM bug a
+		<include refid="bugJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Bug">
+		SELECT 
+			<include refid="bugColumns"/>
+		FROM bug a
+		<include refid="bugJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="bugType != null and bugType != ''">
+				AND a.bug_type = #{bugType}
+			</if>
+			<if test="bugStatus != null and bugStatus != ''">
+				AND a.bug_status = #{bugStatus}
+			</if>
+			<if test="bugLevel != null and bugLevel != ''">
+				AND a.bug_level = #{bugLevel}
+			</if>
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="Bug">
+		SELECT 
+			<include refid="bugColumns"/>
+		FROM bug a
+		<include refid="bugJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO bug(
+			id,
+			bug_type,
+			bug_status,
+			bug_level,
+			name,
+			summary,
+			description,
+			del_flag,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			bug_version_id,
+			bug_project_id
+		) VALUES (
+			#{id},
+			#{bugType},
+			#{bugStatus},
+			#{bugLevel},
+			#{name},
+			#{summary},
+			#{description},
+			#{delFlag},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{bugVersion.id},
+			#{bugProject.id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE bug SET 	
+			bug_type = #{bugType},
+			bug_status = #{bugStatus},
+			bug_level = #{bugLevel},
+			name = #{name},
+			summary = #{summary},
+			description = #{description},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			bug_version_id = #{bugVersion.id},
+			bug_project_id = #{bugProject.id}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM bug
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE bug SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Bug" statementType="STATEMENT">
+		select * FROM bug  where ${propertyName} = '${value}'
+	</select>
+</mapper>

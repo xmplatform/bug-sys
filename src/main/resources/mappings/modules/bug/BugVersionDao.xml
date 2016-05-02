@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jeeplus.modules.bug.dao.BugVersionDao">
+    
+	<sql id="bugVersionColumns">
+		a.id AS "id",
+		a.version AS "version",
+		a.build AS "build",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.bug_project_id AS "bugProject.id"
+	</sql>
+	
+	<sql id="bugVersionJoins">
+		LEFT JOIN bug_project b ON b.id = a.bug_project_id
+	</sql>
+    
+	<select id="get" resultType="BugVersion">
+		SELECT 
+			<include refid="bugVersionColumns"/>
+		FROM bug_version a
+		<include refid="bugVersionJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="BugVersion">
+		SELECT 
+			<include refid="bugVersionColumns"/>
+		FROM bug_version a
+		<include refid="bugVersionJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="version != null and version != ''">
+				AND a.version = #{version}
+			</if>
+			<if test="build != null and build != ''">
+				AND a.build = #{build}
+			</if>
+			<if test="bugProject != null and bugProject.id != null and bugProject.id != ''">
+				AND a.bug_project_id = #{bugProject.id}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="BugVersion">
+		SELECT 
+			<include refid="bugVersionColumns"/>
+		FROM bug_version a
+		<include refid="bugVersionJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO bug_version(
+			id,
+			version,
+			build,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag,
+			bug_project_id
+		) VALUES (
+			#{id},
+			#{version},
+			#{build},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag},
+			#{bugProject.id}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE bug_version SET 	
+			version = #{version},
+			build = #{build},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks},
+			bug_project_id = #{bugProject.id}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM bug_version
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE bug_project_id = #{bugProject.id}
+			</otherwise>
+		</choose>
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE bug_version SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		<choose>
+			<when test="id !=null and id != ''">
+				WHERE id = #{id}
+			</when>
+			<otherwise>
+				WHERE bug_project_id = #{bugProject.id}
+			</otherwise>
+		</choose>
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="BugVersion" statementType="STATEMENT">
+		select * FROM bug_version  where ${propertyName} = '${value}'
+	</select>
+</mapper>
