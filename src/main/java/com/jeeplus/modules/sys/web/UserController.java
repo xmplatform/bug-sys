@@ -143,7 +143,7 @@ public class UserController extends BaseController {
 		user.setQrCode(request.getContextPath()+Global.USERFILES_BASE_URL
 			+  user.getId()  + "/qrcode/"+name);
 		// 保存用户信息
-		systemService.saveUser(user);
+		systemService.saveUserAndRole(user);
 		// 清除当前用户缓存
 		if (user.getLoginName().equals(UserUtils.getUser().getLoginName())){
 			UserUtils.clearCache();
@@ -242,7 +242,7 @@ public class UserController extends BaseController {
 					if ("true".equals(checkLoginName("", user.getLoginName()))){
 						user.setPassword(SystemService.entryptPassword("123456"));
 						BeanValidators.validateWithException(validator, user);
-						systemService.saveUser(user);
+						systemService.saveUserAndRole(user);
 						successNum++;
 					}else{
 						failureMsg.append("<br/>登录名 "+user.getLoginName()+" 已存在; ");
@@ -574,7 +574,7 @@ public class UserController extends BaseController {
 //		b.registerCustomEditor(List.class, "roleList", new PropertyEditorSupport(){
 //			@Autowired
 //			private SystemService systemService;
-//			@Override
+//
 //			public void setAsText(String text) throws IllegalArgumentException {
 //				String[] ids = StringUtils.split(text, ",");
 //				List<Role> roles = new ArrayList<Role>();
@@ -584,7 +584,7 @@ public class UserController extends BaseController {
 //				}
 //				setValue(roles);
 //			}
-//			@Override
+//
 //			public String getAsText() {
 //				return Collections3.extractToString((List) getValue(), "id", ",");
 //			}

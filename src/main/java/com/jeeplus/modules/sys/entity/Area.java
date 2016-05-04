@@ -89,7 +89,7 @@ public class Area extends TreeEntity<Area> {
 //		return parent != null && parent.getId() != null ? parent.getId() : "0";
 //	}
 	
-	@Override
+
 	public String toString() {
 		return name;
 	}

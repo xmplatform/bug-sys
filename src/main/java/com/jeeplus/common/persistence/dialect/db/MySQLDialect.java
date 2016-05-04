@@ -15,7 +15,7 @@ import com.jeeplus.common.persistence.dialect.Dialect;
 public class MySQLDialect implements Dialect {
 
 
-    @Override
+
     public String getLimitString(String sql, int offset, int limit) {
         return getLimitString(sql, offset, Integer.toString(offset),
                 Integer.toString(limit));

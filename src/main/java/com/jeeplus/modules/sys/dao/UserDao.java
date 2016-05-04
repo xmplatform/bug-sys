@@ -4,6 +4,7 @@
 package com.jeeplus.modules.sys.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -32,6 +33,16 @@ public interface UserDao extends CrudDao<User> {
 	 * @return
 	 */
 	public List<User> findUserByOfficeId(User user);
+
+
+	/**
+	 * 通过 bugProjectId 获取用户列表，仅返回用户id和name（树查询用户时用）
+	 * @param user
+	 * @return
+	 */
+	public List<User> findUserByBugProjectId(User user);
+
+
 	
 	/**
 	 * 查询全部用户数目
@@ -107,6 +118,24 @@ public interface UserDao extends CrudDao<User> {
 	 */
 	
 	public List<User>  findListByOffice(User user);
-	
-	
+
+
+	int outAllUserInBugProject(String projectId);
+
+	/**
+	 * 插入用户项目关联数据
+	 * @return
+	 */
+	int insertUserBugProject(@Param("userId")String userId,@Param("projectId")String projectId);
+
+	/**
+	 * 项目中是否已经存在用户
+	 * @param map
+	 * @return
+     */
+	boolean isExistUserInProject(@Param("userId")String userId,@Param("projectId")String projectId);
+
+	void outUserInBugProject(@Param("userId")String userId, @Param("projectId")String projectId);
+
+	String getUserName(String userId);
 }

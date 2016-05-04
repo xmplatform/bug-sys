@@ -15,12 +15,12 @@ import com.jeeplus.common.persistence.dialect.Dialect;
  */
 public class SQLServer2005Dialect implements Dialect {
 
-    @Override
+
     public boolean supportsLimit() {
         return true;
     }
 
-    @Override
+
     public String getLimitString(String sql, int offset, int limit) {
         return getLimitString(sql, offset,
                 limit, Integer.toString(limit));

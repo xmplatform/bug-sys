@@ -189,7 +189,7 @@ public class Page<T> {
 	 * 默认输出当前分页标签 
 	 * <div class="page">${page}</div>
 	 */
-	@Override
+
 	public String toString() {
 
 		StringBuilder sb = new StringBuilder();

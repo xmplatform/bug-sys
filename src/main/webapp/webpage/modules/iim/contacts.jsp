@@ -21,6 +21,40 @@
 <body class="gray-bg">
     <div class="wrapper wrapper-content  animated fadeInRight">
         <div class="row">
+
+            <c:forEach items="${list}" var="user">
+                <div class="col-lg-3">
+                    <div class="contact-box center-version">
+
+                        <a href="profile.html">
+
+                            <img alt="image" class="img-circle" src="img/a2.jpg">
+
+
+                            <h3 class="m-b-xs"><strong>John Smith</strong></h3>
+
+                            <div class="font-bold">Graphics designer</div>
+                            <address class="m-t-md">
+                                <strong>Twitter, Inc.</strong><br>
+                                795 Folsom Ave, Suite 600<br>
+                                San Francisco, CA 94107<br>
+                                <abbr title="Phone">P:</abbr> (123) 456-7890
+                            </address>
+
+                        </a>
+                        <div class="contact-box-footer">
+                            <div class="m-t-xs btn-group">
+                                <a class="btn btn-xs btn-white"><i class="fa fa-phone"></i> Call </a>
+                                <a class="btn btn-xs btn-white"><i class="fa fa-envelope"></i> Email</a>
+                                <a class="btn btn-xs btn-white"><i class="fa fa-user-plus"></i> Follow</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </c:forEach>
+
+
             <div class="col-sm-12">
                 <div class="ibox">
                     <div class="ibox-content">

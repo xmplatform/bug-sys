@@ -30,7 +30,7 @@ import com.jeeplus.common.web.Servlets;
  */
 public class SessionCacheManager implements CacheManager {
 
-	@Override
+
 	public <K, V> Cache<K, V> getCache(String name) throws CacheException {
 		return new SessionCache<K, V>(name);
 	}
@@ -65,7 +65,7 @@ public class SessionCacheManager implements CacheManager {
 		}
 		
 		@SuppressWarnings("unchecked")
-		@Override
+
 		public V get(K key) throws CacheException {
 			if (key == null){
 				return null;
@@ -90,7 +90,7 @@ public class SessionCacheManager implements CacheManager {
 			return value;
 		}
 
-		@Override
+
 		public V put(K key, V value) throws CacheException {
 			if (key == null){
 				return null;
@@ -107,7 +107,7 @@ public class SessionCacheManager implements CacheManager {
 		}
 
 		@SuppressWarnings("unchecked")
-		@Override
+
 		public V remove(K key) throws CacheException {
 			
 			V value = null;
@@ -117,25 +117,25 @@ public class SessionCacheManager implements CacheManager {
 			return value;
 		}
 
-		@Override
+
 		public void clear() throws CacheException {
 			getSession().removeAttribute(cacheKeyName);
 			logger.debug("clear {}", cacheKeyName);
 		}
 
-		@Override
+
 		public int size() {
 			logger.debug("invoke session size abstract size method not supported.");
 			return 0;
 		}
 
-		@Override
+
 		public Set<K> keys() {
 			logger.debug("invoke session keys abstract size method not supported.");
 			return Sets.newHashSet();
 		}
 
-		@Override
+
 		public Collection<V> values() {
 			logger.debug("invoke session values abstract size method not supported.");
 			return Collections.emptyList();

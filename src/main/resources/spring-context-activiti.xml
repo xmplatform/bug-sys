@@ -14,7 +14,19 @@
 	<bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
 		<property name="dataSource" ref="dataSource" />
 		<property name="transactionManager" ref="transactionManager" />
-		<property name="deploymentResources" value="classpath*:/act/deployments/**/*.bar"/>
+
+		<property name="deploymentResources" >
+			<list>
+				<value>classpath*:/act/deployments/oa/leave/*.zip</value>
+				<value>classpath*:/act/deployments/oa/test_audit/*.bar</value>
+				<!--        <value>classpath*:/act/deployments/leave/leave.zip</value> -->
+				<!-- 			<value>classpath*:/activiti/chapter8/leave-mail*.zip</value>
+                                <value>classpath*:/activiti/chapter9/leave-countersign.zip</value>
+                                <value>classpath*:/activiti/chapter10/purchase*.zip</value>
+                                <value>classpath*:/activiti/chapter10/payment.zip</value> -->
+			</list>
+		</property>
+
 		<property name="databaseSchemaUpdate" value="true" />
 		<property name="jobExecutorActivate" value="false" />
 		<property name="history" value="full" />
@@ -34,6 +46,37 @@
 				<bean class="com.jeeplus.modules.act.service.ext.ActGroupEntityServiceFactory"/>
             </list>
     	</property>
+
+
+		<!-- 自定义表单字段类型 -->
+		<property name="customFormTypes">
+			<list>
+				<!--   <bean class="org.activiti.rest.form.UserFormType"/>
+                  <bean class="org.activiti.rest.form.ProcessDefinitionFormType"/>
+                  <bean class="org.activiti.rest.form.MonthFormType"/>  -->
+
+				<bean class="com.jeeplus.modules.act.utils.form.BigtextFormType" />
+				<bean class="com.jeeplus.modules.act.utils.form.DoubleFormType"/>
+				<bean class="com.jeeplus.modules.act.utils.form.JavascriptFormType" />
+				<bean class="com.jeeplus.modules.act.utils.form.UsersFormType" />
+			</list>
+		</property>
+
+
+		<!-- 自定义表单引擎 -->
+		<property name="customFormEngines">
+			<list>
+				<bean class="com.jeeplus.modules.act.utils.form.MyFormEngine" />
+			</list>
+		</property>
+
+		<!-- 邮件配置 -->
+		<property name="mailServerHost" value="${mailServerHost}" />
+		<property name="mailServerPort" value="${mailServerPort}"/>
+		<property name="mailServerDefaultFrom" value="${mailServerDefaultFrom}" />
+		<property name="mailServerUsername" value="${mailServerUsername}" />
+		<property name="mailServerPassword" value="${mailServerPassword}" />
+		<property name="mailServerUseSSL" value="${mailServerUseSSL}" />
         
 	</bean>
 	

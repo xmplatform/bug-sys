@@ -20,13 +20,13 @@ import com.jeeplus.common.utils.UserAgentUtils;
  */
 public class MobileInterceptor extends BaseService implements HandlerInterceptor {
 	
-	@Override
+
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, 
 			Object handler) throws Exception {
 		return true;
 	}
 
-	@Override
+
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, 
 			ModelAndView modelAndView) throws Exception {
 //		if (modelAndView != null){//手机端没有开发，默认打开PC端界面。如果你自己开发app端界面，请取消该注释。
@@ -37,7 +37,7 @@ public class MobileInterceptor extends BaseService implements HandlerInterceptor
 //		}
 	}
 
-	@Override
+
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, 
 			Object handler, Exception ex) throws Exception {
 		

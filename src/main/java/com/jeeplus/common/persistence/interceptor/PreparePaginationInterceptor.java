@@ -35,7 +35,7 @@ public class PreparePaginationInterceptor extends BaseInterceptor {
         super();
     }
 
-    @Override
+
     public Object intercept(Invocation ivk) throws Throwable {
         if (ivk.getTarget().getClass().isAssignableFrom(RoutingStatementHandler.class)) {
             final RoutingStatementHandler statementHandler = (RoutingStatementHandler) ivk.getTarget();
@@ -77,12 +77,12 @@ public class PreparePaginationInterceptor extends BaseInterceptor {
     }
 
 
-    @Override
+
     public Object plugin(Object o) {
         return Plugin.wrap(o, this);
     }
 
-    @Override
+
     public void setProperties(Properties properties) {
         initProperties(properties);
     }

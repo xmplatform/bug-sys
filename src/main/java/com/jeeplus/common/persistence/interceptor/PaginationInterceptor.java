@@ -32,7 +32,7 @@ public class PaginationInterceptor extends BaseInterceptor {
 
     private static final long serialVersionUID = 1L;
 
-    @Override
+
     public Object intercept(Invocation invocation) throws Throwable {
 
         final MappedStatement mappedStatement = (MappedStatement) invocation.getArgs()[0];
@@ -83,12 +83,12 @@ public class PaginationInterceptor extends BaseInterceptor {
     }
 
 
-    @Override
+
     public Object plugin(Object target) {
         return Plugin.wrap(target, this);
     }
 
-    @Override
+
     public void setProperties(Properties properties) {
         super.initProperties(properties);
     }

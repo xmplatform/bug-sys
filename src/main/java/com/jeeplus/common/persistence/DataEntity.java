@@ -42,7 +42,7 @@ public abstract class DataEntity<T> extends BaseEntity<T> {
 	/**
 	 * 插入之前执行方法，需要手动调用
 	 */
-	@Override
+
 	public void preInsert(){
 		// 不限制ID为UUID，调用setIsNewRecord()使用自定义ID
 		if (!this.isNewRecord){
@@ -60,7 +60,7 @@ public abstract class DataEntity<T> extends BaseEntity<T> {
 	/**
 	 * 更新之前执行方法，需要手动调用
 	 */
-	@Override
+
 	public void preUpdate(){
 		User user = UserUtils.getUser();
 		if (StringUtils.isNotBlank(user.getId())){

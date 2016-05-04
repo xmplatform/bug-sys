@@ -58,7 +58,7 @@ public class JsonMapper extends ObjectMapper {
 		this.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         // 空值处理为空串
 		this.getSerializerProvider().setNullValueSerializer(new JsonSerializer<Object>(){
-			@Override
+
 			public void serialize(Object value, JsonGenerator jgen,
 					SerializerProvider provider) throws IOException,
 					JsonProcessingException {
@@ -67,7 +67,7 @@ public class JsonMapper extends ObjectMapper {
         });
 		// 进行HTML解码。
 		this.registerModule(new SimpleModule().addSerializer(String.class, new JsonSerializer<String>(){
-			@Override
+
 			public void serialize(String value, JsonGenerator jgen,
 					SerializerProvider provider) throws IOException,
 					JsonProcessingException {

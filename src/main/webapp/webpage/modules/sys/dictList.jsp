@@ -43,13 +43,16 @@
 	<!-- 查询条件 -->
 	<div class="row">
 	<div class="col-sm-12">
-	<form:form id="searchForm" modelAttribute="dict" action="${ctx}/sys/dict/" method="post" class="form-inline">
+	<form:form id="searchForm" modelAttribute="dict" action="${ctx}/sys/dict/" method="post" class="form-inline breadcrumb form-search">
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<table:sortColumn id="orderBy" name="orderBy" value="${page.orderBy}" callback="sortOrRefresh();"/><!-- 支持排序 -->
 		<div class="form-group">
 			<span>类型：</span>
-				<form:select id="type" path="type" class="form-control m-b"><form:option value="" label=""/><form:options items="${typeList}" htmlEscape="false"/></form:select>
+				<form:select id="type" path="type" class="form-control m-b">
+					<form:option value="" label=""/>
+					<form:options items="${typeList}" htmlEscape="false"/>
+				</form:select>
 			<span>描述 ：</span>
 				<form:input path="description" htmlEscape="false" maxlength="50" class="form-control"/>
 		 </div>	

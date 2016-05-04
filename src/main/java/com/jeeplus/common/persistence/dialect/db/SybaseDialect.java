@@ -20,7 +20,7 @@ public class SybaseDialect implements Dialect {
     }
 
 
-    @Override
+
     public String getLimitString(String sql, int offset, int limit) {
         return null;
     }

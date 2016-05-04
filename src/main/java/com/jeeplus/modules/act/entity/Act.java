@@ -369,12 +369,12 @@ public class Act extends BaseEntity<Act> {
 		return "finish".equals(status) || StringUtils.isBlank(taskId);
 	}
 
-	@Override
+
 	public void preInsert() {
 		
 	}
 
-	@Override
+
 	public void preUpdate() {
 		
 	}

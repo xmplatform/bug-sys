@@ -22,7 +22,7 @@ public class PaginationMapperRegistry extends MapperRegistry {
         super(config);
     }
 
-    @Override
+
     public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
         if (!hasMapper(type)) {
             throw new BindingException("Type " + type + " is not known to the MapperRegistry.");

@@ -37,7 +37,7 @@ public class CacheSessionDAO extends EnterpriseCacheSessionDAO implements Sessio
         super();
     }
 
-    @Override
+
     protected void doUpdate(Session session) {
     	if (session == null || session.getId() == null) {  
             return;
@@ -65,7 +65,7 @@ public class CacheSessionDAO extends EnterpriseCacheSessionDAO implements Sessio
     	logger.debug("update {} {}", session.getId(), request != null ? request.getRequestURI() : "");
     }
 
-    @Override
+
     protected void doDelete(Session session) {
     	if (session == null || session.getId() == null) {  
             return;
@@ -75,7 +75,7 @@ public class CacheSessionDAO extends EnterpriseCacheSessionDAO implements Sessio
     	logger.debug("delete {} ", session.getId());
     }
 
-    @Override
+
     protected Serializable doCreate(Session session) {
 		HttpServletRequest request = Servlets.getRequest();
 		if (request != null){
@@ -90,12 +90,12 @@ public class CacheSessionDAO extends EnterpriseCacheSessionDAO implements Sessio
     	return session.getId();
     }
 
-    @Override
+
     protected Session doReadSession(Serializable sessionId) {
 		return super.doReadSession(sessionId);
     }
     
-    @Override
+
     public Session readSession(Serializable sessionId) throws UnknownSessionException {
     	try{
     		Session s = null;
@@ -130,7 +130,7 @@ public class CacheSessionDAO extends EnterpriseCacheSessionDAO implements Sessio
 	 * @param includeLeave 是否包括离线（最后访问时间大于3分钟为离线会话）
 	 * @return
 	 */
-	@Override
+
 	public Collection<Session> getActiveSessions(boolean includeLeave) {
 		return getActiveSessions(includeLeave, null, null);
 	}
@@ -142,7 +142,7 @@ public class CacheSessionDAO extends EnterpriseCacheSessionDAO implements Sessio
 	 * @param filterSession 不为空，则过滤掉（不包含）这个会话。
 	 * @return
 	 */
-	@Override
+
 	public Collection<Session> getActiveSessions(boolean includeLeave, Object principal, Session filterSession) {
 		// 如果包括离线，并无登录者条件。
 		if (includeLeave && principal == null){

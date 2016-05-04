@@ -79,7 +79,7 @@ public class LogUtils {
 			this.ex = ex;
 		}
 		
-		@Override
+
 		public void run() {
 			// 获取日志标题
 			if (StringUtils.isBlank(log.getTitle())){

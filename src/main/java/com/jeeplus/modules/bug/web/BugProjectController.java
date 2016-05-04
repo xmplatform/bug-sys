@@ -4,19 +4,26 @@
 package com.jeeplus.modules.bug.web;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.google.common.collect.Maps;
+import com.jeeplus.common.utils.Collections3;
+import com.jeeplus.modules.bug.entity.Bug;
+import com.jeeplus.modules.sys.entity.Office;
+import com.jeeplus.modules.sys.entity.Role;
+import com.jeeplus.modules.sys.entity.User;
+import com.jeeplus.modules.sys.service.OfficeService;
+import com.jeeplus.modules.sys.service.SystemService;
+import com.jeeplus.modules.sys.utils.UserUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -43,7 +50,13 @@ public class BugProjectController extends BaseController {
 
 	@Autowired
 	private BugProjectService bugProjectService;
-	
+
+	@Autowired
+	private SystemService systemService;
+
+	@Autowired
+	private OfficeService officeService;
+
 	@ModelAttribute
 	public BugProject get(@RequestParam(required=false) String id) {
 		BugProject entity = null;
@@ -55,14 +68,14 @@ public class BugProjectController extends BaseController {
 		}
 		return entity;
 	}
-	
+
 	/**
 	 * 项目列表页面
 	 */
 	@RequiresPermissions("bug:bugProject:list")
 	@RequestMapping(value = {"list", ""})
 	public String list(BugProject bugProject, HttpServletRequest request, HttpServletResponse response, Model model) {
-		Page<BugProject> page = bugProjectService.findPage(new Page<BugProject>(request, response), bugProject); 
+		Page<BugProject> page = bugProjectService.findPage(new Page<BugProject>(request, response), bugProject);
 		model.addAttribute("page", page);
 		return "modules/bug/bugProjectList";
 	}
@@ -96,7 +109,7 @@ public class BugProjectController extends BaseController {
 		addMessage(redirectAttributes, "保存项目成功");
 		return "redirect:"+Global.getAdminPath()+"/bug/bugProject/?repage";
 	}
-	
+
 	/**
 	 * 删除项目
 	 */
@@ -107,7 +120,7 @@ public class BugProjectController extends BaseController {
 		addMessage(redirectAttributes, "删除项目成功");
 		return "redirect:"+Global.getAdminPath()+"/bug/bugProject/?repage";
 	}
-	
+
 	/**
 	 * 批量删除项目
 	 */
@@ -121,7 +134,7 @@ public class BugProjectController extends BaseController {
 		addMessage(redirectAttributes, "删除项目成功");
 		return "redirect:"+Global.getAdminPath()+"/bug/bugProject/?repage";
 	}
-	
+
 	/**
 	 * 导出excel文件
 	 */
@@ -159,7 +172,7 @@ public class BugProjectController extends BaseController {
 		}
 		return "redirect:"+Global.getAdminPath()+"/bug/bugProject/?repage";
     }
-	
+
 	/**
 	 * 下载导入项目数据模板
 	 */
@@ -168,7 +181,7 @@ public class BugProjectController extends BaseController {
     public String importFileTemplate(HttpServletResponse response, RedirectAttributes redirectAttributes) {
 		try {
             String fileName = "项目数据导入模板.xlsx";
-    		List<BugProject> list = Lists.newArrayList(); 
+    		List<BugProject> list = Lists.newArrayList();
     		new ExportExcel("项目数据", BugProject.class, 1).setDataList(list).write(response, fileName).dispose();
     		return null;
 		} catch (Exception e) {
@@ -176,6 +189,88 @@ public class BugProjectController extends BaseController {
 		}
 		return "redirect:"+Global.getAdminPath()+"/bug/bugProject/?repage";
     }
+
+	/**
+	 * 分配用户:给指定项目分配用户的页面
+	 *
+	 * @param bugProject
+	 * @param model
+	 * @return
+	 */
+	@RequiresPermissions("sys:role:assign")
+	@RequestMapping(value = "assign")
+	public String assign(BugProject bugProject, Model model) {
+		List<User> userList = systemService.findUser(new User(new BugProject(bugProject.getId())));
+		model.addAttribute("userList", userList);
+		return "modules/bug/bugProjectAssign";
+	}
+
+
+	/**
+	 * 分配用户 -- 从项目中移除用户
+	 * @param userId
+	 * @param roleId
+	 * @param redirectAttributes
+	 * @return
+	 */
+	@RequiresPermissions("sys:role:assign")
+	@RequestMapping(value = "outUser")
+	public String outUser(String userId, String projectId, RedirectAttributes redirectAttributes) {
+
+		BugProject bugProject = bugProjectService.get(projectId);
+		User user = systemService.getUser(userId);
+
+		Boolean flag = systemService.outUserInBugProject(projectId, userId);
+		if (!flag) {
+			addMessage(redirectAttributes, "用户【" + user.getName() + "】从项目【" + bugProject.getName() + "】中移除失败！");
+		}else {
+			addMessage(redirectAttributes, "用户【" + user.getName() + "】从项目【" + bugProject.getName() + "】中移除成功！");
+		}
+		return "redirect:" + adminPath + "/bug/bugProject/assign?id="+bugProject.getId();
+	}
+
+	/**
+	 *
+	 * 选择用户 -- 打开用户分配对话框
+	 * @param bugProject
+	 * @param model
+	 * @return
+	 */
+	@RequiresPermissions("sys:role:assign")
+	@RequestMapping(value = "usertobugProject")
+	public String selectUserToBugProject(BugProject bugProject, Model model) {
+		List<User> userList = systemService.findUser(new User(new BugProject(bugProject.getId())));
+		model.addAttribute("bugProject", bugProject);
+		model.addAttribute("userList", userList);
+		model.addAttribute("selectIds", Collections3.extractToString(userList, "id", ","));
+		model.addAttribute("officeList", officeService.findAll());
+		return "modules/bug/selectUserToBugProject";
+	}
+
+
+
+	/**
+	 * 选择用户:确认分配
+	 * @param role
+	 * @param idsArr
+	 * @param redirectAttributes
+	 * @return
+	 */
+	@RequiresPermissions("sys:role:assign")
+	@RequestMapping(value = "assignBugProject")
+	public String assignRole(BugProject bugProject, String[] idsArr, RedirectAttributes redirectAttributes) {
+		if(Global.isDemoMode()){
+			addMessage(redirectAttributes, "演示模式，不允许操作！");
+			return "redirect:" + adminPath + "/bug/bugProject/assign?id="+bugProject.getId();
+		}
+
+
+		Object[] objects=systemService.assignBatchUserToBugProject(bugProject,idsArr);
+		addMessage(redirectAttributes, "已成功分配 "+objects[0]+" 个用户"+objects[1]);
+		return "redirect:" + adminPath + "/bug/bugProject/assign?id="+bugProject.getId();
+	}
+
+
 	
 
 }

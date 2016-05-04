@@ -6,6 +6,7 @@ package com.jeeplus.modules.bug.dao;
 import com.jeeplus.common.persistence.CrudDao;
 import com.jeeplus.common.persistence.annotation.MyBatisDao;
 import com.jeeplus.modules.bug.entity.BugProject;
+import com.sun.tools.javac.util.List;
 
 /**
  * 缺陷所属的项目DAO接口
@@ -14,5 +15,9 @@ import com.jeeplus.modules.bug.entity.BugProject;
  */
 @MyBatisDao
 public interface BugProjectDao extends CrudDao<BugProject> {
-	
+
+    List<BugProject> findJoinList(String userId);
+
+
+    String getName(String projectId);
 }

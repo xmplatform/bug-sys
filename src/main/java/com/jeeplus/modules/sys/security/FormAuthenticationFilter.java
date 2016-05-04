@@ -78,7 +78,7 @@ public class FormAuthenticationFilter extends org.apache.shiro.web.filter.authc.
 		return super.getSuccessUrl();
 	}
 	
-	@Override
+
 	protected void issueSuccessRedirect(ServletRequest request,
 			ServletResponse response) throws Exception {
 		Principal p = UserUtils.getPrincipal();
@@ -100,7 +100,7 @@ public class FormAuthenticationFilter extends org.apache.shiro.web.filter.authc.
 	/**
 	 * 登录失败调用事件
 	 */
-	@Override
+
 	protected boolean onLoginFailure(AuthenticationToken token,
 			AuthenticationException e, ServletRequest request, ServletResponse response) {
 		String className = e.getClass().getName(), message = "";

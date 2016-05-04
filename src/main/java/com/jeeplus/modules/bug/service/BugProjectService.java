@@ -5,6 +5,9 @@ package com.jeeplus.modules.bug.service;
 
 import java.util.List;
 
+import com.jeeplus.modules.sys.entity.Role;
+import com.jeeplus.modules.sys.entity.User;
+import com.jeeplus.modules.sys.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +31,9 @@ public class BugProjectService extends CrudService<BugProjectDao, BugProject> {
 
 	@Autowired
 	private BugVersionDao bugVersionDao;
+
+	@Autowired
+	private SystemService systemService;
 	
 	public BugProject get(String id) {
 		BugProject bugProject = super.get(id);
@@ -70,5 +76,6 @@ public class BugProjectService extends CrudService<BugProjectDao, BugProject> {
 		super.delete(bugProject);
 		bugVersionDao.delete(new BugVersion(bugProject));
 	}
-	
+
+
 }

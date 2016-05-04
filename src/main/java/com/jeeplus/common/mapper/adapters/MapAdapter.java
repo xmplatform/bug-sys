@@ -10,7 +10,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 public class MapAdapter extends XmlAdapter<MapConvertor, Map<String, Object>> {  
 	  
-    @Override  
+
     public MapConvertor marshal(Map<String, Object> map) throws Exception {  
         MapConvertor convertor = new MapConvertor();  
         for (Map.Entry<String, Object> entry : map.entrySet()) {  
@@ -20,7 +20,7 @@ public class MapAdapter extends XmlAdapter<MapConvertor, Map<String, Object>> {
         return convertor;  
     }  
   
-    @Override  
+
     public Map<String, Object> unmarshal(MapConvertor map) throws Exception {  
         Map<String, Object> result = new HashMap<String, Object>();  
         for (MapConvertor.MapEntry e : map.getEntries()) {  

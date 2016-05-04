@@ -270,6 +270,11 @@ public class LoginController extends BaseController{
 				&& indexStyle.equalsIgnoreCase("ace")) {
 			return "modules/sys/sysIndex-ace";
 		}
+		// 要添加自己的风格，复制下面三行即可
+//		if (StringUtils.isNotEmpty(indexStyle)
+//				&& indexStyle.equalsIgnoreCase("top")) {
+//			return "modules/sys/sysIndex-top";
+//		}
 		
 		return "modules/sys/sysIndex";
 	}

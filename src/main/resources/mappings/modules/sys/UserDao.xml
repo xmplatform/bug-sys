@@ -155,6 +155,9 @@
 		<if test="role != null and role.id != null and role.id != ''">
 			JOIN sys_user_role ur ON ur.user_id = a.id AND ur.role_id = #{role.id}
 		</if>
+		<if test="bugProject != null and bugProject.id != null and bugProject.id != ''">
+			JOIN bug_project_user ur ON ur.user_id = a.id AND ur.project_id = #{bugProject.id}
+		</if>
 		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
 		<if test="company != null and company.id != null and company.id != ''">
 			AND (c.id = #{company.id} OR c.parent_ids LIKE 
@@ -237,7 +240,24 @@
 			AND a.office_id = #{office.id}
 		ORDER BY a.name
 	</select>
-	
+
+	<!-- 根据 bugProjectId 获取用户（树查询用户时用） -->
+	<select id="findUserByBugProjectId" resultType="User" useCache="true">
+		SELECT
+		a.id, a.name, a.login_name
+		FROM sys_user a
+		<if test="bugPrject != null and bugPrject.id != null and bugPrject.id != ''">
+			JOIN bug_project_user pu ON pu.user_id = a.id AND ur.role_id = #{role.id}
+
+		</if>
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		AND a.bugProject_id = #{bugProject.id}
+		ORDER BY a.name
+	</select>
+
+
+
+
 	<!-- 查询全部用户 -->
 	<select id="findAllList" resultType="User">
 		SELECT
@@ -254,6 +274,14 @@
 			COUNT(1)
 		FROM sys_user a
 		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+	</select>
+
+	<!-- 查询用户名 -->
+	<select id="getUserName" resultType="string">
+		SELECT
+		name
+		FROM sys_user a
+		WHERE a.id = #{userId}
 	</select>
 	
 	<!-- 插入用户 -->
@@ -329,7 +357,16 @@
 	<delete id="deleteUserRole">
 		DELETE FROM sys_user_role WHERE user_id = #{id}
 	</delete>
-	
+
+	<!-- 删除项目中所有关联用户 -->
+	<delete id="outAllUserInBugProject">
+		DELETE FROM bug_project_user WHERE project_id = #{projectId}
+	</delete>
+	<!-- 删除用户和项目关联表数据 -->
+	<delete id="outUserInBugProject">
+		DELETE FROM bug_project_user WHERE user_id = #{userId} and project_id = #{projectId}
+	</delete>
+
 	<!-- 插入用户和角色关联表数据 -->
 	<insert id="insertUserRole">
 		INSERT INTO sys_user_role(user_id, role_id)
@@ -337,6 +374,24 @@
 			SELECT #{id}, #{role.id} FROM dual
 		</foreach>
 	</insert>
+
+	<!-- 插入用户和项目关联表数据 -->
+	<insert id="insertUserBugProject">
+		INSERT INTO bug_project_user(user_id, project_id)
+		VALUES(
+			#{userId},
+			#{projectId}
+		)
+
+	</insert>
+
+	<!-- 用户和项目是否唯一-->
+	<select id="isExistUserInProject" parameterType="map" resultType="boolean">
+		SELECT (count(*) = 1)
+		FROM bug_project_user pu
+		where pu.project_id=#{projectId} and pu.user_id=#{userId};
+	</select>
+
 	
 	<!-- 更新用户信息  -->
 	<update id="updateUserInfo">

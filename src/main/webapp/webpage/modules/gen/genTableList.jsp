@@ -147,7 +147,8 @@
 				<td>${genTable.comments}</td>
 				<td>${genTable.className}</td>
 				<td title="点击查询子表"><a href="javascript:" onclick="$('#parentTable').val('${genTable.parentTable}');$('#searchForm').submit();">${genTable.parentTable}</a></td>
-				<td ${genTable.isSync == '0'?'style="background-color:red"':''}>${genTable.isSync == '0'?'<font color=\"white\">未同步</font>':'已同步'}</td>
+				<td ${ (genTable.isSync) == 0 ? 'style="background-color:red"' : '' }>${ (genTable.isSync) == 0 ? '<font color="white">未同步</font>' : '已同步' }</td>
+				<%--&lt;%&ndash;<td>&ndash;%&gt;--%>
 				<td>
 					<shiro:hasPermission name="gen:genTable:edit">
 					<a href="#" onclick="openDialog('修改业务表', '${ctx}/gen/genTable/form?id=${genTable.id}','1000px', '700px')" class="btn btn-success btn-xs" ><i class="fa fa-edit"></i> 修改</a>

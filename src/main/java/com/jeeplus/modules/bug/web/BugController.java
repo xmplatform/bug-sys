@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeeplus.modules.oa.entity.TestAudit;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ import com.jeeplus.modules.bug.service.BugService;
 /**
  * 缺陷Controller
  * @author xinguan
- * @version 2016-04-30
+ * @version 2016-05-04
  */
 @Controller
 @RequestMapping(value = "${adminPath}/bug/bug")
@@ -69,12 +70,46 @@ public class BugController extends BaseController {
 
 	/**
 	 * 查看，增加，编辑缺陷表单页面
+	 *
+	 * 申请单填写
 	 */
 	@RequiresPermissions(value={"bug:bug:view","bug:bug:add","bug:bug:edit"},logical=Logical.OR)
 	@RequestMapping(value = "form")
 	public String form(Bug bug, Model model) {
+
+		String view ="bugForm";
+
+		if(StringUtils.isNoneBlank(bug.getId())){
+
+			// 任务编号
+			String taskDefKey=bug.getAct().getTaskDefKey();
+
+			// bug 关闭
+			if (bug.getAct().isFinishTask()){
+				view="bugView";
+			}
+
+			// 重新打开/修改
+			else if ("modify".equals(taskDefKey)){
+				view="bugForm";
+			}else if ("testLead".equals(taskDefKey)){
+				view="bugAudit";
+			}
+			else if ("developerLead".equals(taskDefKey)) {
+				view="bugAudit";
+			}
+			else if ("projectManager".equals(taskDefKey)){
+				view="bugAudit";
+			}
+			// 兑现环节
+			else if ("apply_end".equals(taskDefKey)){
+				view = "bugAudit";
+			}
+		}
+
+
 		model.addAttribute("bug", bug);
-		return "modules/bug/bugForm";
+		return "modules/bug/"+view;
 	}
 
 	/**
@@ -93,8 +128,27 @@ public class BugController extends BaseController {
 		}else{//新增表单保存
 			bugService.save(bug);//保存
 		}
-		addMessage(redirectAttributes, "保存缺陷成功");
-		return "redirect:"+Global.getAdminPath()+"/bug/bug/?repage";
+		addMessage(redirectAttributes, "提交缺陷'" + bug.getName() + "'成功");
+		//return "redirect:"+Global.getAdminPath()+"/bug/bug/?repage";
+		return "redirect:" + adminPath + "/act/task/todo/";
+	}
+
+	/**
+	 * 缺陷执行（完成任务）
+	 * @param bug
+	 * @param model
+	 * @return
+	 */
+	@RequiresPermissions("oa:testAudit:edit")
+	@RequestMapping(value = "saveAudit")
+	public String saveAudit(Bug bug, Model model) {
+		if (StringUtils.isBlank(bug.getAct().getFlag())
+				||StringUtils.isBlank(bug.getAct().getComment())){
+			addMessage(model, "请填写审核意见。");
+			return form(bug, model);
+		}
+		bugService.auditSave(bug);
+		return "redirect:" + adminPath + "/act/task/todo/";
 	}
 	
 	/**

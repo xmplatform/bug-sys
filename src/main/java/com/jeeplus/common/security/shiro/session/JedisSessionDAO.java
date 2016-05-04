@@ -40,7 +40,7 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
 	
 	private String sessionKeyPrefix = "shiro_session_";
 
-	@Override
+
 	public void update(Session session) throws UnknownSessionException {
 		if (session == null || session.getId() == null) {  
             return;
@@ -88,7 +88,7 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
 		}
 	}
 
-	@Override
+
 	public void delete(Session session) {
 		if (session == null || session.getId() == null) {
 			return;
@@ -109,7 +109,7 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
 		}
 	}
 	
-	@Override
+
 	public Collection<Session> getActiveSessions() {
 		return getActiveSessions(true);
 	}
@@ -119,7 +119,7 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
 	 * @param includeLeave 是否包括离线（最后访问时间大于3分钟为离线会话）
 	 * @return
 	 */
-	@Override
+
 	public Collection<Session> getActiveSessions(boolean includeLeave) {
 		return getActiveSessions(includeLeave, null, null);
 	}
@@ -131,7 +131,7 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
 	 * @param filterSession 不为空，则过滤掉（不包含）这个会话。
 	 * @return
 	 */
-	@Override
+
 	public Collection<Session> getActiveSessions(boolean includeLeave, Object principal, Session filterSession){
 		Set<Session> sessions = Sets.newHashSet();
 		
@@ -199,7 +199,7 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
 		return sessions;
 	}
 
-	@Override
+
 	protected Serializable doCreate(Session session) {
 		HttpServletRequest request = Servlets.getRequest();
 		if (request != null){
@@ -215,7 +215,7 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
 		return sessionId;
 	}
 
-	@Override
+
 	protected Session doReadSession(Serializable sessionId) {
 
 		Session s = null;
@@ -254,7 +254,7 @@ public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
 		return session;
 	}
 	
-	@Override
+
     public Session readSession(Serializable sessionId) throws UnknownSessionException {
     	try{
         	return super.readSession(sessionId);

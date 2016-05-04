@@ -3,10 +3,10 @@
  */
 package com.jeeplus.modules.sys.service;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
+import com.jeeplus.modules.bug.dao.BugProjectDao;
+import com.jeeplus.modules.bug.entity.BugProject;
 import org.apache.shiro.session.Session;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +56,10 @@ public class SystemService extends BaseService implements InitializingBean {
 	private SessionDAO sessionDao;
 	@Autowired
 	private SystemAuthorizingRealm systemRealm;
-	
+
+	@Autowired
+	private BugProjectDao bugProjectDao;
+
 	public SessionDAO getSessionDao() {
 		return sessionDao;
 	}
@@ -106,7 +109,7 @@ public class SystemService extends BaseService implements InitializingBean {
 
 	/**
 	 * 通过部门ID获取用户列表，仅返回用户id和name（树查询用户时用）
-	 * @param user
+	 * @param
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
@@ -122,7 +125,8 @@ public class SystemService extends BaseService implements InitializingBean {
 	}
 	
 	@Transactional(readOnly = false)
-	public void saveUser(User user) {
+	public void saveUserAndRole(User user) {
+
 		if (StringUtils.isBlank(user.getId())){
 			user.preInsert();
 			userDao.insert(user);
@@ -135,8 +139,7 @@ public class SystemService extends BaseService implements InitializingBean {
 			// 更新用户数据
 			user.preUpdate();
 			userDao.update(user);
-		}
-		if (StringUtils.isNotBlank(user.getId())){
+
 			// 更新用户与角色关联
 			userDao.deleteUserRole(user);
 			if (user.getRoleList() != null && user.getRoleList().size() > 0){
@@ -144,13 +147,15 @@ public class SystemService extends BaseService implements InitializingBean {
 			}else{
 				throw new ServiceException(user.getLoginName() + "没有设置角色！");
 			}
+
 			// 清除用户缓存
 			UserUtils.clearCache(user);
 //			// 清除权限缓存
 //			systemRealm.clearAllCachedAuthorizationInfo();
 		}
 	}
-	
+
+
 	@Transactional(readOnly = false)
 	public void updateUserInfo(User user) {
 		user.preUpdate();
@@ -288,7 +293,7 @@ public class SystemService extends BaseService implements InitializingBean {
 		for (Role e : roles){
 			if (e.getId().equals(role.getId())){
 				roles.remove(e);
-				saveUser(user);
+				saveUserAndRole(user);
 				return true;
 			}
 		}
@@ -305,7 +310,7 @@ public class SystemService extends BaseService implements InitializingBean {
 			return null;
 		}
 		user.getRoleList().add(role);
-		saveUser(user);
+		saveUserAndRole(user);
 		return user;
 	}
 
@@ -390,13 +395,57 @@ public class SystemService extends BaseService implements InitializingBean {
 		return true;
 	}
 
-
-	@Override
 	public void afterPropertiesSet() throws Exception {
 		// TODO Auto-generated method stub
 		
 	}
-	
 
-	
+	@Transactional(readOnly = false)
+	public Object[] assignBatchUserToBugProject(BugProject bugProject, String [] userIds) {
+
+
+		//String projectName=bugProjectDao.getName(projectId);
+
+		String projectId=bugProject.getId();
+		//删除原来的
+		//userDao.outAllUserInBugProject(projectId);
+
+		StringBuilder msg = new StringBuilder();
+		int newNum = 0;
+
+		for (int i = 0; i < userIds.length; i++) {
+			String userName =assignUserToBugProject(projectId,userIds[i]);
+			if (null != userName) {
+				msg.append("<br/>新增用户【" + userName + "】到项目【" + bugProject.getName()+ "】！");
+				newNum++;
+			}
+		}
+
+		return  new Object[]{newNum,msg};
+
+
+
+	}
+
+	private String assignUserToBugProject(String projectId, String userId) {
+
+		if(!userDao.isExistUserInProject(userId,projectId)){
+			userDao.insertUserBugProject(userId,projectId);
+
+			return userDao.getUserName(userId);
+		}else {
+			return null;
+		}
+	}
+
+	@Transactional(readOnly = false)
+	public Boolean outUserInBugProject(String projectId, String userId) {
+		if(userDao.isExistUserInProject(userId,projectId)){
+			userDao.outUserInBugProject(userId,projectId);
+
+			return true;
+		}else{
+			return false;
+		}
+	}
 }

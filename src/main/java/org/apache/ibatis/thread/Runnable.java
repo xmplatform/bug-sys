@@ -60,7 +60,7 @@ public class Runnable implements java.lang.Runnable {
 		this.configuration = configuration;
 	}
 
-	@Override
+
 	public void run() {
 		location = location.substring("file [".length(),
 				location.lastIndexOf(mappingPath) + mappingPath.length());
@@ -78,7 +78,7 @@ public class Runnable implements java.lang.Runnable {
 
 		new Thread(new java.lang.Runnable() {
 
-			@Override
+
 			public void run() {
 
 				try {

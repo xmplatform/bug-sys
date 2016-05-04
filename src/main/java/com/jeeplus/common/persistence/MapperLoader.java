@@ -41,13 +41,13 @@ public class MapperLoader implements DisposableBean, InitializingBean, Applicati
 	private Scanner scanner = null;
 	private ScheduledExecutorService service = null;
 
-	@Override
+
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		this.context = (ConfigurableApplicationContext) applicationContext;
 
 	}
 
-	@Override
+
 	public void afterPropertiesSet() throws Exception {
 		try {
 			service = Executors.newScheduledThreadPool(1);
@@ -71,7 +71,7 @@ public class MapperLoader implements DisposableBean, InitializingBean, Applicati
 	}
 
 	class Task implements Runnable {
-		@Override
+
 		public void run() {
 			try {
 				if (scanner.isChanged()) {
@@ -202,7 +202,7 @@ public class MapperLoader implements DisposableBean, InitializingBean, Applicati
 		}
 	}
 
-	@Override
+
 	public void destroy() throws Exception {
 		if (service != null) {
 			service.shutdownNow();

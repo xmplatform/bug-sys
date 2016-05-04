@@ -64,7 +64,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 	/**
 	 * 认证回调函数, 登录时调用
 	 */
-	@Override
+
 	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) {
 		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
 		
@@ -100,7 +100,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 	/**
 	 * 授权查询回调函数, 进行鉴权但缓存中无用户的授权信息时调用
 	 */
-	@Override
+
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		Principal principal = (Principal) getAvailablePrincipal(principals);
 		// 获取当前已登录的用户
@@ -148,13 +148,13 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 		}
 	}
 	
-	@Override
+
 	protected void checkPermission(Permission permission, AuthorizationInfo info) {
 		authorizationValidate(permission);
 		super.checkPermission(permission, info);
 	}
 	
-	@Override
+
 	protected boolean[] isPermitted(List<Permission> permissions, AuthorizationInfo info) {
 		if (permissions != null && !permissions.isEmpty()) {
             for (Permission permission : permissions) {
@@ -164,13 +164,13 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 		return super.isPermitted(permissions, info);
 	}
 	
-	@Override
+
 	public boolean isPermitted(PrincipalCollection principals, Permission permission) {
 		authorizationValidate(permission);
 		return super.isPermitted(principals, permission);
 	}
 	
-	@Override
+
 	protected boolean isPermittedAll(Collection<Permission> permissions, AuthorizationInfo info) {
 		if (permissions != null && !permissions.isEmpty()) {
             for (Permission permission : permissions) {
@@ -286,7 +286,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 			}
 		}
 		
-		@Override
+
 		public String toString() {
 			return id;
 		}

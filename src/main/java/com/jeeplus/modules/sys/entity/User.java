@@ -8,6 +8,8 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 
+import com.jeeplus.modules.bug.entity.Bug;
+import com.jeeplus.modules.bug.entity.BugProject;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.Length;
 
@@ -50,7 +52,11 @@ public class User extends DataEntity<User> {
 	private Date oldLoginDate;	// 上次登陆日期
 	
 	private Role role;	// 根据角色查询用户条件
-	
+
+	private BugProject bugProject;
+
+	private List<BugProject> bugProjectList=Lists.newArrayList();//用户参与的项目
+
 	private List<Role> roleList = Lists.newArrayList(); // 拥有角色列表
 
 	public User() {
@@ -71,7 +77,14 @@ public class User extends DataEntity<User> {
 		super();
 		this.role = role;
 	}
-	
+
+	public User(BugProject bugProject){
+
+		super();
+		this.bugProject=bugProject;
+	}
+
+
 	public String getPhoto() {
 		return photo;
 	}
@@ -306,6 +319,44 @@ public class User extends DataEntity<User> {
 	public String getRoleNames() {
 		return Collections3.extractToString(roleList, "name", ",");
 	}
+
+
+
+	@JsonIgnore
+	@ExcelField(title="拥有项目", align=1, sort=800, fieldType=RoleListType.class)
+	public List<BugProject> getBugProjectList() {
+		return bugProjectList;
+	}
+
+	public void setBugProjectList(List<BugProject> bugProjectList) {
+		this.bugProjectList = bugProjectList;
+	}
+
+	@JsonIgnore
+	public List<String> getBugProjectIdList() {
+		List<String> bugProjectIdList = Lists.newArrayList();
+		for (BugProject bugProject : bugProjectList) {
+			bugProjectIdList.add(bugProject.getId());
+		}
+		return bugProjectIdList;
+	}
+
+	public void setBugProjectIdList(List<String> bugProjectIdList) {
+		bugProjectList = Lists.newArrayList();
+		for (String roleId : bugProjectIdList) {
+			BugProject bugProject = new BugProject();
+			bugProject.setId(roleId);
+			bugProjectList.add(bugProject);
+		}
+	}
+
+	/**
+	 * 用户拥有的角色名称字符串, 多个角色名称用','分隔.
+	 */
+	public String getBugProjectNames() {
+		return Collections3.extractToString(bugProjectList, "name", ",");
+	}
+
 	
 	public boolean isAdmin(){
 		return isAdmin(this.id);
@@ -315,7 +366,7 @@ public class User extends DataEntity<User> {
 		return id != null && "1".equals(id);
 	}
 	
-	@Override
+
 	public String toString() {
 		return id;
 	}
@@ -327,4 +378,10 @@ public class User extends DataEntity<User> {
 	public String getQrCode() {
 		return qrCode;
 	}
+
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
 }

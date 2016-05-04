@@ -155,7 +155,7 @@ public class RegisterController extends BaseController {
 		user.setQrCode(request.getContextPath()+Global.USERFILES_BASE_URL
 			+  user.getId()  + "/qrcode/"+name);
 		// 保存用户信息
-		systemService.saveUser(user);
+		systemService.saveUserAndRole(user);
 		// 清除当前用户缓存
 		if (user.getLoginName().equals(UserUtils.getUser().getLoginName())){
 			UserUtils.clearCache();

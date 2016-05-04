@@ -95,7 +95,7 @@ public class Dict extends DataEntity<Dict> {
 		this.parentId = parentId;
 	}
 	
-	@Override
+
 	public String toString() {
 		return label;
 	}

@@ -152,7 +152,7 @@ public abstract class BaseEntity<T> implements Serializable {
 		return Global.getConfig("jdbc.type");
 	}
 	
-    @Override
+
     public boolean equals(Object obj) {
         if (null == obj) {
             return false;
@@ -167,7 +167,7 @@ public abstract class BaseEntity<T> implements Serializable {
         return null == this.getId() ? false : this.getId().equals(that.getId());
     }
     
-    @Override
+
     public String toString() {
         return ReflectionToStringBuilder.toString(this);
     }

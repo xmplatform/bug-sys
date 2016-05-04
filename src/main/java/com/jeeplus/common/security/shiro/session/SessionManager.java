@@ -37,7 +37,7 @@ public class SessionManager extends DefaultWebSessionManager {
 		super();
 	}
 	
-	@Override
+
 	protected Serializable getSessionId(ServletRequest request, ServletResponse response) {
 		// 如果参数中包含“__sid”参数，则使用此sid会话。 例如：http://localhost/project?__sid=xxx&__cookie=true
 		String sid = request.getParameter("__sid");
@@ -61,7 +61,7 @@ public class SessionManager extends DefaultWebSessionManager {
 		}
 	}
 	
-	@Override
+
 	public void validateSessions() {
 		super.validateSessions();
 	}
@@ -178,7 +178,7 @@ public class SessionManager extends DefaultWebSessionManager {
 		}
     }
     
-    @Override
+
     protected Session doCreateSession(SessionContext context) {
     	try{
     		return super.doCreateSession(context);
@@ -187,14 +187,14 @@ public class SessionManager extends DefaultWebSessionManager {
 		}
     }
 
-	@Override
+
 	protected Session newSessionInstance(SessionContext context) {
 		Session session = super.newSessionInstance(context);
 		session.setTimeout(getGlobalSessionTimeout());
 		return session;
 	}
     
-    @Override
+
     public Session start(SessionContext context) {
     	try{
     		return super.start(context);

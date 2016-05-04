@@ -12,12 +12,12 @@ import com.jeeplus.common.persistence.dialect.Dialect;
  * @since JDK 1.5
  */
 public class OracleDialect implements Dialect {
-    @Override
+
     public boolean supportsLimit() {
         return true;
     }
 
-    @Override
+
     public String getLimitString(String sql, int offset, int limit) {
         return getLimitString(sql, offset, Integer.toString(offset), Integer.toString(limit));
     }

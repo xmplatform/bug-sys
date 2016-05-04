@@ -4,6 +4,8 @@
     
 	<sql id="bugColumns">
 		a.id AS "id",
+		a.bug_version_id AS "bugVersion.id",
+		a.bug_project_id AS "bugProject.id",
 		a.bug_type AS "bugType",
 		a.bug_status AS "bugStatus",
 		a.bug_level AS "bugLevel",
@@ -16,11 +18,16 @@
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
 		a.remarks AS "remarks",
-		a.bug_version_id AS "bugVersion.id",
-		a.bug_project_id AS "bugProject.id"
+		a.file AS "file",
+		a.image AS "image",
+		a.testleadtext AS "testLeadText",
+		a.developerleadtext AS "developerLeadText",
+		a.projectmanager AS "projectManager"
 	</sql>
 	
 	<sql id="bugJoins">
+		LEFT JOIN bug_version bugVersion ON bugVersion.id = a.bug_version_id
+		LEFT JOIN bug_project bugProject ON bugProject.id = a.bug_project_id
 	</sql>
     
 	<select id="get" resultType="Bug">
@@ -38,6 +45,9 @@
 		<include refid="bugJoins"/>
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="bugVersion != null and bugVersion.id != null and bugVersion.id != ''">
+				AND a.bug_version_id = #{bugVersion.id}
+			</if>
 			<if test="bugType != null and bugType != ''">
 				AND a.bug_type = #{bugType}
 			</if>
@@ -46,12 +56,6 @@
 			</if>
 			<if test="bugLevel != null and bugLevel != ''">
 				AND a.bug_level = #{bugLevel}
-			</if>
-			<if test="name != null and name != ''">
-				AND a.name LIKE 
-					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
-					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
-					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
 			</if>
 		</where>
 		<choose>
@@ -85,6 +89,8 @@
 	<insert id="insert">
 		INSERT INTO bug(
 			id,
+			bug_version_id,
+			bug_project_id,
 			bug_type,
 			bug_status,
 			bug_level,
@@ -97,10 +103,15 @@
 			update_by,
 			update_date,
 			remarks,
-			bug_version_id,
-			bug_project_id
+			file,
+			image,
+			testleadtext,
+			developerleadtext,
+			projectmanager
 		) VALUES (
 			#{id},
+			#{bugVersion.id},
+			#{bugProject.id},
 			#{bugType},
 			#{bugStatus},
 			#{bugLevel},
@@ -113,13 +124,18 @@
 			#{updateBy.id},
 			#{updateDate},
 			#{remarks},
-			#{bugVersion.id},
-			#{bugProject.id}
+			#{file},
+			#{image},
+			#{testLeadText},
+			#{developerLeadText},
+			#{projectManager}
 		)
 	</insert>
 	
 	<update id="update">
 		UPDATE bug SET 	
+			bug_version_id = #{bugVersion.id},
+			bug_project_id = #{bugProject.id},
 			bug_type = #{bugType},
 			bug_status = #{bugStatus},
 			bug_level = #{bugLevel},
@@ -129,8 +145,11 @@
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
 			remarks = #{remarks},
-			bug_version_id = #{bugVersion.id},
-			bug_project_id = #{bugProject.id}
+			file = #{file},
+			image = #{image},
+			testleadtext = #{testLeadText},
+			developerleadtext = #{developerLeadText},
+			projectmanager = #{projectManager}
 		WHERE id = #{id}
 	</update>
 	
@@ -153,4 +172,30 @@
 	<select id="findUniqueByProperty" resultType="Bug" statementType="STATEMENT">
 		select * FROM bug  where ${propertyName} = '${value}'
 	</select>
+
+
+
+	<update id="updateTestLeadText">
+		UPDATE bug SET
+		testLeadText = #{testLeadText},
+		update_by = #{updateBy.id},
+		update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateDeveloperLeadText">
+		UPDATE bug SET
+		developerLeadText = #{developerLeadText},
+		update_by = #{updateBy.id},
+		update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateProjectManagerText">
+		UPDATE bug SET
+		projectManagerText = #{projectManagerText},
+		update_by = #{updateBy.id},
+		update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
 </mapper>

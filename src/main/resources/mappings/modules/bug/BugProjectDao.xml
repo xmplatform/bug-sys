@@ -24,6 +24,15 @@
 		<include refid="bugProjectJoins"/>
 		WHERE a.id = #{id}
 	</select>
+
+	<select id="getName" resultType="String">
+		SELECT
+			a.name
+		FROM bug_project a
+		WHERE a.id = #{id}
+	</select>
+
+
 	
 	<select id="findList" resultType="BugProject">
 		SELECT 
@@ -42,7 +51,23 @@
 			</otherwise>
 		</choose>
 	</select>
-	
+
+	<!--查找用户参与的项目-->
+	<select id="findJoinList" resultType="BugProject" >
+
+		SELECT
+		`bug_project`.`id`,
+		`bug_project`.`name`
+		FROM
+		`sys_user`
+		JOIN `bug_project_user`
+		ON `sys_user`.`id` = `bug_project_user`.`user_id`
+		JOIN `bug_project`
+		ON `bug_project_user`.`project_id` = `bug_project`.`id`
+		WHERE
+	</select>
+
+
 	<select id="findAllList" resultType="BugProject">
 		SELECT 
 			<include refid="bugProjectColumns"/>

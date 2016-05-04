@@ -36,10 +36,40 @@
 </head>
 <body>
 		<form:form id="inputForm" modelAttribute="bug" action="${ctx}/bug/bug/save" method="post" class="form-horizontal">
-		<form:hidden path="id"/>
-		<sys:message content="${message}"/>	
+			<form:hidden path="id"/>
+			<form:hidden path="act.taskId"/>
+			<form:hidden path="act.taskName"/>
+			<form:hidden path="act.taskDefKey"/>
+			<form:hidden path="act.procInsId"/>
+			<form:hidden path="act.procDefId"/>
+			<form:hidden id="flag" path="act.flag"/>
+			<sys:message content="${message}"/>
 		<table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
 		   <tbody>
+				<tr>
+
+					<td class="width-15 active"><label class="pull-right">项目主键：</label></td>
+					<td class="width-35">
+						<%--<sys:treeselect id="bugProject" name="bugProject.id" value="${bug.bugProject.id}" labelName="" labelValue="${bug.bugProject.name}"--%>
+										<%--title="部门" url="/sys/office/treeData?type=2" cssClass="form-control " allowClear="true" notAllowSelectParent="true"/>--%>
+
+							<form:select path="bugProject" class="form-control required">
+								<form:option value="" label=""/>
+								<form:options items="${fns:getProjectList()}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+							</form:select>
+					</td>
+					<td class="width-15 active"><label class="pull-right">项目版本主键：</label></td>
+					<td class="width-35">
+						<%--<sys:treeselect id="bugVersion" name="bugVersion.id" value="${bug.bugVersion.id}" labelName="" labelValue="${bug.bugVersion.version}-${bug.bugVersion.build}"--%>
+							<%--title="用户" url="/sys/office/treeData?type=3" cssClass="form-control " allowClear="true" notAllowSelectParent="true"/>--%>
+							<form:select path="bugVersion" class="form-control required">
+								<form:option value="" label=""/>
+								<form:options items="${fns:getProjectVersionList('bug_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+							</form:select>
+
+					</td>
+
+				</tr>
 				<tr>
 					<td class="width-15 active"><label class="pull-right"><font color="red">*</font>缺陷类型（0：BUG;1:改进；2：任务；3：需求）：</label></td>
 					<td class="width-35">
@@ -72,10 +102,12 @@
 				<tr>
 					<td class="width-15 active"><label class="pull-right">简介：</label></td>
 					<td class="width-35">
-						<form:textarea path="summary" htmlEscape="false" rows="4" maxlength="255" class="form-control "/>
+						<form:input path="summary" htmlEscape="false" maxlength="255" class="form-control "/>
 					</td>
 					<td class="width-15 active"><label class="pull-right">内容详情：</label></td>
 					<td class="width-35">
+						<%--<input type="hidden" id="content" name="content">--%>
+						<input type="hidden" id="content" name="description">
 					</td>
 				</tr>
 				<tr>
@@ -83,19 +115,33 @@
 					<td class="width-35">
 						<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="255" class="form-control "/>
 					</td>
-					<td class="width-15 active"><label class="pull-right">项目版本主键：</label></td>
+					<td class="width-15 active"><label class="pull-right">缺陷文件：</label></td>
 					<td class="width-35">
-						<form:input path="bugVersion.id" htmlEscape="false" maxlength="64" class="form-control "/>
+						<form:hidden id="file" path="file" htmlEscape="false" maxlength="255" class="form-control"/>
+						<sys:ckfinder input="file" type="files" uploadPath="/bug/bug" selectMultiple="true"/>
 					</td>
 				</tr>
 				<tr>
-					<td class="width-15 active"><label class="pull-right">项目主键：</label></td>
+					<td class="width-15 active"><label class="pull-right">缺陷图片：</label></td>
 					<td class="width-35">
-						<form:input path="bugProject.id" htmlEscape="false" maxlength="64" class="form-control "/>
+						<form:hidden id="image" path="image" htmlEscape="false" maxlength="255" class="form-control"/>
+						<sys:ckfinder input="image" type="files" uploadPath="/bug/bug" selectMultiple="true"/>
 					</td>
-					<td class="width-15 active"></td>
-		   			<td class="width-35" ></td>
-		  		</tr>
+					<td class="width-15 active"><label class="pull-right">测试主管意见：</label></td>
+					<td class="width-35">
+						<form:textarea path="testLeadText" htmlEscape="false" rows="4" maxlength="255" class="form-control "/>
+					</td>
+				</tr>
+				<tr>
+					<td class="width-15 active"><label class="pull-right">开发主管意见：</label></td>
+					<td class="width-35">
+						<form:textarea path="developerLeadText" htmlEscape="false" rows="4" maxlength="255" class="form-control "/>
+					</td>
+					<td class="width-15 active"><label class="pull-right">项目经理意见：</label></td>
+					<td class="width-35">
+						<form:textarea path="projectManager" htmlEscape="false" rows="4" maxlength="255" class="form-control "/>
+					</td>
+				</tr>
 		 	</tbody>
 		</table>
 	</form:form>

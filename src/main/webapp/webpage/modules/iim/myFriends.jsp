@@ -29,7 +29,7 @@
        <div class="wrapper wrapper-content animated fadeInRight">
        <div class="row">
        <c:forEach var="user" items="${list}">
-     		
+
             <div class="col-sm-4">
                 <div class="contact-box">
                     <a href="#">

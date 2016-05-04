@@ -44,23 +44,24 @@
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<table:sortColumn id="orderBy" name="orderBy" value="${page.orderBy}" callback="sortOrRefresh();"/><!-- 支持排序 -->
 		<div class="form-group">
-			<span>缺陷类型：</span>
+			<span>项目版本主键：</span>
+				<sys:treeselect id="bugVersion" name="bugVersion.id" value="${bug.bugVersion.id}" labelName="" labelValue="${bug.}"
+					title="用户" url="/sys/office/treeData?type=3" cssClass="form-control input-sm" allowClear="true" notAllowSelectParent="true"/>
+			<span>缺陷类型（0：BUG;1:改进；2：任务；3：需求）：</span>
 				<form:select path="bugType"  class="form-control m-b">
 					<form:option value="" label=""/>
 					<form:options items="${fns:getDictList('bug_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
-			<span>缺陷状态：</span>
+			<span>缺陷状态（0：新建；1：进行中；2：重开；3：已解决；4：暂缓；5：不解决；6：已关闭）：</span>
 				<form:select path="bugStatus"  class="form-control m-b">
 					<form:option value="" label=""/>
 					<form:options items="${fns:getDictList('bug_status')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
-			<span>缺陷优先级：</span>
+			<span>缺陷优先级（0：低；1：普通；2：高；3：紧急）：</span>
 				<form:select path="bugLevel"  class="form-control m-b">
 					<form:option value="" label=""/>
 					<form:options items="${fns:getDictList('bug_level')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
-			<span>名称：</span>
-				<form:input path="name" htmlEscape="false" maxlength="64"  class=" form-control input-sm"/>
 		 </div>	
 	</form:form>
 	<br/>
@@ -101,15 +102,20 @@
 		<thead>
 			<tr>
 				<th> <input type="checkbox" class="i-checks"></th>
-				<th  class="sort-column bugType">缺陷类型</th>
-				<th  class="sort-column bugStatus">缺陷状态</th>
-				<th  class="sort-column bugLevel">缺陷优先级</th>
+				<th  class="sort-column ">项目版本主键</th>
+				<th  class="sort-column ">项目主键</th>
+				<th  class="sort-column bugType">缺陷类型（0：BUG;1:改进；2：任务；3：需求）</th>
+				<th  class="sort-column bugStatus">缺陷状态（0：新建；1：进行中；2：重开；3：已解决；4：暂缓；5：不解决；6：已关闭）</th>
+				<th  class="sort-column bugLevel">缺陷优先级（0：低；1：普通；2：高；3：紧急）</th>
 				<th  class="sort-column name">名称</th>
 				<th  class="sort-column summary">简介</th>
 				<th  class="sort-column description">内容详情</th>
 				<th  class="sort-column remarks">备注信息</th>
-				<th  class="sort-column bugVersion.id">项目版本主键</th>
-				<th  class="sort-column bugProject.id">项目主键</th>
+				<th  class="sort-column file">缺陷文件</th>
+				<th  class="sort-column image">缺陷图片</th>
+				<th  class="sort-column testLeadText">测试主管意见</th>
+				<th  class="sort-column developerLeadText">开发主管意见</th>
+				<th  class="sort-column projectManager">项目经理意见</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -118,8 +124,14 @@
 			<tr>
 				<td> <input type="checkbox" id="${bug.id}" class="i-checks"></td>
 				<td><a  href="#" onclick="openDialogView('查看缺陷', '${ctx}/bug/bug/form?id=${bug.id}','800px', '500px')">
-					${fns:getDictLabel(bug.bugType, 'bug_type', '')}
+					${bug.}
 				</a></td>
+				<td>
+					${bug.}
+				</td>
+				<td>
+					${fns:getDictLabel(bug.bugType, 'bug_type', '')}
+				</td>
 				<td>
 					${fns:getDictLabel(bug.bugStatus, 'bug_status', '')}
 				</td>
@@ -139,10 +151,19 @@
 					${bug.remarks}
 				</td>
 				<td>
-					${bug.bugVersion.id}
+					${bug.file}
 				</td>
 				<td>
-					${bug.bugProject.id}
+					${bug.image}
+				</td>
+				<td>
+					${bug.testLeadText}
+				</td>
+				<td>
+					${bug.developerLeadText}
+				</td>
+				<td>
+					${bug.projectManager}
 				</td>
 				<td>
 					<shiro:hasPermission name="bug:bug:view">

@@ -141,7 +141,7 @@ public class Log extends DataEntity<Log> {
 		this.params = params.toString();
 	}
 	
-	@Override
+
 	public String toString() {
 		return ReflectionToStringBuilder.toString(this);
 	}

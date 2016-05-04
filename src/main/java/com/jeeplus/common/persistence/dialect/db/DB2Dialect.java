@@ -13,7 +13,7 @@ import com.jeeplus.common.persistence.dialect.Dialect;
  * @since JDK 1.5
  */
 public class DB2Dialect implements Dialect {
-    @Override
+
     public boolean supportsLimit() {
         return true;
     }
@@ -37,7 +37,7 @@ public class DB2Dialect implements Dialect {
         return sql.toLowerCase().contains("select distinct");
     }
 
-    @Override
+
     public String getLimitString(String sql, int offset, int limit) {
         return getLimitString(sql, offset, Integer.toString(offset), Integer.toString(limit));
     }

@@ -25,7 +25,7 @@ public class ActRestApplication extends ActivitiRestApplication {
 	/**
 	 * Creates a root Restlet that will receive all incoming calls.
 	 */
-	@Override
+
 	public synchronized Restlet createInboundRoot() {
 		Router router = new Router(getContext());
 		router.attachDefault(DefaultResource.class);

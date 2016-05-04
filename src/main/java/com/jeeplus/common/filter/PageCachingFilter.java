@@ -15,7 +15,7 @@ import net.sf.ehcache.constructs.web.filter.SimplePageCachingFilter;
  */
 public class PageCachingFilter extends SimplePageCachingFilter {
 
-	@Override
+
 	protected CacheManager getCacheManager() {
 		return CacheUtils.getCacheManager();
 	}

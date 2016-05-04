@@ -43,7 +43,7 @@ public class ChatServer extends WebSocketServer{
 	/**
 	 * 触发连接事件
 	 */
-	@Override
+
 	public void onOpen( WebSocket conn, ClientHandshake handshake ) {
 //		Collection<String> onlineUsers = MsgServerPool.getOnlineUser();
 //		AjaxJson j = new AjaxJson();
@@ -54,7 +54,7 @@ public class ChatServer extends WebSocketServer{
 	/**
 	 * 触发关闭事件
 	 */
-	@Override
+
 	public void onClose( WebSocket conn, int code, String reason, boolean remote ) {
 		userLeave(conn);
 		Collection<String> onlineUsers = ChatServerPool.getOnlineUser();
@@ -66,7 +66,7 @@ public class ChatServer extends WebSocketServer{
 	/**
 	 * 客户端发送消息到服务器时触发事件
 	 */
-	@Override
+
 	public void onMessage(WebSocket conn, String message){
 		message = message.toString();
 		ChatHistoryService chatHistoryService = SpringContextHolder.getBean("chatHistoryService");
@@ -128,7 +128,7 @@ public class ChatServer extends WebSocketServer{
 		}
 	}
 	
-	@Override
+
 	public void onMessage(WebSocket conn, ByteBuffer buffer){
 		 Charset charset = null;
 	        CharsetDecoder decoder = null;
@@ -151,7 +151,7 @@ public class ChatServer extends WebSocketServer{
 	/**
 	 * 触发异常事件
 	 */
-	@Override
+
 	public void onError( WebSocket conn, Exception ex ) {
 		ex.printStackTrace();
 		if( conn != null ) {

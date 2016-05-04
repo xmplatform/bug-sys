@@ -188,7 +188,7 @@ public class Menu extends DataEntity<Menu> {
 		this.userId = userId;
 	}
 
-	@Override
+
 	public String toString() {
 		return name;
 	}

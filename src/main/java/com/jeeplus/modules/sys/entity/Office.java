@@ -210,7 +210,7 @@ public class Office extends TreeEntity<Office> {
 //		return parent != null && parent.getId() != null ? parent.getId() : "0";
 //	}
 	
-	@Override
+
 	public String toString() {
 		return name;
 	}

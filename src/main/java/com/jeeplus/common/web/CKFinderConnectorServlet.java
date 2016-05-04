@@ -25,14 +25,14 @@ public class CKFinderConnectorServlet extends ConnectorServlet {
 	
 	private static final long serialVersionUID = 1L;
 	
-	@Override
+
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		prepareGetResponse(request, response, false);
 		super.doGet(request, response);
 	}
 	
-	@Override
+
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		prepareGetResponse(request, response, true);

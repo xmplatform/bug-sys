@@ -38,7 +38,7 @@ public class H2Dialect implements Dialect {
                 + offsetPlaceholder : " limit " + limitPlaceholder);
     }
 
-    @Override
+
     public String getLimitString(String sql, int offset, int limit) {
         return getLimitString(sql, offset, Integer.toString(offset), limit, Integer.toString(limit));
     }

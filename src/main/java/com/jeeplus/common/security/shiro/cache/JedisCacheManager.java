@@ -30,7 +30,7 @@ public class JedisCacheManager implements CacheManager {
 
 	private String cacheKeyPrefix = "shiro_cache_";
 	
-	@Override
+
 	public <K, V> Cache<K, V> getCache(String name) throws CacheException {
 		return new JedisCache<K, V>(cacheKeyPrefix + name);
 	}
@@ -64,7 +64,7 @@ public class JedisCacheManager implements CacheManager {
 		}
 		
 		@SuppressWarnings("unchecked")
-		@Override
+
 		public V get(K key) throws CacheException {
 			if (key == null){
 				return null;
@@ -98,7 +98,7 @@ public class JedisCacheManager implements CacheManager {
 			return value;
 		}
 
-		@Override
+
 		public V put(K key, V value) throws CacheException {
 			if (key == null){
 				return null;
@@ -118,7 +118,7 @@ public class JedisCacheManager implements CacheManager {
 		}
 
 		@SuppressWarnings("unchecked")
-		@Override
+
 		public V remove(K key) throws CacheException {
 			V value = null;
 			Jedis jedis = null;
@@ -135,7 +135,7 @@ public class JedisCacheManager implements CacheManager {
 			return value;
 		}
 
-		@Override
+
 		public void clear() throws CacheException {
 			Jedis jedis = null;
 			try {
@@ -149,7 +149,7 @@ public class JedisCacheManager implements CacheManager {
 			}
 		}
 
-		@Override
+
 		public int size() {
 			int size = 0;
 			Jedis jedis = null;
@@ -167,7 +167,7 @@ public class JedisCacheManager implements CacheManager {
 		}
 
 		@SuppressWarnings("unchecked")
-		@Override
+
 		public Set<K> keys() {
 			Set<K> keys = Sets.newHashSet();
 			Jedis jedis = null;
@@ -188,7 +188,7 @@ public class JedisCacheManager implements CacheManager {
 		}
 
 		@SuppressWarnings("unchecked")
-		@Override
+
 		public Collection<V> values() {
 			Collection<V> vals = Collections.emptyList();;
 			Jedis jedis = null;

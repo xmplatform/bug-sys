@@ -66,7 +66,8 @@
                                 <li><a class="J_menuItem" href="${ctx }/iim/mailBox/list">信箱</a>
                                 </li> 
                                  <li class="divider"></li>
-                                <li><a onclick="changeStyle()" href="#">切换到ACE模式</a>
+                                <li><a onclick="changeStyle('ace')" href="#">切换到ACE模式</a>
+                                <li><a onclick="changeStyle('top')" href="#">切换到TOP模式</a>
                                 </li> 
                                  
                                 <li class="divider"></li>
@@ -267,7 +268,7 @@
                 <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="${ctx}/home" frameborder="0" data-id="${ctx}/home" seamless></iframe>
             </div>
             <div class="footer">
-                <div class="pull-left"><a href="http://http://guanxine.github.io">http://http://guanxine.github.io</a> &copy; 2016</div>
+                <div class="pull-left"><a href="http://guanxine.github.io">http://guanxine.github.io</a> &copy; 2016</div>
             </div>
         </div>
         <!--右侧部分结束-->
@@ -292,8 +293,8 @@ $(document).ready(function(){
 
 });
 
-function changeStyle(){
-   $.get('${pageContext.request.contextPath}/theme/ace?url='+window.top.location.href,function(result){   window.location.reload();});
+function changeStyle(str){
+   $.get('${pageContext.request.contextPath}/theme/'+str+'?url='+window.top.location.href,function(result){   window.location.reload();});
 }
 
 </script>

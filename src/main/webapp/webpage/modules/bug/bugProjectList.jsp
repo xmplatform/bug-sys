@@ -113,6 +113,10 @@
     				<shiro:hasPermission name="bug:bugProject:del">
 						<a href="${ctx}/bug/bugProject/delete?id=${bugProject.id}" onclick="return confirmx('确认要删除该项目吗？', this.href)"   class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> 删除</a>
 					</shiro:hasPermission>
+
+					<shiro:hasPermission name="sys:role:assign">
+						<a href="#" onclick="openDialogView('分配用户', '${ctx}/bug/bugProject/assign?id=${bugProject.id}','800px', '600px')"  class="btn  btn-warning btn-xs" ><i class="glyphicon glyphicon-plus"></i> 分配用户</a>
+					</shiro:hasPermission>
 				</td>
 			</tr>
 		</c:forEach>

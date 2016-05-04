@@ -3,6 +3,7 @@
  */
 package com.jeeplus.modules.bug.entity;
 
+import com.jeeplus.modules.sys.entity.User;
 import org.hibernate.validator.constraints.Length;
 import java.util.List;
 import com.google.common.collect.Lists;
@@ -21,6 +22,7 @@ public class BugProject extends DataEntity<BugProject> {
 	private String name;		// 项目名称
 	private String summary;		// 项目简介
 	private List<BugVersion> bugVersionList = Lists.newArrayList();		// 子表列表
+	private List<User> userList=Lists.newArrayList();// 参与用户列表
 	
 	public BugProject() {
 		super();
@@ -55,6 +57,20 @@ public class BugProject extends DataEntity<BugProject> {
 	}
 
 	public void setBugVersionList(List<BugVersion> bugVersionList) {
+
+
 		this.bugVersionList = bugVersionList;
+	}
+
+	public static long getSerialVersionUID() {
+		return serialVersionUID;
+	}
+
+	public List<User> getUserList() {
+		return userList;
+	}
+
+	public void setUserList(List<User> userList) {
+		this.userList = userList;
 	}
 }
