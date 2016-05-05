@@ -153,13 +153,6 @@
 
 
 
-  <function>
-    <description>获取项目对象列表</description>
-    <name>getProjectList</name>
-    <function-class>com.jeeplus.modules.bug.utils.BugUtils</function-class>
-    <function-signature>java.util.List getProjectList()</function-signature>
-    <example>${fns:getDictList(type)}</example>
-  </function>
   
   <function>
     <description>获取字典对象列表</description>

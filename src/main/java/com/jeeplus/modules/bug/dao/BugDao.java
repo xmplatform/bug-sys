@@ -20,7 +20,7 @@ public interface BugDao extends CrudDao<Bug> {
 
     public int updateInsId(Bug bug);
 
-    public int updateTestLeadText(Bug bug);
+    public int updateTesterLeadText(Bug bug);
 
     public int updateDeveloperLeadText(Bug bug);
 

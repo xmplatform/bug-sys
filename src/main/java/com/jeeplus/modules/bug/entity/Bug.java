@@ -29,9 +29,9 @@ public class Bug extends ActEntity<Bug> {
 	private String description;		// 内容详情
 	private String file;		// 缺陷文件
 	private String image;		// 缺陷图片
-	private String testLeadText;		// 测试主管意见
+	private String testerLeadText;		// 测试主管意见
 	private String developerLeadText;		// 开发主管意见
-	private String projectManager;		// 项目经理意见
+	private String projectManagerText;		// 项目经理意见
 	
 	public Bug() {
 		super();
@@ -140,14 +140,14 @@ public class Bug extends ActEntity<Bug> {
 	
 	@Length(min=0, max=255, message="测试主管意见长度必须介于 0 和 255 之间")
 	@ExcelField(title="测试主管意见", align=2, sort=17)
-	public String getTestLeadText() {
-		return testLeadText;
+	public String getTesterLeadText() {
+		return testerLeadText;
 	}
 
-	public void setTestLeadText(String testLeadText) {
-		this.testLeadText = testLeadText;
+	public void setTesterLeadText(String testerLeadText) {
+		this.testerLeadText = testerLeadText;
 	}
-	
+
 	@Length(min=0, max=255, message="开发主管意见长度必须介于 0 和 255 之间")
 	@ExcelField(title="开发主管意见", align=2, sort=18)
 	public String getDeveloperLeadText() {
@@ -160,12 +160,12 @@ public class Bug extends ActEntity<Bug> {
 	
 	@Length(min=0, max=255, message="项目经理意见长度必须介于 0 和 255 之间")
 	@ExcelField(title="项目经理意见", align=2, sort=19)
-	public String getProjectManager() {
-		return projectManager;
+	public String getProjectManagerText() {
+		return projectManagerText;
 	}
 
-	public void setProjectManager(String projectManager) {
-		this.projectManager = projectManager;
+	public void setProjectManager(String projectManagerText) {
+		this.projectManagerText = projectManagerText;
 	}
 	
 }

@@ -30,8 +30,52 @@
 					}
 				}
 			});
+
+			initSelfProjectList();
+			console.info("shaonian");
+
+//			$(function() {
+//
+//			});
+
 			
 		});
+
+		/**
+		 * 获取项目列表
+		 */
+		function initSelfProjectList() {
+			$('#project').empty();
+			$.ajax({
+				type : "POST",
+				url : "${ctx}/bug/bugProject/selfJson",
+				success : function(data) {
+					$.each(data, function(i, it) {
+						console.info(it.name);
+						$("<option value='" + it.id + "' >"
+								+ it.name +"</option>").click(function() {
+							initVersion(it.id);
+						}).appendTo($('#project'));
+					});
+				}
+			});
+		}
+		/**
+		 * 获取版本列表
+		 */
+		function initVersion(projectId) {
+			$('#version').empty();
+			$.ajax({
+				type : "POST",
+				url :  "${ctx}/bug/bugProject/findProjectVersionJson?projectId=" + projectId,
+				success : function(data) {
+					$.each(data, function(i, it) {
+						$("<option value='" + it.id + "' >"
+								+ it.version + ":"+it.build+"</option><br>").appendTo($('#version'));
+					});
+				}
+			});
+		}
 	</script>
 </head>
 <body>
@@ -53,19 +97,23 @@
 						<%--<sys:treeselect id="bugProject" name="bugProject.id" value="${bug.bugProject.id}" labelName="" labelValue="${bug.bugProject.name}"--%>
 										<%--title="部门" url="/sys/office/treeData?type=2" cssClass="form-control " allowClear="true" notAllowSelectParent="true"/>--%>
 
-							<form:select path="bugProject" class="form-control required">
-								<form:option value="" label=""/>
-								<form:options items="${fns:getProjectList()}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-							</form:select>
+							<%--<form:select path="bugProject" class="form-control required">--%>
+								<%--<form:option value="" label=""/>--%>
+								<%--<form:options items="" itemLabel="label" itemValue="value" htmlEscape="false"/>--%>
+							<%--</form:select>--%>
+
+							<select id='project' class="form-control required"><option>---项目---</option></select>
 					</td>
 					<td class="width-15 active"><label class="pull-right">项目版本主键：</label></td>
 					<td class="width-35">
 						<%--<sys:treeselect id="bugVersion" name="bugVersion.id" value="${bug.bugVersion.id}" labelName="" labelValue="${bug.bugVersion.version}-${bug.bugVersion.build}"--%>
 							<%--title="用户" url="/sys/office/treeData?type=3" cssClass="form-control " allowClear="true" notAllowSelectParent="true"/>--%>
-							<form:select path="bugVersion" class="form-control required">
-								<form:option value="" label=""/>
-								<form:options items="${fns:getProjectVersionList('bug_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-							</form:select>
+							<%--<form:select path="bugVersion" class="form-control required">--%>
+								<%--<form:option value="" label=""/>--%>
+								<%--<form:options items="${fns:getProjectVersionList('bug_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>--%>
+							<%--</form:select>--%>
+
+							<select id='version' class="form-control required"><option>---版本---</option></select>
 
 					</td>
 
@@ -107,7 +155,7 @@
 					<td class="width-15 active"><label class="pull-right">内容详情：</label></td>
 					<td class="width-35">
 						<%--<input type="hidden" id="content" name="content">--%>
-						<input type="hidden" id="content" name="description">
+						<input type="hidden" id="content" name="content">
 					</td>
 				</tr>
 				<tr>
@@ -129,7 +177,7 @@
 					</td>
 					<td class="width-15 active"><label class="pull-right">测试主管意见：</label></td>
 					<td class="width-35">
-						<form:textarea path="testLeadText" htmlEscape="false" rows="4" maxlength="255" class="form-control "/>
+						<form:textarea path="testerLeadText" htmlEscape="false" rows="4" maxlength="255" class="form-control "/>
 					</td>
 				</tr>
 				<tr>
@@ -139,11 +187,26 @@
 					</td>
 					<td class="width-15 active"><label class="pull-right">项目经理意见：</label></td>
 					<td class="width-35">
-						<form:textarea path="projectManager" htmlEscape="false" rows="4" maxlength="255" class="form-control "/>
+						<form:textarea path="projectManagerText" htmlEscape="false" rows="4" maxlength="255" class="form-control "/>
 					</td>
 				</tr>
 		 	</tbody>
 		</table>
+			<div class="form-actions">
+				<shiro:hasPermission name="bug:bug:edit">
+					<input id="btnSubmit" class="btn btn-primary" type="submit" value="提交" onclick="$('#flag').val('NEW')"/>&nbsp;
+					<c:if test="${not empty bug.id}">
+						<input id="btnSubmit2" class="btn btn-inverse" type="submit" value="丢弃" onclick="$('#flag').val('RENEW')"/>&nbsp;
+					</c:if>
+				</shiro:hasPermission>
+				<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
+			</div>
+			<c:if test="${not empty bug.id}">
+				<act:histoicFlow procInsId="${testAudit.act.procInsId}" />
+			</c:if>
+
+
 	</form:form>
 </body>
+
 </html>

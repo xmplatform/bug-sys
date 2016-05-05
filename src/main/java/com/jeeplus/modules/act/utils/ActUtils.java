@@ -41,7 +41,7 @@ public class ActUtils {
 	public static final String[] PD_LEAVE = new String[]{"leave", "oa_leave"};
 	public static final String[] PD_LEAVE_EMAIL = new String[]{"leave-mail", "oa_leave_mail"};
 	public static final String[] PD_TEST_AUDIT = new String[]{"test_audit", "oa_test_audit"};
-	public static final String[] PD_BUG_AUDIT = new String[]{"BUG_AUDIT", "bug"};
+	public static final String[] PD_BUG_AUDIT = new String[]{"bug-default-process", "bug"};
 	public static final String FLAG = "yes";
 
 //	/**

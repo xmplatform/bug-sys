@@ -10,6 +10,7 @@ import com.google.common.collect.Maps;
 import com.jeeplus.common.utils.StringUtils;
 import com.jeeplus.modules.act.service.ActTaskService;
 import com.jeeplus.modules.act.utils.ActUtils;
+import com.jeeplus.modules.bug.util.BugStatus;
 import com.jeeplus.modules.oa.entity.TestAudit;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,13 +70,13 @@ public class BugService extends CrudService<BugDao, Bug> {
 		else{
 			bug.preUpdate();
 			dao.update(bug);
-			bug.getAct().setComment((ActUtils.FLAG.equals(bug.getAct().getFlag()) ?"[重申]":"[销毁]")+bug.getAct().getComment());
+			bug.getAct().setComment(BugStatus.reasonPhraseOf(bug.getBugStatus())+bug.getAct().getComment());
 
 			// 完成任务流程
 			Map<String,Object> vars= Maps.newHashMap();
-			vars.put("pass",ActUtils.FLAG.equals(bug.getAct().getFlag())?"1":"0");
+			vars.put("status",bug.getBugStatus());
 
-			actTaskService.complete(bug.getAct().getTaskId(), bug.getAct().getProcInsId(), bug.getAct().getComment(), bug.getSummary(), vars);
+			actTaskService.complete(bug.getAct().getTaskId(), bug.getAct().getProcInsId(), bug.getAct().getComment(), bug.getSummary(),null);
 		}
 
 		super.save(bug);
@@ -88,8 +89,11 @@ public class BugService extends CrudService<BugDao, Bug> {
 	@Transactional(readOnly = false)
 	public void auditSave(Bug bug) {
 
+		String currentStatus=bug.getBugStatus();
+		BugStatus bugStatus = BugStatus.reasonPhraseOf(currentStatus);
+
 		// 设置意见
-		bug.getAct().setComment((ActUtils.FLAG.equals(bug.getAct().getFlag())?"[同意] ":"[驳回] ")+bug.getAct().getComment());
+		bug.getAct().setComment(bugStatus.getReasonPhrase()+bug.getAct().getComment());
 
 		bug.preUpdate();
 
@@ -100,17 +104,17 @@ public class BugService extends CrudService<BugDao, Bug> {
 		if ("audit".equals(taskDefKey)){
 
 		}
-		else if ("testLead".equals(taskDefKey)){
-			bug.setTestLeadText(bug.getAct().getComment());
-			dao.updateTestLeadText(bug);
+		else if ("testerLeadTask".equals(taskDefKey)){
+			bug.setTesterLeadText(bug.getAct().getComment());
+			dao.updateTesterLeadText(bug);
 		}
-		else if ("developerLead".equals(taskDefKey)){
+		else if ("developerLeadTask".equals(taskDefKey)){
 			bug.setDeveloperLeadText(bug.getAct().getComment());
 			dao.updateDeveloperLeadText(bug);
 		}
-		else if ("projectManager".equals(taskDefKey)){
+		else if ("projectManagerTask".equals(taskDefKey)){
 			bug.setProjectManager(bug.getAct().getComment());
-			dao.updateDeveloperLeadText(bug);
+			dao.updateProjectManagerText(bug);
 		}
 		else if ("apply_end".equals(taskDefKey)){
 
@@ -123,7 +127,7 @@ public class BugService extends CrudService<BugDao, Bug> {
 
 		// 提交流程任务
 		Map<String, Object> vars = Maps.newHashMap();
-		vars.put("pass", ActUtils.FLAG.equals(bug.getAct().getFlag())? "1" : "0");
+		vars.put("status", bug.getBugStatus());
 		actTaskService.complete(bug.getAct().getTaskId(), bug.getAct().getProcInsId(), bug.getAct().getComment(), vars);
 
 	}

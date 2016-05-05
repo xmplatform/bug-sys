@@ -5,9 +5,11 @@ package com.jeeplus.modules.bug.service;
 
 import java.util.List;
 
+import com.jeeplus.modules.oa.entity.OaNotify;
 import com.jeeplus.modules.sys.entity.Role;
 import com.jeeplus.modules.sys.entity.User;
 import com.jeeplus.modules.sys.service.SystemService;
+import com.jeeplus.modules.sys.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -77,5 +79,16 @@ public class BugProjectService extends CrudService<BugProjectDao, BugProject> {
 		bugVersionDao.delete(new BugVersion(bugProject));
 	}
 
+	public Page<BugProject> find(Page<BugProject> page, BugProject bugProject) {
 
+		bugProject.setPage(page);
+		page.setList(dao.findList(bugProject));
+		return page;
+	}
+
+
+	public List<BugVersion> findProjectVersionList(String projectId) {
+
+		return bugVersionDao.findList(new BugVersion(new BugProject(projectId)));
+	}
 }

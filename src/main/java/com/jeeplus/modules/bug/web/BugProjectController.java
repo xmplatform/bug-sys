@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import com.google.common.collect.Maps;
 import com.jeeplus.common.utils.Collections3;
 import com.jeeplus.modules.bug.entity.Bug;
+import com.jeeplus.modules.bug.entity.BugVersion;
+import com.jeeplus.modules.oa.entity.OaNotify;
 import com.jeeplus.modules.sys.entity.Office;
 import com.jeeplus.modules.sys.entity.Role;
 import com.jeeplus.modules.sys.entity.User;
@@ -69,6 +71,8 @@ public class BugProjectController extends BaseController {
 		return entity;
 	}
 
+
+
 	/**
 	 * 项目列表页面
 	 */
@@ -79,6 +83,8 @@ public class BugProjectController extends BaseController {
 		model.addAttribute("page", page);
 		return "modules/bug/bugProjectList";
 	}
+
+
 
 	/**
 	 * 查看，增加，编辑项目表单页面
@@ -248,7 +254,6 @@ public class BugProjectController extends BaseController {
 	}
 
 
-
 	/**
 	 * 选择用户:确认分配
 	 * @param role
@@ -270,7 +275,39 @@ public class BugProjectController extends BaseController {
 		return "redirect:" + adminPath + "/bug/bugProject/assign?id="+bugProject.getId();
 	}
 
+	/**
+	 * 我的项目列表
+	 */
+	@RequestMapping(value = "self")
+	public String selfList(BugProject bugProject, HttpServletRequest request, HttpServletResponse response, Model model) {
+		bugProject.setSelf(true);
+		Page<BugProject> page = bugProjectService.find(new Page<BugProject>(request, response), bugProject);
+		model.addAttribute("page", page);
+		return "modules/bug/bugProjectList";
+	}
 
-	
+	/**
+	 *
+	 * 我所有的项目列表
+	 * @return
+     */
+
+	@RequestMapping(value = "selfJson")
+	@ResponseBody
+	public List<BugProject> selfAllList(BugProject bugProject){
+		bugProject.setSelf(true);
+		return bugProjectService.findList(bugProject);
+	}
+
+	/**
+	 *
+	 * 指定项目版本列表
+	 * @return
+	 */
+	@RequestMapping(value = "findProjectVersionJson")
+	@ResponseBody
+	public List<BugVersion> findProjectVersionJson(String projectId, HttpServletRequest request, HttpServletResponse response, Model model){
+		return bugProjectService.findProjectVersionList(projectId);
+	}
 
 }

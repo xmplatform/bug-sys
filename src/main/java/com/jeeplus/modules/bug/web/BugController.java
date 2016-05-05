@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeeplus.modules.bug.util.BugStatus;
 import com.jeeplus.modules.oa.entity.TestAudit;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -79,31 +80,38 @@ public class BugController extends BaseController {
 
 		String view ="bugForm";
 
-		if(StringUtils.isNoneBlank(bug.getId())){
+		if(StringUtils.isBlank(bug.getId())){
+			bug.setBugStatus(BugStatus.NEW.getStatus());
+		}else{
 
 			// 任务编号
 			String taskDefKey=bug.getAct().getTaskDefKey();
+			bug.setBugStatus(null);
+
+			// 测试主管审核不通过,重新提交
+			if ("posterTask".equals(taskDefKey)){
+				view="bugForm";
+			}else {
+				view="bugAudit";
+			}
+
+//			else if ("testerLeadTask".equals(taskDefKey)){
+//				view="bugAudit";
+//			}
+//			else if ("developerLeadTask".equals(taskDefKey)) {
+//				view="bugAudit";
+//			}
+//			else if ("projectManagerTask".equals(taskDefKey)){
+//				view="bugAudit";
+//			}
+//			// 兑现环节
+//			else if ("apply_end".equals(taskDefKey)){
+//				view = "bugAudit";
+//			}
 
 			// bug 关闭
 			if (bug.getAct().isFinishTask()){
 				view="bugView";
-			}
-
-			// 重新打开/修改
-			else if ("modify".equals(taskDefKey)){
-				view="bugForm";
-			}else if ("testLead".equals(taskDefKey)){
-				view="bugAudit";
-			}
-			else if ("developerLead".equals(taskDefKey)) {
-				view="bugAudit";
-			}
-			else if ("projectManager".equals(taskDefKey)){
-				view="bugAudit";
-			}
-			// 兑现环节
-			else if ("apply_end".equals(taskDefKey)){
-				view = "bugAudit";
 			}
 		}
 
@@ -124,6 +132,7 @@ public class BugController extends BaseController {
 		if(!bug.getIsNewRecord()){//编辑表单保存
 			Bug t = bugService.get(bug.getId());//从数据库取出记录的值
 			MyBeanUtils.copyBeanNotNull2Bean(bug, t);//将编辑表单中的非NULL值覆盖数据库记录中的值
+
 			bugService.save(t);//保存
 		}else{//新增表单保存
 			bugService.save(bug);//保存
@@ -142,7 +151,7 @@ public class BugController extends BaseController {
 	@RequiresPermissions("oa:testAudit:edit")
 	@RequestMapping(value = "saveAudit")
 	public String saveAudit(Bug bug, Model model) {
-		if (StringUtils.isBlank(bug.getAct().getFlag())
+		if (StringUtils.isBlank(bug.getBugStatus())
 				||StringUtils.isBlank(bug.getAct().getComment())){
 			addMessage(model, "请填写审核意见。");
 			return form(bug, model);

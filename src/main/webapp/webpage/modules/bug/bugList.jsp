@@ -45,7 +45,7 @@
 		<table:sortColumn id="orderBy" name="orderBy" value="${page.orderBy}" callback="sortOrRefresh();"/><!-- 支持排序 -->
 		<div class="form-group">
 			<span>项目版本主键：</span>
-				<sys:treeselect id="bugVersion" name="bugVersion.id" value="${bug.bugVersion.id}" labelName="" labelValue="${bug.}"
+				<sys:treeselect id="bugVersion" name="bugVersion.id" value="${bug.bugVersion.id}" labelName="" labelValue="${bug.bugVersion.version}"
 					title="用户" url="/sys/office/treeData?type=3" cssClass="form-control input-sm" allowClear="true" notAllowSelectParent="true"/>
 			<span>缺陷类型（0：BUG;1:改进；2：任务；3：需求）：</span>
 				<form:select path="bugType"  class="form-control m-b">
@@ -113,9 +113,9 @@
 				<th  class="sort-column remarks">备注信息</th>
 				<th  class="sort-column file">缺陷文件</th>
 				<th  class="sort-column image">缺陷图片</th>
-				<th  class="sort-column testLeadText">测试主管意见</th>
+				<th  class="sort-column testerLeadText">测试主管意见</th>
 				<th  class="sort-column developerLeadText">开发主管意见</th>
-				<th  class="sort-column projectManager">项目经理意见</th>
+				<th  class="sort-column projectManagerText">项目经理意见</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -124,10 +124,10 @@
 			<tr>
 				<td> <input type="checkbox" id="${bug.id}" class="i-checks"></td>
 				<td><a  href="#" onclick="openDialogView('查看缺陷', '${ctx}/bug/bug/form?id=${bug.id}','800px', '500px')">
-					${bug.}
+					${bug.bugVersion.version}
 				</a></td>
 				<td>
-					${bug.}
+					${bug.bugProject.name}
 				</td>
 				<td>
 					${fns:getDictLabel(bug.bugType, 'bug_type', '')}
@@ -157,13 +157,13 @@
 					${bug.image}
 				</td>
 				<td>
-					${bug.testLeadText}
+					${bug.testerLeadText}
 				</td>
 				<td>
 					${bug.developerLeadText}
 				</td>
 				<td>
-					${bug.projectManager}
+					${bug.projectManagerText}
 				</td>
 				<td>
 					<shiro:hasPermission name="bug:bug:view">

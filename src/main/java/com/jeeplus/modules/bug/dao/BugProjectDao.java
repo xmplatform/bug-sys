@@ -20,4 +20,5 @@ public interface BugProjectDao extends CrudDao<BugProject> {
 
 
     String getName(String projectId);
+
 }

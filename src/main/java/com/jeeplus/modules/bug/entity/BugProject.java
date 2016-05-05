@@ -23,7 +23,11 @@ public class BugProject extends DataEntity<BugProject> {
 	private String summary;		// 项目简介
 	private List<BugVersion> bugVersionList = Lists.newArrayList();		// 子表列表
 	private List<User> userList=Lists.newArrayList();// 参与用户列表
-	
+
+
+	private boolean isSelf;		// 是否只查询自己的项目
+
+
 	public BugProject() {
 		super();
 	}
@@ -71,6 +75,17 @@ public class BugProject extends DataEntity<BugProject> {
 	}
 
 	public void setUserList(List<User> userList) {
+
+
 		this.userList = userList;
 	}
+
+	public boolean isSelf() {
+		return isSelf;
+	}
+
+	public void setSelf(boolean isSelf) {
+		this.isSelf = isSelf;
+	}
+
 }

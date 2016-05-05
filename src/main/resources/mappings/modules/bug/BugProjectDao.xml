@@ -39,7 +39,13 @@
 			<include refid="bugProjectColumns"/>
 		FROM bug_project a
 		<include refid="bugProjectJoins"/>
+		<!--我的项目-->
+		<if test="isSelf">
+			JOIN bug_project_user pu ON pu.project_id = a.id
+			AND pu.user_id=#{currentUser.id}
+		</if>
 		<where>
+
 			a.del_flag = #{DEL_FLAG_NORMAL}
 		</where>
 		<choose>
@@ -51,6 +57,7 @@
 			</otherwise>
 		</choose>
 	</select>
+
 
 	<!--查找用户参与的项目-->
 	<select id="findJoinList" resultType="BugProject" >

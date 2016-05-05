@@ -20,9 +20,10 @@
 		a.remarks AS "remarks",
 		a.file AS "file",
 		a.image AS "image",
-		a.testleadtext AS "testLeadText",
+		a.testerleadtext AS "testerLeadText",
 		a.developerleadtext AS "developerLeadText",
-		a.projectmanager AS "projectManager"
+		a.projectmanagertext AS "projectManagerText",
+		a.proc_ins_id
 	</sql>
 	
 	<sql id="bugJoins">
@@ -105,9 +106,9 @@
 			remarks,
 			file,
 			image,
-			testleadtext,
+			testerLeadText,
 			developerleadtext,
-			projectmanager
+			projectManagerText
 		) VALUES (
 			#{id},
 			#{bugVersion.id},
@@ -126,9 +127,9 @@
 			#{remarks},
 			#{file},
 			#{image},
-			#{testLeadText},
+			#{testerLeadText},
 			#{developerLeadText},
-			#{projectManager}
+			#{projectManagerText}
 		)
 	</insert>
 	
@@ -147,9 +148,9 @@
 			remarks = #{remarks},
 			file = #{file},
 			image = #{image},
-			testleadtext = #{testLeadText},
+			testerLeadText = #{testerLeadText},
 			developerleadtext = #{developerLeadText},
-			projectmanager = #{projectManager}
+			projectManagerText = #{projectManagerText}
 		WHERE id = #{id}
 	</update>
 	
@@ -175,9 +176,9 @@
 
 
 
-	<update id="updateTestLeadText">
+	<update id="updateTesterLeadText">
 		UPDATE bug SET
-		testLeadText = #{testLeadText},
+		testerLeadText = #{testerLeadText},
 		update_by = #{updateBy.id},
 		update_date = #{updateDate}
 		WHERE id = #{id}
