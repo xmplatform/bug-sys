@@ -178,61 +178,26 @@
 							<a id="lang-switch" class="lang-selector dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="true">
 								<span class="lang-selected">
 										<img  class="lang-flag" src="${ctxStatic}/common/img/china.png" alt="中国">
-										<span class="lang-id">中国</span>
-										<span class="lang-name">中文</span>
+										<span class="lang-id">项目</span>
+										<span class="lang-name">选择项目</span>
 									</span>
 							</a>
 
 							<!--Language selector menu-->
 							<ul class="head-list dropdown-menu with-arrow">
-								<li>
-									<!--English-->
-									<a class="lang-select">
-										<img class="lang-flag" src="${ctxStatic}/common/img/china.png" alt="中国">
-										<span class="lang-id">中国</span>
-										<span class="lang-name">中文</span>
-									</a>
-								</li>
-								<li>
-									<!--English-->
-									<a class="lang-select">
-										<img class="lang-flag" src="${ctxStatic}/common/img/united-kingdom.png" alt="English">
-										<span class="lang-id">EN</span>
-										<span class="lang-name">English</span>
-									</a>
-								</li>
-								<li>
-									<!--France-->
-									<a class="lang-select">
-										<img class="lang-flag" src="${ctxStatic}/common/img/france.png" alt="France">
-										<span class="lang-id">FR</span>
-										<span class="lang-name">Français</span>
-									</a>
-								</li>
-								<li>
-									<!--Germany-->
-									<a class="lang-select">
-										<img class="lang-flag" src="${ctxStatic}/common/img/germany.png" alt="Germany">
-										<span class="lang-id">DE</span>
-										<span class="lang-name">Deutsch</span>
-									</a>
-								</li>
-								<li>
-									<!--Italy-->
-									<a class="lang-select">
-										<img class="lang-flag" src="${ctxStatic}/common/img/italy.png" alt="Italy">
-										<span class="lang-id">IT</span>
-										<span class="lang-name">Italiano</span>
-									</a>
-								</li>
-								<li>
-									<!--Spain-->
-									<a class="lang-select">
-										<img class="lang-flag" src="${ctxStatic}/common/img/spain.png" alt="Spain">
-										<span class="lang-id">ES</span>
-										<span class="lang-name">Español</span>
-									</a>
-								</li>
+
+
+                                <c:forEach items="${projectPage.list}" var="bugProject">
+                                    <li>
+                                        <!--English-->
+                                        <a class="lang-select J_menuItem" href="${ctx}/bug/bugProject/detail?projectId=${bugProject.id}">
+                                            <img class="lang-flag" src="${ctxStatic}/common/img/china.png" alt="中国">
+                                            <span class="lang-id">${bugProject.name}</span>
+                                            <span class="lang-name">中文</span>
+                                        </a>
+                                    </li>
+                                </c:forEach>
+
 							</ul>
 						</li>
                     </ul>

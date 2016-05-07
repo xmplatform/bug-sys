@@ -49,6 +49,9 @@
 			<if test="bugVersion != null and bugVersion.id != null and bugVersion.id != ''">
 				AND a.bug_version_id = #{bugVersion.id}
 			</if>
+			<if test="bugProject != null and bugProject.id != null and bugProject.id != ''">
+				AND a.bug_project_id = #{bugProject.id}
+			</if>
 			<if test="bugType != null and bugType != ''">
 				AND a.bug_type = #{bugType}
 			</if>

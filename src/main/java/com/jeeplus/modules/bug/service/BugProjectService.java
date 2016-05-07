@@ -3,13 +3,14 @@
  */
 package com.jeeplus.modules.bug.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.jeeplus.modules.oa.entity.OaNotify;
-import com.jeeplus.modules.sys.entity.Role;
-import com.jeeplus.modules.sys.entity.User;
+import com.jeeplus.modules.bug.bean.StatusBug;
+import com.jeeplus.modules.bug.util.BugStatus;
+import com.jeeplus.modules.bug.bean.Charts;
+import com.jeeplus.modules.bug.util.Total;
 import com.jeeplus.modules.sys.service.SystemService;
-import com.jeeplus.modules.sys.utils.UserUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -90,5 +91,61 @@ public class BugProjectService extends CrudService<BugProjectDao, BugProject> {
 	public List<BugVersion> findProjectVersionList(String projectId) {
 
 		return bugVersionDao.findList(new BugVersion(new BugProject(projectId)));
+	}
+
+	public List<List<StatusBug>> totalBugStatusNum(String projectId) {
+
+
+		List<List<StatusBug>> totalList=new ArrayList<List<StatusBug>>();
+
+		StatusBug statusBug=new StatusBug();
+		statusBug.setProjectId(projectId);
+
+
+		// 新建
+		statusBug.setBugStatus(BugStatus.NEW.getStatus());
+		List<StatusBug> statusBugsNEW = dao.totalBugStatusNum(statusBug);
+		totalList.add(statusBugsNEW);
+		// 重开
+		statusBug.setBugStatus(BugStatus.REOPEN.getStatus());
+		List<StatusBug> statusBugsREOPEN = dao.totalBugStatusNum(statusBug);
+		totalList.add(statusBugsREOPEN);
+		// 待测试
+		statusBug.setBugStatus(BugStatus.RETEST.getStatus());
+		List<StatusBug> statusBugsRETEST=dao.totalBugStatusNum(statusBug);
+		totalList.add(statusBugsRETEST);
+		// 暂缓
+		statusBug.setBugStatus(BugStatus.DEFERRED.getStatus());
+		List<StatusBug> statusBugsDEFERRED=dao.totalBugStatusNum(statusBug);
+		totalList.add(statusBugsDEFERRED);
+		// 不解决
+		statusBug.setBugStatus(BugStatus.REJECTED_NOT_BUG.getStatus());
+		List<StatusBug> statusBugsREJECTED=dao.totalBugStatusNum(statusBug);
+		totalList.add(statusBugsRETEST);
+		// 已修复
+		statusBug.setBugStatus(BugStatus.FIXED.getStatus());
+		List<StatusBug> statusBugsFIXED=dao.totalBugStatusNum(statusBug);
+		totalList.add(statusBugsDEFERRED);
+
+
+		return totalList;
+	}
+
+	public List<Charts> getProjectStatus(String projectId) {
+
+		List<Charts> chartses = Total.showBugStatus();
+		int size= chartses.size();
+
+		for (int i = 0; i <size; i++) {
+			Charts charts = chartses.get(i);
+			charts.setProjectId(projectId);
+			Charts dbCharts=dao.totalBugStatus(charts);
+			charts.setValue(dbCharts.getValue());
+		}
+
+
+		return chartses;
+
+
 	}
 }

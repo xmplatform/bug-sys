@@ -8,6 +8,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeeplus.modules.bug.entity.BugProject;
 import com.jeeplus.modules.bug.util.BugStatus;
 import com.jeeplus.modules.oa.entity.TestAudit;
 import org.apache.shiro.authz.annotation.Logical;
@@ -65,6 +66,17 @@ public class BugController extends BaseController {
 	@RequestMapping(value = {"list", ""})
 	public String list(Bug bug, HttpServletRequest request, HttpServletResponse response, Model model) {
 		Page<Bug> page = bugService.findPage(new Page<Bug>(request, response), bug); 
+		model.addAttribute("page", page);
+		return "modules/bug/bugList";
+	}
+
+	@RequestMapping(value = "statusList")
+	public String statusList(String projectId,String statusPhrase,HttpServletRequest request,HttpServletResponse response,Model model){
+
+		Bug bug=new Bug();
+		bug.setBugProject(new BugProject(projectId));
+		bug.setBugStatus(BugStatus.statusOf(statusPhrase).getStatus());
+		Page<Bug> page = bugService.findPage(new Page<Bug>(request, response), bug);
 		model.addAttribute("page", page);
 		return "modules/bug/bugList";
 	}
@@ -150,12 +162,15 @@ public class BugController extends BaseController {
 	 */
 	@RequiresPermissions("oa:testAudit:edit")
 	@RequestMapping(value = "saveAudit")
-	public String saveAudit(Bug bug, Model model) {
+	public String saveAudit(Bug bug, Model model) throws Exception {
 		if (StringUtils.isBlank(bug.getBugStatus())
 				||StringUtils.isBlank(bug.getAct().getComment())){
 			addMessage(model, "请填写审核意见。");
 			return form(bug, model);
 		}
+		Bug t = bugService.get(bug.getId());//从数据库取出记录的值
+		MyBeanUtils.copyBeanNotNull2Bean(bug, t);//将编辑表单中的非NULL值覆盖数据库记录中的值
+
 		bugService.auditSave(bug);
 		return "redirect:" + adminPath + "/act/task/todo/";
 	}

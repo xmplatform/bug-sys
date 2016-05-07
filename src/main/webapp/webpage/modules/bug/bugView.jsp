@@ -2,7 +2,7 @@
 <%@ include file="/webpage/include/taglib.jsp"%>
 <html>
 <head>
-	<title>bug 审核管理</title>
+	<title>审批管理</title>
 	<meta name="decorator" content="default"/>
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -28,16 +28,9 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/oa/testAudit/">审批列表</a></li>
-		<li class="active"><a href="#"><shiro:hasPermission name="oa:testAudit:edit">${testAudit.act.taskName}</shiro:hasPermission><shiro:lacksPermission name="oa:testAudit:edit">查看</shiro:lacksPermission></a></li>
+		<li class="active"><a href="${ctx}/oa/testAudit/form/?procInsId=${testAudit.procInsId}">审批详情</a></li>
 	</ul>
-	<form:form id="inputForm" modelAttribute="bug" action="${ctx}/bug/bug/saveAudit" method="post" class="form-horizontal">
-		<form:hidden path="id"/>
-		<form:hidden path="act.taskId"/>
-		<form:hidden path="act.taskName"/>
-		<form:hidden path="act.taskDefKey" id="taskDefKey"/>
-		<form:hidden path="act.procInsId"/>
-		<form:hidden path="act.procDefId"/>
-		<form:hidden id="flag" path="act.flag"/>
+	<form:form class="form-horizontal">
 		<sys:message content="${message}"/>
 		<fieldset>
 			<legend>${bug.act.taskName}</legend>
@@ -54,11 +47,7 @@
 				<tr>
 					<td class="tit">缺陷优先级${bug.bugLevel}</td>
 					<td colspan="5">
-
-						<form:select path="bugLevel" class="form-control required" >
-							<form:option value="" label=""/>
-							<form:options items="${fns:getDictList('bug_level')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-						</form:select>
+							${bug.bugLevel}
 					</td>
 
 				</tr>
@@ -92,49 +81,21 @@
 				<tr>
 					<td class="tit">项目经理意见</td>
 					<td colspan="5">
-						${bug.projectManagerText}
+							${bug.projectManagerText}
 					</td>
 				</tr>
 				<tr>
 					<td class="tit">开发主管意见</td>
 					<td colspan="5">
-						${bug.developerLeadText}
-					</td>
-				</tr>
-
-				<tr>
-					<td class="tit">您的看法(${bug.act.taskDefKey})</td>
-					<td colspan="5" >
-						<form:select path="bugStatus" class="form-control required" >
-							<form:option value="" label=""/>
-							<form:options items="${fns:getDictList(bug.act.taskDefKey)}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-						</form:select>
-					</td>
-				</tr>
-
-				<tr>
-					<td class="tit">原因</td>
-					<td colspan="5">
-						<form:textarea path="act.comment" class="required" rows="5" maxlength="20" cssStyle="width:500px"/>
+							${bug.developerLeadText}
 					</td>
 				</tr>
 			</table>
 		</fieldset>
+		<act:histoicFlow procInsId="${bug.act.procInsId}" />
 		<div class="form-actions">
-			<shiro:hasPermission name="bug:bug:edit">
-				<%--<c:if test="${bug.act.taskDefKey eq 'testerTask'}">--%>
-					<%--<input id="btnSubmit" class="btn btn-primary" type="submit" value="兑 现" onclick="$('#flag').val('yes')"/>&nbsp;--%>
-				<%--</c:if>--%>
-				<%--<c:if test="${testAudit.act.taskDefKey ne 'apply_end'}">--%>
-					<%--<input id="btnSubmit" class="btn btn-primary" type="submit" value="同 意" onclick="$('#flag').val('yes')"/>&nbsp;--%>
-					<%--<input id="btnSubmit" class="btn btn-inverse" type="submit" value="驳 回" onclick="$('#flag').val('no')"/>&nbsp;--%>
-
-
-				<input id="btnSubmit" class="btn btn-primary" type="submit"  value="确认"/>
-			</shiro:hasPermission>
 			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
 		</div>
-		<act:histoicFlow procInsId="${bug.act.procInsId}"/>
 	</form:form>
 </body>
 </html>

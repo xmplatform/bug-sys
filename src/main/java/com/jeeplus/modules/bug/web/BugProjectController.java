@@ -4,22 +4,20 @@
 package com.jeeplus.modules.bug.web;
 
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.google.common.collect.Maps;
 import com.jeeplus.common.utils.Collections3;
+import com.jeeplus.modules.bug.bean.Json;
+import com.jeeplus.modules.bug.bean.StatusBug;
 import com.jeeplus.modules.bug.entity.Bug;
 import com.jeeplus.modules.bug.entity.BugVersion;
-import com.jeeplus.modules.oa.entity.OaNotify;
-import com.jeeplus.modules.sys.entity.Office;
-import com.jeeplus.modules.sys.entity.Role;
+import com.jeeplus.modules.bug.bean.Charts;
 import com.jeeplus.modules.sys.entity.User;
 import com.jeeplus.modules.sys.service.OfficeService;
 import com.jeeplus.modules.sys.service.SystemService;
-import com.jeeplus.modules.sys.utils.UserUtils;
+import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -215,7 +213,7 @@ public class BugProjectController extends BaseController {
 	/**
 	 * 分配用户 -- 从项目中移除用户
 	 * @param userId
-	 * @param roleId
+	 * @param projectId
 	 * @param redirectAttributes
 	 * @return
 	 */
@@ -256,7 +254,7 @@ public class BugProjectController extends BaseController {
 
 	/**
 	 * 选择用户:确认分配
-	 * @param role
+	 * @param bugProject
 	 * @param idsArr
 	 * @param redirectAttributes
 	 * @return
@@ -309,5 +307,59 @@ public class BugProjectController extends BaseController {
 	public List<BugVersion> findProjectVersionJson(String projectId, HttpServletRequest request, HttpServletResponse response, Model model){
 		return bugProjectService.findProjectVersionList(projectId);
 	}
+
+	/**
+	 * 根据 projectId 返回 bug 所有详细信息.
+	 * 统计
+	 * @param projectId
+	 * @return
+     */
+	@RequestMapping(value = "detail")
+	public String projectBugDetail(String projectId,Model model){
+
+
+		BugProject bugProject = bugProjectService.get(projectId);
+
+		//总计 count ,type
+		//List<List<StatusBug>> totalList = bugProjectService.totalBugStatusNum(projectId);
+
+
+
+		//新建
+		//List<StatusBug> new
+
+		//重开
+
+		//解决
+
+		//不解决 2e22d9691f684bfd863a107ae222398d
+
+		//已关闭
+		//model.addAllAttributes(totalList);
+		model.addAttribute(bugProject);
+
+		return "modules/bug/projectDetail";
+	}
+
+	@RequestMapping(value = "projectStatus",method = RequestMethod.GET)
+	@ResponseBody
+	public Json getProjectStatus(String projectId,Model model){
+
+		Json json=new Json();
+		try {
+
+			List<Charts> data=bugProjectService.getProjectStatus(projectId);
+			json.setMsg("加载项目状态成功");
+			json.setSuccess(true);
+			json.setData(data);
+		}catch (Exception e){
+			json.setMsg(e.getMessage());
+		}
+
+		return json;
+	}
+
+
+
 
 }

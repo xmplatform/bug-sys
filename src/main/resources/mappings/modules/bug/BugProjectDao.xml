@@ -146,4 +146,36 @@
 	<select id="findUniqueByProperty" resultType="BugProject" statementType="STATEMENT">
 		select * FROM bug_project  where ${propertyName} = '${value}'
 	</select>
+
+	<!--select b.id,b.bug_status as bugStatus,count(b.id) as newNum-->
+	<!--from bug b-->
+	<!--where b.bug_project_id=#{projectId}-->
+	<!--GROUP BY b.bug_status ;-->
+	<!--查询7天内指定 Bug 类型的数量-->
+	<select id="totalBugStatusNum" resultType="StatusBug">
+
+		select
+				b.bug_project_id as projectId,
+				date_format(b.update_date,'%Y-%m-%d') as 'dateStr',
+				count(id) as 'num',
+				b.bug_status as 'bugStatus'
+		from bug b
+		where date_format(b.update_date,'%Y-%m-%d')>=DATE_FORMAT(DATE_ADD(sysdate(),INTERVAL -6 day),'%Y-%m-%d')
+		and b.bug_status=#{bugStatus}
+		and b.bug_project_id=#{projectId}
+		group by date_format(b.update_date,'%Y-%m-%d')
+
+	</select>
+
+	<select id="totalBugStatus" resultType="Charts">
+
+		select count(id) as value
+		from bug b
+		WHERE b.bug_project_id=#{projectId}
+		AND b.bug_status=#{status}
+	</select>
+	<!--select count(*),DATE_FORMAT(a.insert_time,'%e') as e from table a-->
+	<!--where DATE_FORMAT(a.insert_time,'%m')='08'-->
+	<!--group by e-->
+
 </mapper>

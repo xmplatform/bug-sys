@@ -10,6 +10,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.jeeplus.modules.bug.entity.BugProject;
+import com.jeeplus.modules.bug.service.BugProjectService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -59,6 +61,9 @@ public class LoginController extends BaseController{
 	
 	@Autowired
 	private MailBoxService mailBoxService;
+
+	@Autowired
+	private BugProjectService bugProjectService;
 	
 	
 	/**
@@ -254,6 +259,13 @@ public class LoginController extends BaseController{
 		Page<MailBox> mailPage = mailBoxService.findPage(new MailPage<MailBox>(request, response), mailBox); 
 		request.setAttribute("noReadCount", mailBoxService.getCount(mailBox));
 		request.setAttribute("mailPage", mailPage);
+
+		//项目
+		BugProject bugProject=new BugProject();
+		bugProject.setSelf(true);
+		Page<BugProject> projectPage = bugProjectService.find(new Page<BugProject>(request, response), bugProject);
+		request.setAttribute("projectPage", projectPage);
+
 		// 默认风格
 		String indexStyle = "default";
 		Cookie[] cookies = request.getCookies();

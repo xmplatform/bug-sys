@@ -102,7 +102,7 @@
 								<%--<form:options items="" itemLabel="label" itemValue="value" htmlEscape="false"/>--%>
 							<%--</form:select>--%>
 
-							<select id='project' class="form-control required"><option>---项目---</option></select>
+							<select name="bugProject.id"  id='project' class="form-control required"><option>---项目---</option></select>
 					</td>
 					<td class="width-15 active"><label class="pull-right">项目版本主键：</label></td>
 					<td class="width-35">
@@ -113,7 +113,7 @@
 								<%--<form:options items="${fns:getProjectVersionList('bug_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>--%>
 							<%--</form:select>--%>
 
-							<select id='version' class="form-control required"><option>---版本---</option></select>
+							<select name="bugVersion.id" id='version' class="form-control required"><option>---版本---</option></select>
 
 					</td>
 
@@ -130,7 +130,7 @@
 					<td class="width-35">
 						<form:select path="bugStatus" class="form-control required">
 							<form:option value="" label=""/>
-							<form:options items="${fns:getDictList('bug_status')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+							<form:options items="${fns:getDictList('poster_task')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 						</form:select>
 					</td>
 				</tr>

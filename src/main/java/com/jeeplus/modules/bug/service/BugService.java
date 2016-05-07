@@ -90,40 +90,41 @@ public class BugService extends CrudService<BugDao, Bug> {
 	public void auditSave(Bug bug) {
 
 		String currentStatus=bug.getBugStatus();
-		BugStatus bugStatus = BugStatus.reasonPhraseOf(currentStatus);
 
 		// 设置意见
-		bug.getAct().setComment(bugStatus.getReasonPhrase()+bug.getAct().getComment());
+		bug.getAct().setComment(BugStatus.reasonPhraseOf(currentStatus)+bug.getAct().getComment());
 
 		bug.preUpdate();
+
+		dao.update(bug);
 
 		// 对不同环节的业务逻辑进行操作
 		String taskDefKey = bug.getAct().getTaskDefKey();
 
-		// 审核环节
-		if ("audit".equals(taskDefKey)){
-
-		}
-		else if ("testerLeadTask".equals(taskDefKey)){
-			bug.setTesterLeadText(bug.getAct().getComment());
-			dao.updateTesterLeadText(bug);
-		}
-		else if ("developerLeadTask".equals(taskDefKey)){
-			bug.setDeveloperLeadText(bug.getAct().getComment());
-			dao.updateDeveloperLeadText(bug);
-		}
-		else if ("projectManagerTask".equals(taskDefKey)){
-			bug.setProjectManager(bug.getAct().getComment());
-			dao.updateProjectManagerText(bug);
-		}
-		else if ("apply_end".equals(taskDefKey)){
-
-		}
-
-		// 未知环节，直接返回
-		else{
-			return;
-		}
+//		// 审核环节
+//		if ("audit".equals(taskDefKey)){
+//
+//		}
+//		else if ("testerLead_task".equals(taskDefKey)){
+//			bug.setTesterLeadText(bug.getAct().getComment());
+//			dao.updateTesterLeadText(bug);
+//		}
+//		else if ("developerLead_task".equals(taskDefKey)){
+//			bug.setDeveloperLeadText(bug.getAct().getComment());
+//			dao.updateDeveloperLeadText(bug);
+//		}
+//		else if ("projectManager_task".equals(taskDefKey)){
+//			bug.setProjectManager(bug.getAct().getComment());
+//			dao.updateProjectManagerText(bug);
+//		}
+//		else if ("apply_end".equals(taskDefKey)){
+//
+//		}
+//
+//		// 未知环节，直接返回
+//		else{
+//			return;
+//		}
 
 		// 提交流程任务
 		Map<String, Object> vars = Maps.newHashMap();

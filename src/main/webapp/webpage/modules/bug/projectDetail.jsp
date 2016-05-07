@@ -11,6 +11,7 @@
 	</script>
 </head>
 <body class="gray-bg">
+
   <%--<div class="row">--%>
   		 <%--<div class="sidebard-panel col-lg-4 col-md-3">--%>
                 <%--<div>--%>
@@ -105,9 +106,9 @@
                                             <br/>
                                             All sales: 162,862
                                         </span>
-                                        <h1 class="m-b-xs">$ 50,992</h1>
+                                        <h1 class="m-b-xs">$ 50,992()</h1>
                                         <h3 class="font-bold no-margins">
-                                            Half-year revenue margin
+                                            Half-year revenue margin(7天内的bug)
                                         </h3>
                                         <small>Sales marketing.</small>
                                     </div>
@@ -134,25 +135,6 @@
 
                 <div class="row">
 
-
-
-
-                    <div class="col-lg-4 col-md-4">
-                        <div class="ibox float-e-margins">
-                            <div class="ibox-title">
-                                <span class="label label-primary pull-right">Today</span>
-                                <h5>Vistits</h5>
-                            </div>
-                            <div class="ibox-content">
-                                <h1 class="no-margins">22 285,400</h1>
-                                <div class="stat-percent font-bold text-navy">20% <i class="fa fa-level-up"></i></div>
-                                <small>New orders</small>
-                            </div>
-                        </div>
-                    </div>
-
-
-
                     <div class="col-lg-4 col-md-4">
                         <div class="ibox float-e-margins">
                             <div class="ibox-title">
@@ -166,6 +148,10 @@
                             </div>
                         </div>
                     </div>
+
+
+
+
                     <div class="col-lg-4 col-md-4">
                         <div class="ibox float-e-margins">
                             <div class="ibox-title">
@@ -179,7 +165,45 @@
                             </div>
                         </div>
                     </div>
+
+
+
+
                 </div>
+                 <div class="row">
+
+                     <div class="col-lg-6 col-md-6 ">
+                         <div class="ibox float-e-margins">
+                             <div class="ibox float-e-margins">
+                                 <div class="ibox-title">
+                                     <h5>应用状态</h5>
+
+                                     <div ibox-tools></div>
+                                 </div>
+                                 <div class="ibox-content">
+                                     <div>
+                                         <canvas id="projectStatusChart" height="140"></canvas>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                     <div class="col-lg-6 col-md-6 ">
+                         <div class="ibox float-e-margins">
+                             <div class="ibox-title">
+                                 <h5>我的任务</h5>
+
+                                 <div ibox-tools></div>
+                             </div>
+                             <div class="ibox-content">
+                                 <div>
+                                     <%--<canvas id="projectStatusChart" height="140"></canvas>--%>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+
+                 </div>
 
                 <div class="row">
                 <div class="col-lg-6 col-md-6">
@@ -406,16 +430,43 @@
     <script src="${ctxStatic}/js/demo/sparkline-demo.js"></script>
 
     <!-- ChartJS-->
-    <script src="${ctxStatic}/js/plugins/chartJs/Chart.min.js"></script>
+    <script src="${ctxStatic}/js/plugins/chartJs/Chart.js"></script>
 
     <script>
         $(document).ready(function() {
+
+
+
+            <%--var data={--%>
+                <%--"projectId":${bugProject.id}--%>
+            <%--}--%>
+
+
+
+            <%--$.post("${ctx}/bug/bugProject/projectStatus",data,function (json) {--%>
+//                if(json.isSuccess){
+//
+//                   new Chart(ctx).Doughnut(json.data, projectStatusOpt);
+//                }
+//
+//                console.info(json.msg);
+
+            <%--},"json");--%>
+
+            // 初始化 图表 projectDetail.js
+           initProjectData2("${ctx}","${bugProject.id}");
+
+
+
+
+
+
 
             var lineData = {
                 labels: ["January", "February", "March", "April", "May", "June", "July"],
                 datasets: [
                     {
-                        label: "Example dataset",
+                        label: "RENEW",
                         fillColor: "rgba(220,220,220,0.5)",
                         strokeColor: "rgba(220,220,220,1)",
                         pointColor: "rgba(220,220,220,1)",
@@ -425,7 +476,34 @@
                         data: [65, 59, 80, 81, 56, 55, 40]
                     },
                     {
-                        label: "Example dataset",
+                        label: "New",
+                        fillColor: "rgba(26,179,148,0.5)",
+                        strokeColor: "rgba(26,179,148,0.7)",
+                        pointColor: "rgba(26,179,148,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(26,179,148,1)",
+                        data: [28, 48, 40, 19, 86, 27, 90]
+                    }
+                ]
+            };
+
+
+            var statusData = {
+                labels:[${labels}],
+                datasets: [
+                    {
+                        label: "RENEW",
+                        fillColor: "rgba(220,220,220,0.5)",
+                        strokeColor: "rgba(220,220,220,1)",
+                        pointColor: "rgba(220,220,220,1)",
+                        pointStrokeColor: "#fff",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(220,220,220,1)",
+                        data: [65, 59, 80, 81, 56, 55, 40]
+                    },
+                    {
+                        label: "New",
                         fillColor: "rgba(26,179,148,0.5)",
                         strokeColor: "rgba(26,179,148,0.7)",
                         pointColor: "rgba(26,179,148,1)",
@@ -457,7 +535,12 @@
             var ctx = document.getElementById("lineChart").getContext("2d");
             var myNewChart = new Chart(ctx).Line(lineData, lineOptions);
 
+
+
         });
+
     </script>
+
+<script type="application/javascript" src="${ctxStatic}/modules/bug/projectDetail.js"></script>
 </body>
 </html>

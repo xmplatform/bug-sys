@@ -42,6 +42,9 @@
 	<!-- 类型别名 -->
 	<typeAliases>
 		<typeAlias alias="Page" type="com.jeeplus.common.persistence.Page" /><!--分页  -->
+		<typeAlias alias="StatusBug" type="com.jeeplus.modules.bug.bean.StatusBug" /><!--简单bug  -->
+		<typeAlias alias="Charts" type="com.jeeplus.modules.bug.bean.Charts"></typeAlias>
+
 	</typeAliases>
 	
 	<!-- 插件配置 -->

@@ -94,7 +94,7 @@ public class ActTaskService extends BaseService {
 		
 		List<Act> result = new ArrayList<Act>();
 		
-		// =============== 已经签收的任务  ===============
+		// =============== 直接分配给当前人或是已经签收的任务  ===============
 		TaskQuery todoTaskQuery = taskService.createTaskQuery().taskAssignee(userId).active()
 				.includeProcessVariables().orderByTaskCreateTime().desc();
 		
