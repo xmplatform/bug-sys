@@ -8,7 +8,7 @@
 	<description>Activiti Configuration</description>
 	
     <!-- 加载配置属性文件 -->
-	<context:property-placeholder ignore-unresolvable="true" location="classpath:jeeplus.properties" />
+	<context:property-placeholder ignore-unresolvable="true" location="classpath:bug.properties" />
 	
 	<!-- Activiti begin -->
 	<bean id="processEngineConfiguration" class="org.activiti.spring.SpringProcessEngineConfiguration">
@@ -42,8 +42,8 @@
         <!-- 自定义用户权限 -->
         <property name="customSessionFactories"> 
             <list>
-				<bean class="com.jeeplus.modules.act.service.ext.ActUserEntityServiceFactory"/>
-				<bean class="com.jeeplus.modules.act.service.ext.ActGroupEntityServiceFactory"/>
+				<bean class="cn.gx.modules.act.service.ext.ActUserEntityServiceFactory"/>
+				<bean class="cn.gx.modules.act.service.ext.ActGroupEntityServiceFactory"/>
             </list>
     	</property>
 
@@ -55,10 +55,10 @@
                   <bean class="org.activiti.rest.form.ProcessDefinitionFormType"/>
                   <bean class="org.activiti.rest.form.MonthFormType"/>  -->
 
-				<bean class="com.jeeplus.modules.act.utils.form.BigtextFormType" />
-				<bean class="com.jeeplus.modules.act.utils.form.DoubleFormType"/>
-				<bean class="com.jeeplus.modules.act.utils.form.JavascriptFormType" />
-				<bean class="com.jeeplus.modules.act.utils.form.UsersFormType" />
+				<bean class="cn.gx.modules.act.utils.form.BigtextFormType" />
+				<bean class="cn.gx.modules.act.utils.form.DoubleFormType"/>
+				<bean class="cn.gx.modules.act.utils.form.JavascriptFormType" />
+				<bean class="cn.gx.modules.act.utils.form.UsersFormType" />
 			</list>
 		</property>
 
@@ -66,7 +66,7 @@
 		<!-- 自定义表单引擎 -->
 		<property name="customFormEngines">
 			<list>
-				<bean class="com.jeeplus.modules.act.utils.form.MyFormEngine" />
+				<bean class="cn.gx.modules.act.utils.form.MyFormEngine" />
 			</list>
 		</property>
 

@@ -119,14 +119,14 @@
 
 				</tr>
 				<tr>
-					<td class="width-15 active"><label class="pull-right"><font color="red">*</font>缺陷类型（0：BUG;1:改进；2：任务；3：需求）：</label></td>
+					<td class="width-15 active"><label class="pull-right"><font color="red">*</font>缺陷类型：</label></td>
 					<td class="width-35">
 						<form:select path="bugType" class="form-control required">
 							<form:option value="" label=""/>
 							<form:options items="${fns:getDictList('bug_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 						</form:select>
 					</td>
-					<td class="width-15 active"><label class="pull-right"><font color="red">*</font>缺陷状态（0：新建；1：进行中；2：重开；3：已解决；4：暂缓；5：不解决；6：已关闭）：</label></td>
+					<td class="width-15 active"><label class="pull-right"><font color="red">*</font>缺陷状态：</label></td>
 					<td class="width-35">
 						<form:select path="bugStatus" class="form-control required">
 							<form:option value="" label=""/>
@@ -135,7 +135,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td class="width-15 active"><label class="pull-right"><font color="red">*</font>缺陷优先级（0：低；1：普通；2：高；3：紧急）：</label></td>
+					<td class="width-15 active"><label class="pull-right"><font color="red">*</font>缺陷优先级：</label></td>
 					<td class="width-35">
 						<form:select path="bugLevel" class="form-control required">
 							<form:option value="" label=""/>

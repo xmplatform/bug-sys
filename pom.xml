@@ -650,7 +650,7 @@
 
     <!-- 自定义jar依赖包
     <dependency>
-        <groupId>com.jeeplus</groupId>
+        <groupId>cn.gx</groupId>
         <artifactId>test-core</artifactId>
         <version>1.0</version>
         <scope>system</scope>

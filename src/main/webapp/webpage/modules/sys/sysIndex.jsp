@@ -193,7 +193,7 @@
                                         <a class="lang-select J_menuItem" href="${ctx}/bug/bugProject/detail?projectId=${bugProject.id}">
                                             <img class="lang-flag" src="${ctxStatic}/common/img/china.png" alt="中国">
                                             <span class="lang-id">${bugProject.name}</span>
-                                            <span class="lang-name">中文</span>
+                                            <span class="lang-name"></span>
                                         </a>
                                     </li>
                                 </c:forEach>

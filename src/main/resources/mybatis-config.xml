@@ -41,15 +41,15 @@
 	
 	<!-- 类型别名 -->
 	<typeAliases>
-		<typeAlias alias="Page" type="com.jeeplus.common.persistence.Page" /><!--分页  -->
-		<typeAlias alias="StatusBug" type="com.jeeplus.modules.bug.bean.StatusBug" /><!--简单bug  -->
-		<typeAlias alias="Charts" type="com.jeeplus.modules.bug.bean.Charts"></typeAlias>
+		<typeAlias alias="Page" type="cn.gx.common.persistence.Page" /><!--分页  -->
+		<typeAlias alias="StatusBug" type="cn.gx.modules.bug.bean.StatusBug" /><!--简单bug  -->
+		<typeAlias alias="Charts" type="cn.gx.modules.bug.bean.Charts"></typeAlias>
 
 	</typeAliases>
 	
 	<!-- 插件配置 -->
 	<plugins>
-		<plugin interceptor="com.jeeplus.common.persistence.interceptor.PaginationInterceptor" />
+		<plugin interceptor="cn.gx.common.persistence.interceptor.PaginationInterceptor" />
     </plugins>
 	
 </configuration>

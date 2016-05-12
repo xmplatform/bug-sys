@@ -1,6 +1,6 @@
 
-import com.jeeplus.modules.bug.bean.StatusBug;
-import com.jeeplus.modules.bug.service.BugProjectService;
+import cn.gx.modules.bug.bean.StatusBug;
+import cn.gx.modules.bug.service.BugProjectService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

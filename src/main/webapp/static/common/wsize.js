@@ -1,8 +1,8 @@
 /*!
- * Copyright &copy; 2015-2020 <a href="http://www.jeeplus.org/">JeePlus</a> All rights reserved.
+ * Copyright &copy; 2015-2020 <a href="http://www.bug.org/">JeePlus</a> All rights reserved.
  * 
  * 主框架窗口大小调整
- * @author jeeplus
+ * @author bug
  * @version 2013-11-09
  */
 

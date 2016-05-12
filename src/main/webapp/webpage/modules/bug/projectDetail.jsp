@@ -133,43 +133,58 @@
                 </div>
 
 
-                <div class="row">
 
-                    <div class="col-lg-4 col-md-4">
-                        <div class="ibox float-e-margins">
-                            <div class="ibox-title">
-                                <span class="label label-info pull-right">Monthly</span>
-                                <h5>Orders</h5>
-                            </div>
-                            <div class="ibox-content">
-                                <h1 class="no-margins">60 420,600</h1>
-                                <div class="stat-percent font-bold text-info">40% <i class="fa fa-level-up"></i></div>
-                                <small>New orders</small>
-                            </div>
-                        </div>
-                    </div>
+                 <!--我的任务-->
+                 <div class="row">
 
 
 
 
-                    <div class="col-lg-4 col-md-4">
-                        <div class="ibox float-e-margins">
-                            <div class="ibox-title">
-                                <span class="label label-warning pull-right">Annual</span>
-                                <h5>Income</h5>
-                            </div>
-                            <div class="ibox-content">
-                                <h1 class="no-margins">$ 120 430,800</h1>
-                                <div class="stat-percent font-bold text-warning">16% <i class="fa fa-level-up"></i></div>
-                                <small>New orders</small>
-                            </div>
-                        </div>
-                    </div>
+                     <div class="col-lg-4 col-md-4">
+                         <div class="ibox float-e-margins">
+                             <div class="ibox-title">
+                                 <span class="label label-primary pull-right">Today</span>
+                                 <h5>指派给你的</h5>
+                             </div>
+                             <div class="ibox-content">
+                                 <h1 class="no-margins">5</h1>
+                                 <div class="stat-percent font-bold text-navy">20% <i class="fa fa-level-up"></i></div>
+                                 <small>指派给你的 bug </small>
+                             </div>
+                         </div>
+                     </div>
 
 
 
+                     <div class="col-lg-4 col-md-4">
+                         <div class="ibox float-e-margins">
+                             <div class="ibox-title">
+                                 <span class="label label-info pull-right">Monthly</span>
+                                 <h5>你提交的</h5>
+                             </div>
+                             <div class="ibox-content">
+                                 <h1 class="no-margins">60 420,600</h1>
+                                 <div class="stat-percent font-bold text-info">40% <i class="fa fa-level-up"></i></div>
+                                 <small>New orders</small>
+                             </div>
+                         </div>
+                     </div>
+                     <div class="col-lg-4 col-md-4">
+                         <div class="ibox float-e-margins">
+                             <div class="ibox-title">
+                                 <span class="label label-warning pull-right">Annual</span>
+                                 <h5>你追踪的</h5>
+                             </div>
+                             <div class="ibox-content">
+                                 <h1 class="no-margins">$ 120 430,800</h1>
+                                 <div class="stat-percent font-bold text-warning">16% <i class="fa fa-level-up"></i></div>
+                                 <small>New orders</small>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
 
-                </div>
+
                  <div class="row">
 
                      <div class="col-lg-6 col-md-6 ">
@@ -188,16 +203,20 @@
                              </div>
                          </div>
                      </div>
+
+
                      <div class="col-lg-6 col-md-6 ">
                          <div class="ibox float-e-margins">
-                             <div class="ibox-title">
-                                 <h5>我的任务</h5>
+                             <div class="ibox float-e-margins">
+                                 <div class="ibox-title">
+                                     <h5>应用信息</h5>
 
-                                 <div ibox-tools></div>
-                             </div>
-                             <div class="ibox-content">
-                                 <div>
-                                     <%--<canvas id="projectStatusChart" height="140"></canvas>--%>
+                                     <div ibox-tools></div>
+                                 </div>
+                                 <div class="ibox-content">
+                                     <div>
+
+                                     </div>
                                  </div>
                              </div>
                          </div>

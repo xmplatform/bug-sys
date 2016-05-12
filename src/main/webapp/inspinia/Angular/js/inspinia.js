@@ -8,7 +8,7 @@
 $(document).ready(function () {
 
     // Append config box / Only for demo purpose
-    //$.get("views/jeeplus.html", function (data) {
+    //$.get("views/bug.html", function (data) {
     //    $('body').append(data);
     //});
 

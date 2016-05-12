@@ -92,8 +92,8 @@ $(document).ready(function () {
 
     // Append config box / Only for demo purpose
     // Uncomment on server mode to enable XHR calls
-    $.get("jeeplus.html", function (data) {
-        if (!$('body').hasClass('no-jeeplus'))
+    $.get("bug.html", function (data) {
+        if (!$('body').hasClass('no-bug'))
             $('body').append(data);
     });
 

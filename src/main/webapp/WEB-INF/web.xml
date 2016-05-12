@@ -1,20 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
   <display-name>JeePlus</display-name>
+
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>classpath:spring-context*.xml</param-value>
   </context-param>
+
   <listener>
-    <listener-class>com.jeeplus.modules.sys.listener.WebContextListener</listener-class>
+    <listener-class>cn.gx.modules.sys.listener.WebContextListener</listener-class>
   </listener>
   <listener>
     <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
   </listener>
+
   <filter>
     <filter-name>startFilter</filter-name>
-    <filter-class>com.jeeplus.common.websocket.WebSockertFilter</filter-class>
+    <filter-class>cn.gx.common.websocket.WebSockertFilter</filter-class>
   </filter>
+
   <filter>
     <filter-name>encodingFilter</filter-name>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -31,6 +35,7 @@
     <filter-name>encodingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+
   <filter>
     <filter-name>shiroFilter</filter-name>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -43,6 +48,7 @@
     <filter-name>shiroFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
+
   <filter>
     <filter-name>sitemeshFilter</filter-name>
     <filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
@@ -55,6 +61,8 @@
     <filter-name>sitemeshFilter</filter-name>
     <url-pattern>/f/*</url-pattern>
   </filter-mapping>
+
+
   <servlet>
     <servlet-name>springServlet</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -73,7 +81,7 @@
     <servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
     <init-param>
       <param-name>org.restlet.application</param-name>
-      <param-value>com.jeeplus.modules.act.rest.ActRestApplication</param-value>
+      <param-value>cn.gx.modules.act.rest.ActRestApplication</param-value>
     </init-param>
   </servlet>
   <servlet-mapping>
@@ -94,7 +102,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>CKFinderConnectorServlet</servlet-name>
-    <servlet-class>com.jeeplus.common.web.CKFinderConnectorServlet</servlet-class>
+    <servlet-class>cn.gx.common.web.CKFinderConnectorServlet</servlet-class>
     <init-param>
       <param-name>XMLConfig</param-name>
       <param-value>/WEB-INF/ckfinder.xml</param-value>
@@ -105,7 +113,7 @@
     </init-param>
     <init-param>
       <param-name>configuration</param-name>
-      <param-value>com.jeeplus.common.web.CKFinderConfig</param-value>
+      <param-value>cn.gx.common.web.CKFinderConfig</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
@@ -131,7 +139,7 @@
   </filter-mapping>
   <servlet>
     <servlet-name>UserfilesDownloadServlet</servlet-name>
-    <servlet-class>com.jeeplus.common.servlet.UserfilesDownloadServlet</servlet-class>
+    <servlet-class>cn.gx.common.servlet.UserfilesDownloadServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>UserfilesDownloadServlet</servlet-name>
@@ -139,7 +147,7 @@
   </servlet-mapping>
   <servlet>
     <servlet-name>ValidateCodeServlet</servlet-name>
-    <servlet-class>com.jeeplus.common.servlet.ValidateCodeServlet</servlet-class>
+    <servlet-class>cn.gx.common.servlet.ValidateCodeServlet</servlet-class>
   </servlet>
   <servlet-mapping>
     <servlet-name>ValidateCodeServlet</servlet-name>
