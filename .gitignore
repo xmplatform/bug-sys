@@ -2,7 +2,7 @@
 .settings/
 .classpath
 .project
-.userfiles
+src/main/webapp/userfiles/
 
 # Idea
 .idea
