@@ -16,6 +16,7 @@
 <body>
 	<ul class="nav nav-tabs">
 		<li><a href="${ctx}/act/task/todo/">待办任务</a></li>
+		<li><a href="${ctx}/act/task/join/">参与任务</a></li>
 		<li class="active"><a href="${ctx}/act/task/historic/">已办任务</a></li>
 		<li><a href="${ctx}/act/task/process/">新建任务</a></li>
 	</ul>

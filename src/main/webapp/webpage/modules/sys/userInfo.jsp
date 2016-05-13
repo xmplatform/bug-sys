@@ -139,6 +139,11 @@
 						</div>
 						<div class="ibox-content">
 							<div class="row">
+
+								<a target="_blank" href="www.baidu.com">点击 blank</a>
+								<a target="_top" href="www.baidu.com">点击 top</a>
+
+
 								<div class="col-sm-4" style="margin-bottom: 10px;">
 									<img alt="image" class="img-responsive" src="${user.photo }" />
 								</div>

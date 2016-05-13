@@ -7,6 +7,10 @@
 <%@ taglib prefix="sys" tagdir="/WEB-INF/tags/sys" %>
 <%@ taglib prefix="act" tagdir="/WEB-INF/tags/act" %>
 <%@ taglib prefix="table" tagdir="/WEB-INF/tags/table" %>
+<%@ taglib prefix="page" tagdir="/WEB-INF/tags/page" %>
 <%@ taglib prefix="t" uri="/menu-tags"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}${fns:getAdminPath()}"/>
 <c:set var="ctxStatic" value="${pageContext.request.contextPath}/static"/>
+<script type="text/javascript">
+    var ctx = '<%=request.getContextPath() %>';
+</script>

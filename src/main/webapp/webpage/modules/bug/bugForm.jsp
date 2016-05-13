@@ -79,6 +79,7 @@
 	</script>
 </head>
 <body>
+ <div class="ibox-content">
 		<form:form id="inputForm" modelAttribute="bug" action="${ctx}/bug/bug/save" method="post" class="form-horizontal">
 			<form:hidden path="id"/>
 			<form:hidden path="act.taskId"/>
@@ -88,125 +89,147 @@
 			<form:hidden path="act.procDefId"/>
 			<form:hidden id="flag" path="act.flag"/>
 			<sys:message content="${message}"/>
-		<table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
-		   <tbody>
-				<tr>
-
-					<td class="width-15 active"><label class="pull-right">项目主键：</label></td>
-					<td class="width-35">
-						<%--<sys:treeselect id="bugProject" name="bugProject.id" value="${bug.bugProject.id}" labelName="" labelValue="${bug.bugProject.name}"--%>
-										<%--title="部门" url="/sys/office/treeData?type=2" cssClass="form-control " allowClear="true" notAllowSelectParent="true"/>--%>
-
-							<%--<form:select path="bugProject" class="form-control required">--%>
-								<%--<form:option value="" label=""/>--%>
-								<%--<form:options items="" itemLabel="label" itemValue="value" htmlEscape="false"/>--%>
-							<%--</form:select>--%>
-
-							<select name="bugProject.id"  id='project' class="form-control required"><option>---项目---</option></select>
-					</td>
-					<td class="width-15 active"><label class="pull-right">项目版本主键：</label></td>
-					<td class="width-35">
-						<%--<sys:treeselect id="bugVersion" name="bugVersion.id" value="${bug.bugVersion.id}" labelName="" labelValue="${bug.bugVersion.version}-${bug.bugVersion.build}"--%>
-							<%--title="用户" url="/sys/office/treeData?type=3" cssClass="form-control " allowClear="true" notAllowSelectParent="true"/>--%>
-							<%--<form:select path="bugVersion" class="form-control required">--%>
-								<%--<form:option value="" label=""/>--%>
-								<%--<form:options items="${fns:getProjectVersionList('bug_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>--%>
-							<%--</form:select>--%>
-
-							<select name="bugVersion.id" id='version' class="form-control required"><option>---版本---</option></select>
-
-					</td>
-
-				</tr>
-				<tr>
-					<td class="width-15 active"><label class="pull-right"><font color="red">*</font>缺陷类型：</label></td>
-					<td class="width-35">
-						<form:select path="bugType" class="form-control required">
-							<form:option value="" label=""/>
-							<form:options items="${fns:getDictList('bug_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-						</form:select>
-					</td>
-					<td class="width-15 active"><label class="pull-right"><font color="red">*</font>缺陷状态：</label></td>
-					<td class="width-35">
-						<form:select path="bugStatus" class="form-control required">
-							<form:option value="" label=""/>
-							<form:options items="${fns:getDictList('poster_task')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-						</form:select>
-					</td>
-				</tr>
-				<tr>
-					<td class="width-15 active"><label class="pull-right"><font color="red">*</font>缺陷优先级：</label></td>
-					<td class="width-35">
-						<form:select path="bugLevel" class="form-control required">
-							<form:option value="" label=""/>
-							<form:options items="${fns:getDictList('bug_level')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-						</form:select>
-					</td>
-					<td class="width-15 active"><label class="pull-right">名称：</label></td>
-					<td class="width-35">
-						<form:input path="name" htmlEscape="false" maxlength="64" class="form-control "/>
-					</td>
-				</tr>
-				<tr>
-					<td class="width-15 active"><label class="pull-right">简介：</label></td>
-					<td class="width-35">
-						<form:input path="summary" htmlEscape="false" maxlength="255" class="form-control "/>
-					</td>
-					<td class="width-15 active"><label class="pull-right">内容详情：</label></td>
-					<td class="width-35">
-						<%--<input type="hidden" id="content" name="content">--%>
-						<input type="hidden" id="content" name="content">
-					</td>
-				</tr>
-				<tr>
-					<td class="width-15 active"><label class="pull-right">备注信息：</label></td>
-					<td class="width-35">
-						<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="255" class="form-control "/>
-					</td>
-					<td class="width-15 active"><label class="pull-right">缺陷文件：</label></td>
-					<td class="width-35">
-						<form:hidden id="file" path="file" htmlEscape="false" maxlength="255" class="form-control"/>
-						<sys:ckfinder input="file" type="files" uploadPath="/bug/bug" selectMultiple="true"/>
-					</td>
-				</tr>
-				<tr>
-					<td class="width-15 active"><label class="pull-right">缺陷图片：</label></td>
-					<td class="width-35">
-						<form:hidden id="image" path="image" htmlEscape="false" maxlength="255" class="form-control"/>
-						<sys:ckfinder input="image" type="files" uploadPath="/bug/bug" selectMultiple="true"/>
-					</td>
-					<td class="width-15 active"><label class="pull-right">测试主管意见：</label></td>
-					<td class="width-35">
-						<form:textarea path="testerLeadText" htmlEscape="false" rows="4" maxlength="255" class="form-control "/>
-					</td>
-				</tr>
-				<tr>
-					<td class="width-15 active"><label class="pull-right">开发主管意见：</label></td>
-					<td class="width-35">
-						<form:textarea path="developerLeadText" htmlEscape="false" rows="4" maxlength="255" class="form-control "/>
-					</td>
-					<td class="width-15 active"><label class="pull-right">项目经理意见：</label></td>
-					<td class="width-35">
-						<form:textarea path="projectManagerText" htmlEscape="false" rows="4" maxlength="255" class="form-control "/>
-					</td>
-				</tr>
-		 	</tbody>
+			
+		<table class="">
+			<tr>
+				<td>项目</td>
+				<td><select name="bugVersion.id"  id="version" class="required" /></td>
+				<td>版本</td>
+				<td><select name="bugProject.id"  id="project" class="required" /></td>
+			</tr>
 		</table>
-			<div class="form-actions">
+			
+			
+		<!-- <div class="row">
+		<label class="col-sm-2 control-label">版本：</label>
+			<div class="col-sm-4">
+				<select name="bugVersion.id"  id="version" class="required" />
+				<span class="help-inline"><font color="red">*</font> </span>
+			</div>
+			<label class="col-sm-2 control-label" >项目：</label>
+			<div class="col-sm-4">
+				<select name="bugProject.id"  id="project" class="required" /><font color="red">*</font> 
+			</div>
+			
+			
+		</div> -->
+		
+		<div class="form-group">
+			<label class="col-sm-2 control-label">缺陷类型：</label>
+			<div class="col-sm-10">
+				<form:select path="bugType" class=" form-control input-xlarge required">
+					<form:option value="" label=""/>
+					<form:options items="${fns:getDictList('bug_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+				</form:select>
+				<span class="help-inline"><font color="red">*</font> </span>
+			</div>
+		</div>
+		
+			
+		
+		<div class="form-group">
+			<label class="col-sm-2 control-label">缺陷状态：</label>
+			<div class="col-sm-10">
+				<form:select path="bugStatus" class="form-control input-xlarge required">
+					<form:option value="" label=""/>
+					<form:options items="${fns:getDictList('poster_task')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+				</form:select>
+				<span class="help-inline"><font color="red">*</font> </span>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">缺陷优先级：</label>
+			<div class="col-sm-10">
+				<form:select path="bugLevel" class=" form-control input-xlarge required">
+					<form:option value="" label=""/>
+					<form:options items="${fns:getDictList('bug_level')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+				</form:select>
+				<span class="help-inline"><font color="red">*</font> </span>
+			</div>
+		</div>
+		
+		
+		
+		<div class="form-group">
+			<label class="col-sm-2 control-label">名称：</label>
+			<div class="col-sm-10">
+				<form:input path="name" htmlEscape="false" maxlength="64" class=" form-control input-xlarge required"/>
+				<span class="help-inline"><font color="red">*</font> </span>
+			</div>
+		</div>
+		
+	
+		
+		
+		
+		
+		<div class="form-group">
+			<label class="col-sm-2 control-label">简介：</label>
+			<div class="col-sm-10">
+				<form:textarea path="summary" htmlEscape="false" rows="4" maxlength="255" class=" form-control input-xxlarge required"/>
+				<span class="help-inline"><font color="red">*</font> </span>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-sm-2 control-label">内容详情:</label>
+			<div class="col-sm-10">
+				<form:textarea id="description" htmlEscape="true" path="description" rows="4" maxlength="200" class=" form-control input-xxlarge"/>
+				<sys:ckeditor replace="description" uploadPath="/bug/bug" />
+			</div>
+		</div>
+		
+	
+		<div class="form-group">
+			<label class="col-sm-2 control-label">图片:</label>
+			<div class="col-sm-10">
+                <input type="hidden" id="image" name="image" value="${image}" />
+				<sys:ckfinder input="image" type="thumb" uploadPath="/bug/bug" selectMultiple="false"/>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="col-sm-2 control-label">附件:</label>
+			<div class="col-sm-10">
+                <input type="hidden" id="file" name="file" value="${file}" />
+				<sys:ckfinder input="file" type="thumb" uploadPath="/bug/bug" selectMultiple="false"/>
+			</div>
+		</div>
+		
+		
+		<div class="form-group">
+			<label class="col-sm-2 control-label">备注信息：</label>
+			<div class="col-sm-10">
+				<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="255" class=" form-control input-xxlarge "/>
+			</div>
+		</div>
+	
+	  <div class="hr-line-dashed"></div>
+	  
+		<div class="form-group">
+			<div class="col-sm-4 col-sm-offset-2">
 				<shiro:hasPermission name="bug:bug:edit">
 					<input id="btnSubmit" class="btn btn-primary" type="submit" value="提交" onclick="$('#flag').val('NEW')"/>&nbsp;
 					<c:if test="${not empty bug.id}">
 						<input id="btnSubmit2" class="btn btn-inverse" type="submit" value="丢弃" onclick="$('#flag').val('RENEW')"/>&nbsp;
 					</c:if>
 				</shiro:hasPermission>
-				<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
+				<input id="btnCancel" class="btn btn-white" type="button" value="返 回" onclick="history.go(-1)"/>
 			</div>
-			<c:if test="${not empty bug.id}">
-				<act:histoicFlow procInsId="${testAudit.act.procInsId}" />
-			</c:if>
+		</div>
+		<c:if test="${not empty bug.id}">
+			<act:histoicFlow procInsId="${testAudit.act.procInsId}" />
+		</c:if>
+		
+		
+		
+	
+		
 
 
 	</form:form>
+	
+	</div>
 </body>
 
 </html>
