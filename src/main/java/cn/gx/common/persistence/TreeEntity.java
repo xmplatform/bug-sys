@@ -13,8 +13,6 @@ import cn.gx.common.utils.StringUtils;
 
 /**
  * 数据Entity类
- * @author bug
- * @version 2014-05-16
  */
 public abstract class TreeEntity<T> extends DataEntity<T> {
 

@@ -27,6 +27,7 @@ public enum  BugStatus {
     //developer_task
     OPEN("OPEN","打开","接受任务,打开缺陷"),
     FIXED("FIXED","修复","开发人员修复缺陷,待测试组检测"),
+    NOFIXED("NOFIXED","无法修复","开发人员修复不了"),
 
     //tester_task
     RETEST("RETEST","验证","验证开发人员修复的缺陷"),

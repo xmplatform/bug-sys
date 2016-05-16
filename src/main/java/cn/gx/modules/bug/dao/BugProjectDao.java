@@ -8,6 +8,8 @@ import cn.gx.common.persistence.annotation.MyBatisDao;
 import cn.gx.modules.bug.bean.StatusBug;
 import cn.gx.modules.bug.entity.BugProject;
 import cn.gx.modules.bug.bean.Charts;
+import cn.gx.modules.sys.entity.User;
+import javafx.scene.chart.Chart;
 
 import java.util.List;
 
@@ -27,4 +29,8 @@ public interface BugProjectDao extends CrudDao<BugProject> {
     List<StatusBug> totalBugStatusNum(StatusBug statusBug);
 
     Charts totalBugStatus(Charts charts);
+
+    List<Charts> totalProjectByDay(Charts charts);
+
+    List<User> getProjectPeople(User user);
 }

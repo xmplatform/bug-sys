@@ -3,13 +3,14 @@
  */
 package cn.gx.modules.bug.service;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 import cn.gx.modules.bug.bean.StatusBug;
 import cn.gx.modules.bug.util.BugStatus;
 import cn.gx.modules.bug.bean.Charts;
 import cn.gx.modules.bug.util.Total;
+import cn.gx.modules.sys.entity.User;
 import cn.gx.modules.sys.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -147,5 +148,115 @@ public class BugProjectService extends CrudService<BugProjectDao, BugProject> {
 		return chartses;
 
 
+	}
+
+	/**
+	 * 统计近7天的项目各个状态的每天的数量
+	 * @param projectId
+	 * @param day
+     * @return
+     */
+	public Map<String,Object> totalProjectByDay(String projectId, int day) {
+
+		Map<String,Object> map=new HashMap<String, Object>(2);
+
+		List<Charts> chartses = Total.showBugStatus();
+		String [] days=null;
+
+		// 初始化日期
+
+
+		int size= chartses.size();
+
+
+		for (int i = 0; i <size; i++) {
+			Charts charts = chartses.get(i);
+			charts.setProjectId(projectId);
+			charts.setDay(day);
+
+			List<Charts> chartsList=dao.totalProjectByDay(charts);
+
+			// 初始化 7天内的默认数据为 0
+			LinkedHashMap<String,Integer> initValues=new LinkedHashMap<String,Integer>();
+			for (int j= day; j>0; j--) {
+				//Calendar.get(Calendar.DAY_OF_WEEK);
+				String dateStr=getBeforeDay(j);
+				initValues.put(dateStr,0);
+			}
+
+			for (int j = 0; j < chartsList.size(); j++) {
+				Charts c = chartsList.get(j);
+				String dayStr = c.getDayStr();
+				initValues.put(dayStr,c.getValue());
+			}
+
+
+			charts.setValues(toArrayValues(initValues));
+			if (days==null){
+				days=toArrayKeys(initValues);
+				map.put("dateStr",days);
+			}
+		}
+
+		map.put("bugList",chartses);
+
+		return map;
+	}
+
+	private String[] toArrayKeys(LinkedHashMap<String, Integer> initValues) {
+
+		int size =initValues.size();
+		String [] str=new String[size];
+
+		int i=0;
+		for (Map.Entry<String,Integer> item:initValues.entrySet()
+				) {
+			str[i++]=item.getKey();
+		}
+
+		return str;
+	}
+
+	/**
+	 * 将 map 的 values 数据转化为 数组.
+	 * @param initValues
+	 * @return
+     */
+	private int [] toArrayValues(LinkedHashMap<String, Integer> initValues) {
+
+
+		int size =initValues.size();
+		int [] values=new int [size];
+
+		int i=0;
+		for (Map.Entry<String,Integer> item:initValues.entrySet()
+			 ) {
+			values[i++]=item.getValue();
+		}
+
+		return values;
+	}
+
+	/**
+	 * 得到距当前日期第 i 天的数据
+	 * @param i
+	 * @return
+     */
+	private String getBeforeDay(int i) {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+		Calendar c = Calendar.getInstance();
+		c.add(Calendar.DATE, -i);
+		Date monday = c.getTime();
+		String preMonday = sdf.format(monday);
+		return preMonday;
+	}
+
+	public List<User> getProjectPeople(String projectId) {
+
+		User user=new User();
+		user.setBugProject(new BugProject(projectId));
+		return dao.getProjectPeople(user);
 	}
 }

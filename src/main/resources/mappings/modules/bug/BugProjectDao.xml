@@ -11,12 +11,15 @@
 		a.update_by AS "updateBy.id",
 		a.update_date AS "updateDate",
 		a.del_flag AS "delFlag",
-		a.remarks AS "remarks"
+		a.remarks AS "remarks",
+		u.name as "createBy.name"
 	</sql>
 	
 	<sql id="bugProjectJoins">
+		LEFT JOIN sys_user u ON u.id = a.create_by
+
 	</sql>
-    
+	<!--LEFT JOIN sys_user joinUser on joinUser-->
 	<select id="get" resultType="BugProject">
 		SELECT 
 			<include refid="bugProjectColumns"/>
@@ -152,16 +155,15 @@
 	<!--where b.bug_project_id=#{projectId}-->
 	<!--GROUP BY b.bug_status ;-->
 	<!--查询7天内指定 Bug 类型的数量-->
-	<select id="totalBugStatusNum" resultType="StatusBug">
+	<select id="totalProjectByDay" resultType="Charts">
 
 		select
-				b.bug_project_id as projectId,
-				date_format(b.update_date,'%Y-%m-%d') as 'dateStr',
-				count(id) as 'num',
-				b.bug_status as 'bugStatus'
+				date_format(b.update_date,'%Y-%m-%d') as 'dayStr',
+				count(id) as value
+
 		from bug b
-		where date_format(b.update_date,'%Y-%m-%d')>=DATE_FORMAT(DATE_ADD(sysdate(),INTERVAL -6 day),'%Y-%m-%d')
-		and b.bug_status=#{bugStatus}
+		where date_format(b.update_date,'%Y-%m-%d')>=DATE_FORMAT(DATE_ADD(sysdate(),INTERVAL -#{day} day),'%Y-%m-%d')
+		and b.bug_status=#{status}
 		and b.bug_project_id=#{projectId}
 		group by date_format(b.update_date,'%Y-%m-%d')
 
@@ -177,5 +179,18 @@
 	<!--select count(*),DATE_FORMAT(a.insert_time,'%e') as e from table a-->
 	<!--where DATE_FORMAT(a.insert_time,'%m')='08'-->
 	<!--group by e-->
+
+
+
+	<select id="getProjectPeople" resultType="User">
+
+		select
+			su.`photo` as photo,
+			su.name as name
+from sys_user su
+left join `bug_project_user` bpu on bpu.`user_id`=su.id
+left join `bug_project` bp on bpu.`project_id`=bp.id
+where bp.id=#{bugProject.id}
+	</select>
 
 </mapper>

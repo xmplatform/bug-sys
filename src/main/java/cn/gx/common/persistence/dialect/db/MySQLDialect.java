@@ -8,8 +8,6 @@ import cn.gx.common.persistence.dialect.Dialect;
 /**
  * Mysql方言的实现
  *
- * @author poplar.yfyang
- * @version 1.0 2010-10-10 下午12:31
  * @since JDK 1.5
  */
 public class MySQLDialect implements Dialect {

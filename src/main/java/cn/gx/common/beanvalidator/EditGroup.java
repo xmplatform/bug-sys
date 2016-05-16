@@ -5,7 +5,6 @@ package cn.gx.common.beanvalidator;
 
 /**
  * 编辑Bena验证组
- * @author bug
  */
 public interface EditGroup {
 

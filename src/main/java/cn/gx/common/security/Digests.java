@@ -17,8 +17,7 @@ import cn.gx.common.utils.Exceptions;
  * 支持SHA-1/MD5消息摘要的工具类.
  * 
  * 返回ByteSource，可进一步被编码为Hex, Base64或UrlSafeBase64
- * 
- * @author calvin
+ *
  */
 public class Digests {
 

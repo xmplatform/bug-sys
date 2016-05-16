@@ -16,8 +16,6 @@ import cn.gx.modules.sys.utils.UserUtils;
 
 /**
  * 数据Entity类
- * @author bug
- * @version 2014-05-16
  */
 public abstract class DataEntity<T> extends BaseEntity<T> {
 

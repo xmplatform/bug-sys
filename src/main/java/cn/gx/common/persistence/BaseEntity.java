@@ -19,8 +19,6 @@ import cn.gx.modules.sys.utils.UserUtils;
 
 /**
  * Entity支持类
- * @author bug
- * @version 2014-05-16
  */
 public abstract class BaseEntity<T> implements Serializable {
 

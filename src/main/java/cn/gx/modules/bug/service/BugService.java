@@ -11,8 +11,6 @@ import cn.gx.common.utils.StringUtils;
 import cn.gx.modules.act.service.ActTaskService;
 import cn.gx.modules.act.utils.ActUtils;
 import cn.gx.modules.bug.util.BugStatus;
-import cn.gx.modules.oa.entity.TestAudit;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

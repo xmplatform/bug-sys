@@ -4,6 +4,7 @@
 package cn.gx.modules.bug.web;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -326,7 +327,13 @@ public class BugProjectController extends BaseController {
 		BugProject bugProject = bugProjectService.get(projectId);
 
 		//bugProject
+		List<User> userList=bugProjectService.getProjectPeople(projectId);
 
+		for (User u:
+			 userList) {
+			System.out.println(u.getPhoto());
+		}
+		bugProject.setUserList(userList);
 
 		Act act=new Act();
 
@@ -372,6 +379,31 @@ public class BugProjectController extends BaseController {
 		try {
 
 			List<Charts> data=bugProjectService.getProjectStatus(projectId);
+			json.setMsg("加载项目状态成功");
+			json.setSuccess(true);
+			json.setData(data);
+		}catch (Exception e){
+			json.setMsg(e.getMessage());
+		}
+
+		return json;
+	}
+
+
+	/**
+	 * 指定项目
+	 * @param projectId
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "totalProjectByDay",method = RequestMethod.GET)
+	@ResponseBody
+	public Json totalProjectByDay(String projectId,int day,Model model){
+
+		Json json=new Json();
+		try {
+
+			Map<String, Object> data = bugProjectService.totalProjectByDay(projectId, day);
 			json.setMsg("加载项目状态成功");
 			json.setSuccess(true);
 			json.setData(data);

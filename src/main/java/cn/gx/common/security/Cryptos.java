@@ -22,8 +22,7 @@ import cn.gx.common.utils.Exceptions;
  * 支持HMAC-SHA1消息签名 及 DES/AES对称加密的工具类.
  * 
  * 支持Hex与Base64两种编码方式.
- * 
- * @author calvin
+ *
  */
 public class Cryptos {
 

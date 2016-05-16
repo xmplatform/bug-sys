@@ -1,6 +1,3 @@
-/**
- * Copyright &copy; 2015-2020 <a href="http://www.bug.org/">JeePlus</a> All rights reserved.
- */
 package cn.gx.common.json;
 
 import java.io.IOException;

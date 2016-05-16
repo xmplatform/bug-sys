@@ -5,7 +5,10 @@
 	<sql id="bugColumns">
 		a.id AS "id",
 		a.bug_version_id AS "bugVersion.id",
+		bugVersion.version as "bugVersion.version",
+		bugVersion.build as "bugVersion.build",
 		a.bug_project_id AS "bugProject.id",
+		bugProject.name as "bugProject.name",
 		a.bug_type AS "bugType",
 		a.bug_status AS "bugStatus",
 		a.bug_level AS "bugLevel",

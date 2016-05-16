@@ -14,8 +14,6 @@ import cn.gx.common.utils.StringUtils;
 
 /**
  * Service基类
- * @author bug
- * @version 2014-05-16
  */
 @Transactional(readOnly = true)
 public abstract class TreeService<D extends TreeDao<T>, T extends TreeEntity<T>> extends CrudService<D, T> {

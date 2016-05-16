@@ -9,8 +9,6 @@ import org.apache.ibatis.annotations.Param;
 
 /**
  * DAO支持类实现
- * @author bug
- * @version 2014-05-16
  * @param <T>
  */
 public interface CrudDao<T> extends BaseDao {

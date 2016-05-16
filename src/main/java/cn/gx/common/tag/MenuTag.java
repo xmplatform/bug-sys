@@ -15,10 +15,7 @@ import cn.gx.modules.sys.entity.Menu;
 /**
  * 
  * 类描述：菜单标签
- * 
- * 刘高峰
- * @date： 日期：2015-1-23 时间：上午10:17:45
- * @version 1.0
+ *
  */
 public class MenuTag extends TagSupport {
 	private static final long serialVersionUID = 1L;

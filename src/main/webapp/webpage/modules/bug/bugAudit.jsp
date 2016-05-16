@@ -25,116 +25,182 @@
 		});
 	</script>
 </head>
-<body>
-	<ul class="nav nav-tabs">
-		<li><a href="${ctx}/oa/testAudit/">审批列表</a></li>
-		<li class="active"><a href="#"><shiro:hasPermission name="oa:testAudit:edit">${testAudit.act.taskName}</shiro:hasPermission><shiro:lacksPermission name="oa:testAudit:edit">查看</shiro:lacksPermission></a></li>
-	</ul>
-	<form:form id="inputForm" modelAttribute="bug" action="${ctx}/bug/bug/saveAudit" method="post" class="form-horizontal">
-		<form:hidden path="id"/>
-		<form:hidden path="act.taskId"/>
-		<form:hidden path="act.taskName"/>
-		<form:hidden path="act.taskDefKey" id="taskDefKey"/>
-		<form:hidden path="act.procInsId"/>
-		<form:hidden path="act.procDefId"/>
-		<form:hidden id="flag" path="act.flag"/>
-		<sys:message content="${message}"/>
-		<fieldset>
-			<legend>${bug.act.taskName}</legend>
-			<table class="table-form">
-				<tr>
-					<td class="tit">项目名称</td><td>${bug.bugProject.name}</td>
-					<td class="tit">部门</td><td>${bug.bugVersion.version}:${bug.bugVersion.build}</td>
-					<td class="tit">缺陷类型</td><td>${bug.bugType}</td>
-				</tr>
-				<tr>
-					<td class="tit">缺陷状态</td>
-					<td colspan="5">${bug.bugStatus}</td>
-				</tr>
-				<tr>
-					<td class="tit">缺陷优先级${bug.bugLevel}</td>
-					<td colspan="5">
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+	<div class="row animated fadeInRight">
 
-						<form:select path="bugLevel" class="form-control required" >
+
+		<div class="col-lg-8 col-md-8">
+			<div class="ibox float-e-margins">
+
+
+				<div class="ibox-title">
+					<h5>问题单</h5>
+
+					<div class="ibox-tools">
+						<a class="collapse-link">
+							<i class="fa fa-chevron-up"></i>
+						</a>
+						<a class="dropdown-toggle" data-toggle="dropdown" href="#">
+							<i class="fa fa-wrench"></i>
+						</a>
+						<ul class="dropdown-menu dropdown-user">
+							<li><a href="#">Config option 1</a>
+							</li>
+							<li><a href="#">Config option 2</a>
+							</li>
+						</ul>
+						<a class="close-link">
+							<i class="fa fa-times"></i>
+						</a>
+					</div>
+				</div>
+
+				<div class="ibox-content">
+					<div class="row">
+			<form:form id="inputForm" modelAttribute="bug" action="${ctx}/bug/bug/saveAudit" method="post" class="form-horizontal">
+
+				<form:hidden path="id"/>
+				<form:hidden path="act.taskId"/>
+				<form:hidden path="act.taskName"/>
+				<form:hidden path="act.taskDefKey" id="taskDefKey"/>
+				<form:hidden path="act.procInsId"/>
+				<form:hidden path="act.procDefId"/>
+				<form:hidden id="flag" path="act.flag"/>
+				<sys:message content="${message}"/>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">项目：</label>
+					<div class="col-sm-10">
+							${bug.bugProject.name}
+
+
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">版本：</label>
+					<div class="col-sm-10">
+							${bug.bugVersion.version}:${bug.bugVersion.build}
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">缺陷类型：</label>
+					<div class="col-sm-10">
+						<form:select path="bugType" class=" form-control input-xlarge required" disabled="true">
+							<form:option value="" label=""/>
+							<form:options items="${fns:getDictList('bug_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+						</form:select>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">缺陷状态：</label>
+					<div class="col-sm-10">
+						${bug.bugStatusPhrase}
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">缺陷优先级：</label>
+					<div class="col-sm-10">
+						<form:select path="bugLevel" class=" form-control input-xlarge required" disabled="true">
 							<form:option value="" label=""/>
 							<form:options items="${fns:getDictList('bug_level')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 						</form:select>
-					</td>
+						<span class="help-inline"><font color="red">*</font> </span>
+					</div>
+				</div>
 
-				</tr>
-				<tr>
-					<td class="tit">名称</td>
-					<td colspan="5">${bug.name}</td>
-				</tr>
-				<tr>
-					<td class="tit">简介</td>
-					<td colspan="5">${bug.summary}</td>
-				</tr>
-				<tr>
-					<td class="tit">详情</td>
-					<td colspan="5">${bug.description}</td>
-				</tr>
-				<tr>
-					<td class="tit">备注</td>
-					<td colspan="5">${bug.remarks}</td>
-				</tr>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">名称：</label>
+					<div class="col-sm-10">
+						<form:input path="name" htmlEscape="false" maxlength="64" class=" form-control input-xlarge required" disabled="true"/>
+					</div>
+				</div>
 
-				<tr>
-					<td class="tit">缺陷文件</td>
-					<td colspan="5">${bug.file}</td>
-				</tr>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">简介：</label>
+					<div class="col-sm-10">
+						<form:textarea path="summary" htmlEscape="false" rows="4" maxlength="255" class=" form-control input-xxlarge required" disabled="true"/>
+					</div>
+				</div>
 
-				<tr>
-					<td class="tit">缺陷图片</td>
-					<td colspan="5">${bug.image}</td>
-				</tr>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">内容详情：</label>
+					<div class="col-sm-10">
+						<form:textarea id="description" htmlEscape="true" path="description" rows="4" maxlength="200" class=" form-control input-xxlarge" disabled="true"/>
+						<sys:ckeditor replace="description" uploadPath="/bug/bug" />
+					</div>
+				</div>
 
-				<tr>
-					<td class="tit">项目经理意见</td>
-					<td colspan="5">
-						${bug.projectManagerText}
-					</td>
-				</tr>
-				<tr>
-					<td class="tit">开发主管意见</td>
-					<td colspan="5">
-						${bug.developerLeadText}
-					</td>
-				</tr>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">图片：</label>
+					<div class="col-sm-10">
+						<img src="${bug.image}">
+						<input type="hidden" id="image" name="image" value="${image}" />
+						<sys:ckfinder input="image" type="thumb" uploadPath="/bug/bug" selectMultiple="false"/>
+					</div>
+				</div>
 
-				<tr>
-					<td class="tit">您的看法(${bug.act.taskDefKey})</td>
-					<td colspan="5" >
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">附件:</label>
+					<div class="col-sm-10">
+						<a href="${bug.file}">文件</a>
+					</div>
+				</div>
+
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">备注信息：</label>
+					<div class="col-sm-10">
+						<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="255" class=" form-control input-xxlarge " disabled="true"/>
+					</div>
+				</div>
+
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">您的看法：</label>
+					<div class="col-sm-10">
 						<form:select path="bugStatus" class="form-control required" >
 							<form:option value="" label=""/>
 							<form:options items="${fns:getDictList(bug.act.taskDefKey)}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 						</form:select>
-					</td>
-				</tr>
+						<span class="help-inline"><font color="red">*</font> </span>
+					</div>
+				</div>
 
-				<tr>
-					<td class="tit">原因</td>
-					<td colspan="5">
+
+				<div class="form-group">
+					<label class="col-sm-2 control-label">看法原因：</label>
+					<div class="col-sm-10">
 						<form:textarea path="act.comment" class="required" rows="5" maxlength="20" cssStyle="width:500px"/>
-					</td>
-				</tr>
-			</table>
-		</fieldset>
-		<div class="form-actions">
-			<shiro:hasPermission name="bug:bug:edit">
-				<%--<c:if test="${bug.act.taskDefKey eq 'testerTask'}">--%>
-					<%--<input id="btnSubmit" class="btn btn-primary" type="submit" value="兑 现" onclick="$('#flag').val('yes')"/>&nbsp;--%>
-				<%--</c:if>--%>
-				<%--<c:if test="${testAudit.act.taskDefKey ne 'apply_end'}">--%>
-					<%--<input id="btnSubmit" class="btn btn-primary" type="submit" value="同 意" onclick="$('#flag').val('yes')"/>&nbsp;--%>
-					<%--<input id="btnSubmit" class="btn btn-inverse" type="submit" value="驳 回" onclick="$('#flag').val('no')"/>&nbsp;--%>
+						<span class="help-inline"><font color="red">*</font> </span>
+					</div>
+				</div>
 
+				<div class="hr-line-dashed"></div>
 
-				<input id="btnSubmit" class="btn btn-primary" type="submit"  value="确认"/>
-			</shiro:hasPermission>
-			<input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
+				<div class="form-group">
+					<div class="col-sm-4 col-sm-offset-2">
+						<shiro:hasPermission name="bug:bug:edit">
+							<input id="btnSubmit" class="btn btn-primary" type="submit"  value="确认"/>
+						</shiro:hasPermission>
+						<input id="btnCancel" class="btn btn-white" type="button" value="返 回" onclick="history.go(-1)"/>
+					</div>
+				</div>
+			</form:form>
+					</div>
+					</div>
+			</div>
 		</div>
-		<act:histoicFlow procInsId="${bug.act.procInsId}"/>
-	</form:form>
+
+		<div class="col-lg-4 col-md-4">
+			<act:histoicFlow procInsId="${bug.act.procInsId}"/>
+		</div>
+	</div>
+</div>
 </body>
 </html>

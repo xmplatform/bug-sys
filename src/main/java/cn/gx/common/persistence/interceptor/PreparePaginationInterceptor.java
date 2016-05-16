@@ -21,8 +21,7 @@ import java.util.Properties;
 
 /**
  * Mybatis数据库分页插件，拦截StatementHandler的prepare方法
- * @author poplar.yfyang / thinkgem
- * @version 2013-8-28
+ *
  */
 @Intercepts({
 	@Signature(type = StatementHandler.class, method = "prepare", args = {Connection.class})

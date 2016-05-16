@@ -64,14 +64,26 @@
 		</script>
 	</div>
 	<table id="contentTable" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
-		<thead><tr><th>归属公司</th><th>归属部门</th><th>登录名</th><th>姓名</th><th>电话</th><th>手机</th><shiro:hasPermission name="sys:user:edit"><th>操作</th></shiro:hasPermission></tr></thead>
+		<thead>
+			<tr>
+				<th>归属公司</th>
+				<th>归属部门</th>
+				<th>角色</th>
+				<th>登录名</th>
+				<th>姓名</th>
+				<th>电话</th>
+				<th>手机</th>
+				<shiro:hasPermission name="sys:user:edit"><th>操作</th></shiro:hasPermission>
+			</tr>
+		</thead>
 		<tbody>
 		<c:forEach items="${userList}" var="user">
 			<tr>
 				<td>${user.company.name}</td>
 				<td>${user.office.name}</td>
+				<td>${user.role.name}</td>
 				<td><a href="${ctx}/sys/user/form?id=${user.id}">${user.loginName}</a></td>
-				<td>${user.name}</td>
+				<td>${user.roleNames}</td>
 				<td>${user.phone}</td>
 				<td>${user.mobile}</td>
 				<shiro:hasPermission name="sys:role:edit"><td>

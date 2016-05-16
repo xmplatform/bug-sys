@@ -17,8 +17,6 @@ import cn.gx.modules.sys.entity.User;
 
 /**
  * Service基类
- * @author bug
- * @version 2014-05-16
  */
 @Transactional(readOnly = true)
 public abstract class BaseService {

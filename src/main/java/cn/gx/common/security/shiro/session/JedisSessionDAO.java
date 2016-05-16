@@ -31,8 +31,6 @@ import cn.gx.common.web.Servlets;
 
 /**
  * 自定义授权会话管理类
- * @author bug
- * @version 2014-7-20
  */
 public class JedisSessionDAO extends AbstractSessionDAO implements SessionDAO {
 

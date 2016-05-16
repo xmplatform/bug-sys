@@ -53,7 +53,7 @@ public class User extends DataEntity<User> {
 	
 	private Role role;	// 根据角色查询用户条件
 
-	private BugProject bugProject;
+	private BugProject bugProject;//根据项目查询用户条条件
 
 	private List<BugProject> bugProjectList=Lists.newArrayList();//用户参与的项目
 
@@ -384,4 +384,12 @@ public class User extends DataEntity<User> {
 		return serialVersionUID;
 	}
 
+
+	public BugProject getBugProject() {
+		return bugProject;
+	}
+
+	public void setBugProject(BugProject bugProject) {
+		this.bugProject = bugProject;
+	}
 }

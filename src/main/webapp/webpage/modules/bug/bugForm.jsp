@@ -162,7 +162,7 @@
 		
 		
 		
-		
+
 		<div class="form-group">
 			<label class="col-sm-2 control-label">简介：</label>
 			<div class="col-sm-10">
@@ -218,7 +218,7 @@
 			</div>
 		</div>
 		<c:if test="${not empty bug.id}">
-			<act:histoicFlow procInsId="${testAudit.act.procInsId}" />
+			<act:histoicFlow procInsId="${bug.act.procInsId}"/>
 		</c:if>
 		
 		

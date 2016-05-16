@@ -143,7 +143,7 @@ $(function () {
     rootpath="/"+webroot;
     
     
-    $.get(rootpath+"/static/common/bug.jsp", function (data) {
+    $.get(rootpath+"/static/common/skin-config.jsp", function (data) {
         $('body').append(data);
     });
     

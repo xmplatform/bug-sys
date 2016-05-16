@@ -5,7 +5,6 @@ package cn.gx.common.beanvalidator;
 
 /**
  * 默认Bean验证组
- * @author bug
  */
 public interface DefaultGroup {
 

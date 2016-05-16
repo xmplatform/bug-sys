@@ -6,6 +6,7 @@ package cn.gx.modules.bug.entity;
 import cn.gx.common.persistence.ActEntity;
 import cn.gx.modules.bug.entity.BugVersion;
 import cn.gx.modules.bug.entity.BugProject;
+import cn.gx.modules.bug.util.BugStatus;
 import org.hibernate.validator.constraints.Length;
 
 import cn.gx.common.persistence.DataEntity;
@@ -32,6 +33,10 @@ public class Bug extends ActEntity<Bug> {
 	private String testerLeadText;		// 测试主管意见
 	private String developerLeadText;		// 开发主管意见
 	private String projectManagerText;		// 项目经理意见
+
+
+
+	private String bugStatusPhrase;
 	
 	public Bug() {
 		super();
@@ -137,6 +142,11 @@ public class Bug extends ActEntity<Bug> {
 	public void setImage(String image) {
 		this.image = image;
 	}
+
+
+
+
+
 	
 	@Length(min=0, max=255, message="测试主管意见长度必须介于 0 和 255 之间")
 	@ExcelField(title="测试主管意见", align=2, sort=17)
@@ -167,5 +177,14 @@ public class Bug extends ActEntity<Bug> {
 	public void setProjectManager(String projectManagerText) {
 		this.projectManagerText = projectManagerText;
 	}
-	
+
+
+	public String getBugStatusPhrase() {
+
+		return BugStatus.statusPhraseOf(this.bugStatus);
+	}
+
+	public void setBugStatusPhrase(String bugStatusPhrase) {
+		this.bugStatusPhrase = bugStatusPhrase;
+	}
 }

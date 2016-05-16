@@ -18,7 +18,8 @@ import cn.gx.modules.sys.entity.User;
  * @version 2014-05-16
  */
 @MyBatisDao
-public interface UserDao extends CrudDao<User> {
+public interface
+UserDao extends CrudDao<User> {
 	
 	/**
 	 * 根据登录名称查询用户

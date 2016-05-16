@@ -425,7 +425,7 @@
 														<input name="ck1" type="checkbox" class="required ace" />
 														<span class="lbl">
 															我接受
-															<a href="#">《JeePlus用户注册协议》</a>
+															<a href="#">《bug用户注册协议》</a>
 														</span>
 														<label id="ck1-error" class="error" for="ck1" style="display: none;">必须接受用户协议</label>
 													</label>
@@ -457,7 +457,7 @@
 									</div><!-- /.widget-body -->
 								</div><!-- /.signup-box -->
 							</div><!-- /.position-relative -->
-							<div class="center"><h4 class="blue" id="id-company-text">&copy;xinguan</h4></div>
+							<%--<div class="center"><h4 class="blue" id="id-company-text">&copy;xinguan</h4></div>--%>
 							<div class="navbar-fixed-top align-right">
 								<br />
 								&nbsp;

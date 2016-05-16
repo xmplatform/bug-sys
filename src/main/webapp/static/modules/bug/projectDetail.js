@@ -1,11 +1,6 @@
 /**
  * Created by always on 16/5/7.
  */
-var project={
-
-
-}
-
 
 function initProjectData2(baseUrl,id) {
 
@@ -96,7 +91,9 @@ function initProjectData2(baseUrl,id) {
              //projectStatus?projectId=${bugProject.id}
              var url=baseUrl+"/bug/bug/statusList?projectId="+id+"&statusPhrase="+statusPhrase;
 
-             self.location.href=url;
+             //self.location.href=url;
+
+             top.openTab(url,"应用状态「${e.statusPhrase}」", false)
 
          }
      )

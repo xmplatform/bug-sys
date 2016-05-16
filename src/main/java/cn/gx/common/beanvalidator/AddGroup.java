@@ -5,7 +5,6 @@ package cn.gx.common.beanvalidator;
 
 /**
  * 添加Bean验证组
- * @author bug
  *
  */
 public interface AddGroup {

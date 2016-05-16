@@ -17,10 +17,13 @@ public class Charts {
     private String color;
     private String highlight;
     private String label;
+    private int [] values;
 
     // 简单状态
     private String projectId;
     private String status;
+    private int day;
+    private String dayStr;
 
 
     public Charts() {
@@ -88,5 +91,32 @@ public class Charts {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+
+    public int getDay() {
+
+        return day;
+    }
+
+    public void setDay(int day) {
+        this.day = day;
+    }
+
+
+    public int[] getValues() {
+        return values;
+    }
+
+    public void setValues(int[] values) {
+        this.values = values;
+    }
+
+    public String getDayStr() {
+        return dayStr;
+    }
+
+    public void setDayStr(String dayStr) {
+        this.dayStr = dayStr;
     }
 }

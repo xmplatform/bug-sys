@@ -9,8 +9,6 @@ import cn.gx.modules.sys.utils.UserUtils;
 
 /**
  * 字段类型转换
- * @author bug
- * @version 2013-03-10
  */
 public class OfficeType {
 

@@ -7,8 +7,6 @@ import java.util.HashMap;
 
 /**
  * 查询参数类
- * @author bug
- * @version 2013-8-23
  */
 public class Parameter extends HashMap<String, Object> {
 	

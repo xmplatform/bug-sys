@@ -41,7 +41,7 @@
 <!--  <link href="${ctxStatic}/bootstrap/3.3.4/css_${not empty cookie.theme.value ? cookie.theme.value : 'default'}/bootstrap.min.css" type="text/css" rel="stylesheet" />-->
 <link href="${ctxStatic}/bootstrap/3.3.4/css_default/bootstrap.min.css" type="text/css" rel="stylesheet" />
 <script src="${ctxStatic}/bootstrap/3.3.4/js/bootstrap.min.js"  type="text/javascript"></script>
-<link href="${ctxStatic}/awesome/4.4/css/font-awesome.min.css" rel="stylesheet" />
+<link href="${ctxStatic}/awesome/4.4/css/font-awesome.css" type="text/css" rel="stylesheet" />
 <link href="${ctxStatic}/common/css/style.css?v=3.2.0" type="text/css" rel="stylesheet" />
 
 <!-- 引入layer插件 -->

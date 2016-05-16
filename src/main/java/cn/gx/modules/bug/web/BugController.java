@@ -3,6 +3,7 @@
  */
 package cn.gx.modules.bug.web;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import cn.gx.modules.bug.entity.BugProject;
 import cn.gx.modules.bug.util.BugStatus;
-import cn.gx.modules.oa.entity.TestAudit;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +98,7 @@ public class BugController extends BaseController {
 
 			// 任务编号
 			String taskDefKey=bug.getAct().getTaskDefKey();
-			bug.setBugStatus(null);
+			//bug.setBugStatus(null);
 
 			// 测试主管审核不通过,重新提交
 			if ("posterTask".equals(taskDefKey)){
@@ -106,20 +106,6 @@ public class BugController extends BaseController {
 			}else {
 				view="bugAudit";
 			}
-
-//			else if ("testerLeadTask".equals(taskDefKey)){
-//				view="bugAudit";
-//			}
-//			else if ("developerLeadTask".equals(taskDefKey)) {
-//				view="bugAudit";
-//			}
-//			else if ("projectManagerTask".equals(taskDefKey)){
-//				view="bugAudit";
-//			}
-//			// 兑现环节
-//			else if ("apply_end".equals(taskDefKey)){
-//				view = "bugAudit";
-//			}
 
 			// bug 关闭
 			if (bug.getAct().isFinishTask()){
@@ -147,6 +133,7 @@ public class BugController extends BaseController {
 
 			bugService.save(t);//保存
 		}else{//新增表单保存
+			bug.setUpdateDate(new Date());
 			bugService.save(bug);//保存
 		}
 		addMessage(redirectAttributes, "提交缺陷'" + bug.getName() + "'成功");
@@ -160,7 +147,7 @@ public class BugController extends BaseController {
 	 * @param model
 	 * @return
 	 */
-	@RequiresPermissions("oa:testAudit:edit")
+	@RequiresPermissions("bug:bug:edit")
 	@RequestMapping(value = "saveAudit")
 	public String saveAudit(Bug bug, Model model) throws Exception {
 		if (StringUtils.isBlank(bug.getBugStatus())

@@ -23,8 +23,6 @@ import cn.gx.common.web.Servlets;
 
 /**
  * 自定义授权缓存管理类
- * @author bug
- * @version 2014-7-20
  */
 public class JedisCacheManager implements CacheManager {
 

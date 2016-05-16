@@ -28,8 +28,6 @@ import cn.gx.common.utils.StringUtils;
 
 /**
  * 自定义WEB会话管理类
- * @author bug
- * @version 2014-7-20
  */
 public class SessionManager extends DefaultWebSessionManager {
 

@@ -389,7 +389,6 @@
     <script src="${ctxStatic}/js/demo/peity-demo.js"></script>
 
     <!-- Custom and plugin javascript -->
-    <script src="${ctxStatic}/js/inspinia.js"></script>
     <script src="${ctxStatic}/js/plugins/pace/pace.min.js"></script>
 
     <!-- jQuery UI -->

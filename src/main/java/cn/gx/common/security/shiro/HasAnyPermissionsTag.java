@@ -8,8 +8,7 @@ import org.apache.shiro.web.tags.PermissionTag;
 
 /**
  * Shiro HasAnyPermissions Tag.
- * 
- * @author calvin
+ *
  */
 public class HasAnyPermissionsTag extends PermissionTag {
 

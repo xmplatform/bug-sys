@@ -27,13 +27,13 @@ $(function () {
     // 解决坐标错误问题
     $('#changeToAutoDiagram').click(function() {
         $('.activity-attr,.activity-attr-border').remove();
-        $('#processDiagram').attr('src', ctx + '/act/trace/data/auto/' + processInstanceId);
+        $('#processDiagram').attr('src', bugCtx + '/act/trace/data/auto/' + processInstanceId);
     });
 
 });
 
 function showActivities() {
-    $.getJSON(ctx + '/act/trace/data/' + executionId, function (infos) {
+    $.getJSON(bugCtx + '/act/trace/data/' + executionId, function (infos) {
 
         var positionHtml = "";
 
