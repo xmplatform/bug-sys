@@ -47,8 +47,6 @@ import cn.gx.modules.sys.web.LoginController;
 
 /**
  * 系统安全认证实现类
- * @author bug
- * @version 2014-7-5
  */
 @Service
 //@DependsOn({"userDao","roleDao","menuDao"})

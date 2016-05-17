@@ -35,8 +35,6 @@ import cn.gx.modules.sys.service.SystemConfigService;
 
 /**
  * 系统配置Controller
- * @author liugf
- * @version 2016-02-07
  */
 @Controller
 @RequestMapping(value = "${adminPath}/sys/systemConfig")

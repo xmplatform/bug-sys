@@ -50,8 +50,6 @@ import cn.gx.modules.tools.utils.TwoDimensionCode;
 
 /**
  * 用户Controller
- * @author bug
- * @version 2013-8-29
  */
 @Controller
 @RequestMapping(value = "${adminPath}/sys/user")

@@ -17,8 +17,6 @@ import cn.gx.modules.sys.entity.Dict;
 
 /**
  * 字典工具类
- * @author bug
- * @version 2013-5-29
  */
 public class DictUtils {
 	

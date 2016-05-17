@@ -16,8 +16,6 @@ import cn.gx.modules.sys.utils.DictUtils;
 
 /**
  * 字典Service
- * @author bug
- * @version 2014-05-16
  */
 @Service
 @Transactional(readOnly = true)

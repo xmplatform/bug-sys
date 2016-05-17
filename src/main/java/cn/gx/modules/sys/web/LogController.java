@@ -21,8 +21,6 @@ import cn.gx.modules.sys.service.LogService;
 
 /**
  * 日志Controller
- * @author bug
- * @version 2013-6-2
  */
 @Controller
 @RequestMapping(value = "${adminPath}/sys/log")

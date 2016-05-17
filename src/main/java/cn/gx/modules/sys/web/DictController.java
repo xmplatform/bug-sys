@@ -33,8 +33,6 @@ import cn.gx.modules.sys.utils.UserUtils;
 
 /**
  * 字典Controller
- * @author bug
- * @version 2014-05-16
  */
 @Controller
 @RequestMapping(value = "${adminPath}/sys/dict")

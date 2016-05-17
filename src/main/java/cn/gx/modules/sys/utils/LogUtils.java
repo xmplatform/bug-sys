@@ -27,8 +27,6 @@ import cn.gx.modules.sys.entity.User;
 
 /**
  * 字典工具类
- * @author bug
- * @version 2014-11-7
  */
 public class LogUtils {
 	

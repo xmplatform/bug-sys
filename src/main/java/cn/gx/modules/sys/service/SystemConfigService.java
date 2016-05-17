@@ -15,8 +15,6 @@ import cn.gx.modules.sys.dao.SystemConfigDao;
 
 /**
  * 系统配置Service
- * @author liugf
- * @version 2016-02-07
  */
 @Service
 @Transactional(readOnly = true)

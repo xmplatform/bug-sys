@@ -15,8 +15,6 @@ import cn.gx.modules.sys.entity.Log;
 
 /**
  * 日志Service
- * @author bug
- * @version 2014-05-16
  */
 @Service
 @Transactional(readOnly = true)

@@ -30,8 +30,6 @@ import cn.gx.modules.sys.utils.UserUtils;
 
 /**
  * 菜单Controller
- * @author bug
- * @version 2013-3-23
  */
 @Controller
 @RequestMapping(value = "${adminPath}/sys/menu")

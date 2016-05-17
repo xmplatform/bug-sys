@@ -14,8 +14,6 @@ import cn.gx.common.web.BaseController;
 
 /**
  * 标签Controller
- * @author bug
- * @version 2013-3-23
  */
 @Controller
 @RequestMapping(value = "${adminPath}/tag")

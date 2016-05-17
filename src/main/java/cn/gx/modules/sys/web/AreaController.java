@@ -30,8 +30,6 @@ import cn.gx.modules.sys.utils.UserUtils;
 
 /**
  * 区域Controller
- * @author bug
- * @version 2013-5-15
  */
 @Controller
 @RequestMapping(value = "${adminPath}/sys/area")

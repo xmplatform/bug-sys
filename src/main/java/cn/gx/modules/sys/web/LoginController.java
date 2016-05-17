@@ -47,8 +47,6 @@ import cn.gx.modules.sys.utils.UserUtils;
 
 /**
  * 登录Controller
- * @author bug
- * @version 2013-5-31
  */
 @Controller
 public class LoginController extends BaseController{
@@ -331,7 +329,6 @@ public class LoginController extends BaseController{
 		}
 		return loginFailNum >= 3;
 	}
-	
 	
 	/**
 	 * 首页

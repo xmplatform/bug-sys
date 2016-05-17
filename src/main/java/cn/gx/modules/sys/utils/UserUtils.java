@@ -31,8 +31,6 @@ import cn.gx.modules.sys.security.SystemAuthorizingRealm.Principal;
 
 /**
  * 用户工具类
- * @author bug
- * @version 2013-12-05
  */
 public class UserUtils {
 
