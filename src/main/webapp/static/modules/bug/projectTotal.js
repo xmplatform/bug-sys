@@ -61,23 +61,12 @@ function initProjectTotalByDay(id,day) {
 
 
     $.ajax({
-
         async: false,
-
         url: bugCtx+"/bug/bugProject/totalProjectByDay?projectId="+id+"&day="+day,
-
         dataType:"json",
-
         success: function(json) {
-
             if(json.success) {
-
-                
-
-
-
                 var map=json.data;
-                console.info(map);
                 config.data.labels=map.dateStr;
                 $.each(map.bugList,function(index,bug){
 
@@ -85,25 +74,19 @@ function initProjectTotalByDay(id,day) {
                         label: bug.label,
                         borderColor: bug.color,
                         backgroundColor:'#FFFFFF',
-                        // pointBorderColor: randomColor(0.7),
-                        // pointBackgroundColor: randomColor(0.5),
                         pointBorderWidth: 1,
                         data: bug.values,
                     };
                     config.data.datasets.push(newDataset);
 
-
                 });
-
             }
-
-
         }
     });
-
-
     var ctx = document.getElementById("lineChart").getContext("2d");
     new Chart(ctx, config);
+
+
     // var data = {  // data.labels  data.datasets.data
     //     labels: labels,
     //     datasets: [

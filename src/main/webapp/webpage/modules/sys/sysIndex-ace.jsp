@@ -8,7 +8,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="renderer" content="webkit">
-    <title>JeePlus快速开发框架</title>
+    <title>Bug 管理</title>
 
 	<%@ include file="/webpage/include/acehead.jsp"%>
 	<script src="${ctxStatic}/common/inspinia-ace.js?v=3.2.0"></script>
@@ -42,7 +42,7 @@
 					<a href="#" class="navbar-brand">
 						<small>
 							<i class="fa fa-leaf"></i>
-							JeePlus快速开发框架
+							Bug 管理
 						</small>
 					</a>
 
@@ -378,7 +378,7 @@
 					<!-- #section:basics/footer -->
 					<div class="footer-content">
 						<span class="bigger-120">
-							<span class="blue bolder">JeePlus</span>
+							<span class="blue bolder">Bug</span>
 							 &copy; 2015-2020
 						</span>
 

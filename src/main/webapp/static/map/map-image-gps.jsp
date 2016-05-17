@@ -1,5 +1,5 @@
 <%@page import="java.io.File"%>
-<%@page import="cn.gx.common.utils.ImageGeo"%>
+<%@page import="com.jeeplus.common.utils.ImageGeo"%>
 <%@ page language="java" contentType="text/html; charset=utf-8"%>
 <%@ include file="/webpage/include/taglib.jsp"%>
 <!DOCTYPE html>

@@ -10,8 +10,8 @@
 
 
 var config = {
-    msgurl: url+'/iim/mailBox/list',//私信地址
-    chatlogurl: url+'/iim/chatHistory?userid1='+currentId+"&userid2=",//聊天记录url前缀
+    msgurl: url+'/iim/mailBox/list',
+    chatlogurl: url+'/iim/chatHistory?userid1='+currentId+"&userid2=",
     aniTime: 200,
     right: -232,
     api: {

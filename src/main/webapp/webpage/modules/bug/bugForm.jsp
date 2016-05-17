@@ -90,14 +90,14 @@
 			<form:hidden id="flag" path="act.flag"/>
 			<sys:message content="${message}"/>
 			
-		<table class="">
-			<tr>
-				<td>项目</td>
-				<td><select name="bugVersion.id"  id="version" class="required" /></td>
-				<td>版本</td>
-				<td><select name="bugProject.id"  id="project" class="required" /></td>
-			</tr>
-		</table>
+		<%--<table class="">--%>
+			<%--<tr>--%>
+				<%--<td>项目</td>--%>
+				<%--<td><select name="bugVersion.id"  id="version" class="required" /></td>--%>
+				<%--<td>版本</td>--%>
+				<%--<td><select name="bugProject.id"  id="project" class="required" /></td>--%>
+			<%--</tr>--%>
+		<%--</table>--%>
 			
 			
 		<!-- <div class="row">
@@ -113,7 +113,25 @@
 			
 			
 		</div> -->
-		
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label" >项目：</label>
+			<div class="col-sm-4">
+				<select name="bugProject.id"  id="project" class=" form-control required" /><font color="red">*</font>
+			</div>
+
+		</div>
+
+		<div class="form-group">
+
+			<label class="col-sm-2 control-label">版本：</label>
+			<div class="col-sm-4">
+				<select name="bugVersion.id"  id="version" class=" form-control required" />
+				<span class="help-inline"><font color="red">*</font> </span>
+			</div>
+
+		</div>
+
 		<div class="form-group">
 			<label class="col-sm-2 control-label">缺陷类型：</label>
 			<div class="col-sm-10">

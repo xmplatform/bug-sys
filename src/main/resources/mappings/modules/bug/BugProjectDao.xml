@@ -154,9 +154,11 @@
 	<!--from bug b-->
 	<!--where b.bug_project_id=#{projectId}-->
 	<!--GROUP BY b.bug_status ;-->
-	<!--查询7天内指定 Bug 类型的数量-->
-	<select id="totalProjectByDay" resultType="Charts">
 
+
+
+	<!--查询一段时间内指定Bug 类型每天数量-->
+	<select id="totalProjectByDay" resultType="Charts">
 		select
 				date_format(b.update_date,'%Y-%m-%d') as 'dayStr',
 				count(id) as value
@@ -166,7 +168,6 @@
 		and b.bug_status=#{status}
 		and b.bug_project_id=#{projectId}
 		group by date_format(b.update_date,'%Y-%m-%d')
-
 	</select>
 
 	<select id="totalBugStatus" resultType="Charts">

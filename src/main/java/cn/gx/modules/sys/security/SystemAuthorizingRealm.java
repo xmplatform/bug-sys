@@ -1,5 +1,5 @@
 /**
- * Copyright &copy; 2015-2020 <a href="http://www.bug.org/">JeePlus</a> All rights reserved.
+ * Copyright &copy; 2015-2020 <a href="http://www.bug.org/">Bug</a> All rights reserved.
  */
 package cn.gx.modules.sys.security;
 
@@ -60,6 +60,7 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 	HttpServletRequest request;
 
 	/**
+	 * 获取身份验证信息
 	 * 认证回调函数, 登录时调用
 	 */
 
@@ -96,7 +97,9 @@ public class SystemAuthorizingRealm extends AuthorizingRealm {
 	}
 
 	/**
+	 * 获取授权信息
 	 * 授权查询回调函数, 进行鉴权但缓存中无用户的授权信息时调用
+	 *
 	 */
 
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
