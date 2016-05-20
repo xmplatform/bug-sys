@@ -7,11 +7,13 @@ public class LayJson {
 	
 	private int status;
 	private String msg;
-	private List<Group> data = new ArrayList();
-	public void setData(List<Group> data) {
+	private List data = new ArrayList();
+
+
+	public void setData(List data) {
 		this.data = data;
 	}
-	public List<Group> getData() {
+	public List getData() {
 		return data;
 	}
 	public void setMsg(String msg) {

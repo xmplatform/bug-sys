@@ -148,9 +148,9 @@
                                              <dl class="dl-horizontal" >
 
 
-                                                 <dt>Created:</dt> <dd><fmt:formatDate value="${bugProject.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></dd>
-                                                 <dt>Last Updated:</dt><dd><fmt:formatDate value="${bugProject.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/></dd>
-                                                 <dt>Participants:</dt>
+                                                 <dt>创建时间:</dt> <dd><fmt:formatDate value="${bugProject.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/></dd>
+                                                 <dt>修改时间:</dt><dd><fmt:formatDate value="${bugProject.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/></dd>
+                                                 <dt>项目组成员:</dt>
                                                  <dd class="project-people" id="project-people">
 
                                                      <c:forEach items="${bugProject.userList}" var="user">

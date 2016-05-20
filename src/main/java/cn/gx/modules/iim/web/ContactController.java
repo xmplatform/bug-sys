@@ -3,11 +3,14 @@
  */
 package cn.gx.modules.iim.web;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.gx.modules.bug.entity.BugProject;
+import cn.gx.modules.bug.service.BugProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,6 +48,9 @@ public class ContactController extends BaseController {
 	
 	@Autowired
 	private OfficeService officeService;
+
+	@Autowired
+	private BugProjectService bugProjectService;
 	
 	
 	/**
@@ -173,7 +179,7 @@ public class ContactController extends BaseController {
 		
 		List<Office> officeList = officeService.findList(true);
 		int index=1;
-		for(Office office : officeList){
+		for(Office office : officeList){// 获取每个部门,即 分组
 			user.setOffice(office);
 			List<User> users = userDao.findListByOffice(user);
 			Group group = new Group();
@@ -206,16 +212,47 @@ public class ContactController extends BaseController {
 		
 		return j;
 	}
-	
+
+
+
 	/**
 	 * 群组列表接口 预留待开发
 	 * @return
 	 */
 	@RequestMapping(value="group")
 	@ResponseBody
-	public LayJson getGroup(){
+	public LayJson getGroup(User user){
 		LayJson j = new LayJson();
 		j.setStatus(1);
+
+		User currentUser=UserUtils.getUser();
+
+		BugProject bugProject=new BugProject();
+		if (!currentUser.isAdmin()){
+			bugProject.setSelf(true);
+		}
+
+		//项目组
+		List<BugProject> projectList = bugProjectService.findList(bugProject);
+		int index=1;
+		for(BugProject project : projectList){// 获取每个项目,即 分组
+			user.setBugProject(project);
+			List<User> users = bugProjectService.getProjectPeople(project.getId());//项目下的用户
+
+			Group group = new Group();
+			group.setName(project.getName());
+			group.setNums(users.size());
+			group.setId(++index);
+			for(User u : users){
+				Friend friend = new Friend();
+				friend.setId(u.getLoginName());
+				friend.setName(u.getName());
+				friend.setFace(u.getPhoto());
+				group.getItem().add(friend);
+			}
+			j.getData().add(group);
+		}
+		//
 		return j;
 	}
 	/**
@@ -235,9 +272,21 @@ public class ContactController extends BaseController {
 	 */
 	@RequestMapping(value="groups")
 	@ResponseBody
-	public LayJson getGroups(){
+	public LayJson getGroups(BugProject project){
 		LayJson j = new LayJson();
 		j.setStatus(1);
+
+
+		List<User> users = bugProjectService.getProjectPeople(project.getId());//项目下的用户
+		List<Friend> friends=new ArrayList<Friend>();
+		for(User u : users){
+			Friend friend = new Friend();
+			friend.setId(u.getLoginName());
+			friend.setName(u.getName());
+			friend.setFace(u.getPhoto());
+			friends.add(friend);
+		}
+		j.setData(friends);
 		return j;
 	}
 	

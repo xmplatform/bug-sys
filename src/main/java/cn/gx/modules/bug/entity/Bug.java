@@ -25,11 +25,21 @@ public class Bug extends ActEntity<Bug> {
 	private String bugType;		// 缺陷类型（0：BUG;1:改进；2：任务；3：需求）
 	private String bugStatus;		// 缺陷状态（0：新建；1：进行中；2：重开；3：已解决；4：暂缓；5：不解决；6：已关闭）
 	private String bugLevel;		// 缺陷优先级（0：低；1：普通；2：高；3：紧急）
+	private String bugFrequency;   // 缺陷发生频率
+
 	private String name;		// 名称
 	private String summary;		// 简介
-	private String description;		// 内容详情
+
+	private String platform; // 平台
+	private String system; // 操作系统
+	private String systemVersion;//版本
+
+	private String description;	// 问题重现步骤
+	private String solution; // 解决办法
+
 	private String file;		// 缺陷文件
 	private String image;		// 缺陷图片
+
 	private String testerLeadText;		// 测试主管意见
 	private String developerLeadText;		// 开发主管意见
 	private String projectManagerText;		// 项目经理意见
@@ -144,10 +154,50 @@ public class Bug extends ActEntity<Bug> {
 	}
 
 
+	public String getBugFrequency() {
+		return bugFrequency;
+	}
 
+	public void setBugFrequency(String bugFrequency) {
+		this.bugFrequency = bugFrequency;
+	}
 
+	public String getPlatform() {
+		return platform;
+	}
 
-	
+	public void setPlatform(String platform) {
+		this.platform = platform;
+	}
+
+	public String getSystem() {
+		return system;
+	}
+
+	public void setSystem(String system) {
+		this.system = system;
+	}
+
+	public String getSystemVersion() {
+		return systemVersion;
+	}
+
+	public String getSolution() {
+		return solution;
+	}
+
+	public void setSolution(String solution) {
+		this.solution = solution;
+	}
+
+	public void setProjectManagerText(String projectManagerText) {
+		this.projectManagerText = projectManagerText;
+	}
+
+	public void setSystemVersion(String systemVersion) {
+		this.systemVersion = systemVersion;
+	}
+
 	@Length(min=0, max=255, message="测试主管意见长度必须介于 0 和 255 之间")
 	@ExcelField(title="测试主管意见", align=2, sort=17)
 	public String getTesterLeadText() {

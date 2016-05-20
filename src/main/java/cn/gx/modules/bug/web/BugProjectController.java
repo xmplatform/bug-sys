@@ -329,8 +329,7 @@ public class BugProjectController extends BaseController {
 		//bugProject
 		List<User> userList=bugProjectService.getProjectPeople(projectId);
 
-		for (User u:
-			 userList) {
+		for (User u: userList) {
 			System.out.println(u.getPhoto());
 		}
 		bugProject.setUserList(userList);

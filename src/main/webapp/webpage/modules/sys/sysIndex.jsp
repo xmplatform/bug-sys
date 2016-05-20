@@ -241,6 +241,18 @@
 
 $(document).ready(function(){
 
+    setTimeout(function() {
+        console.info("shaonian");
+        toastr.options = {
+            closeButton: true,
+            progressBar: true,
+            showMethod: 'slideDown',
+            timeOut: 4000
+        };
+        toastr.success('Responsive Admin Theme', 'Welcome to INSPINIA');
+
+    }, 1300);
+
 	$("a.lang-select").click(function(){
 		$(".lang-selected").find(".lang-flag").attr("src",$(this).find(".lang-flag").attr("src"));
 		$(".lang-selected").find(".lang-flag").attr("alt",$(this).find(".lang-flag").attr("alt"));
