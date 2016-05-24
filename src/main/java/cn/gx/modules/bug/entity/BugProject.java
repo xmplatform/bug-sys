@@ -21,11 +21,16 @@ public class BugProject extends DataEntity<BugProject> {
 	private static final long serialVersionUID = 1L;
 	private String name;		// 项目名称
 	private String summary;		// 项目简介
+	private String logo;//项目图片
+	private String processKey; // 流程定义key
+	private boolean active=false; // 项目启动
+
 	private List<BugVersion> bugVersionList = Lists.newArrayList();		// 子表列表
 	private List<User> userList=Lists.newArrayList();// 参与用户列表
 
 
 	private boolean isSelf;		// 是否只查询自己的项目
+
 
 
 	public BugProject() {
@@ -50,6 +55,22 @@ public class BugProject extends DataEntity<BugProject> {
 	@ExcelField(title="项目简介", align=2, sort=2)
 	public String getSummary() {
 		return summary;
+	}
+
+	public String getLogo() {
+		return logo;
+	}
+
+	public void setLogo(String logo) {
+		this.logo = logo;
+	}
+
+	public String getProcessKey() {
+		return processKey;
+	}
+
+	public void setProcessKey(String processKey) {
+		this.processKey = processKey;
 	}
 
 	public void setSummary(String summary) {
@@ -88,4 +109,15 @@ public class BugProject extends DataEntity<BugProject> {
 		this.isSelf = isSelf;
 	}
 
+	public boolean isActive() {
+		if(processKey!=null){
+			return true;
+		}
+		return  false;
+
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
+	}
 }

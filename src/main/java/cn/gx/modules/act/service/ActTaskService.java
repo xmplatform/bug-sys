@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import cn.gx.modules.bug.entity.Bug;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
@@ -26,7 +27,10 @@ import org.activiti.engine.impl.RepositoryServiceImpl;
 import org.activiti.engine.impl.bpmn.behavior.UserTaskActivityBehavior;
 import org.activiti.engine.impl.bpmn.diagram.ProcessDiagramGenerator;
 import org.activiti.engine.impl.context.Context;
+import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.pvm.PvmActivity;
+import org.activiti.engine.impl.pvm.PvmTransition;
 import org.activiti.engine.impl.pvm.delegate.ActivityBehavior;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
 import org.activiti.engine.impl.task.TaskDefinition;
@@ -155,6 +159,9 @@ public class ActTaskService extends BaseService {
 		}
 		return result;
 	}
+
+
+
 
 
 
@@ -409,15 +416,18 @@ public class ActTaskService extends BaseService {
 		if (StringUtils.isNotBlank(title)){
 			vars.put("title", title);
 		}
-		
+
+
 		// 启动流程
-		ProcessInstance procIns = runtimeService.startProcessInstanceByKey(procDefKey, businessTable+":"+businessId, vars);
-		
+		ProcessInstance procIns = runtimeService.startProcessInstanceByKey(procDefKey,ActUtils.createBusinessKey( businessTable,businessId), vars);
+
+
 		// 更新业务表流程实例ID
 		Act act = new Act();
 		act.setBusinessTable(businessTable);// 业务表名
 		act.setBusinessId(businessId);	// 业务表ID
 		act.setProcInsId(procIns.getId());
+
 		actDao.updateProcInsIdByBusinessId(act);
 		return act.getProcInsId();
 	}
@@ -729,5 +739,98 @@ public class ActTaskService extends BaseService {
 		activityInfo.put("x", activity.getX());
 		activityInfo.put("y", activity.getY());
 	}
-	
+
+
+	/**
+	 * 获取 startEvent 的下一个节点
+	 * @param processKey
+	 * @return
+     */
+	public TaskDefinition nextStartEvent(String processKey){
+
+		//这个没有 activiti,只能通过 id 获取...可能也有更好的方法
+		ProcessDefinitionEntity  defold= (ProcessDefinitionEntity) repositoryService.createProcessDefinitionQuery().processDefinitionKey(processKey).latestVersion().singleResult();
+		ProcessDefinitionEntity def = (ProcessDefinitionEntity) ((RepositoryServiceImpl)repositoryService).getDeployedProcessDefinition(defold.getId());
+
+		List<ActivityImpl> activitiList = def.getActivities();
+//		for (ActivityImpl activityImpl:activitiList){
+//			//activityImpl.get
+//		}
+		// 获取 startEvent 下的第一个任务
+		// 无脑获取第一个...task..
+		TaskDefinition taskDefinition = ((UserTaskActivityBehavior)activitiList.get(0).getActivityBehavior()).getTaskDefinition();
+
+		return taskDefinition;
+	}
+
+	/**
+	 * 根据实例编号查找下一个任务节点
+	 * @param String procInstId ：实例编号
+	 * @return
+	 */
+	public TaskDefinition nextTaskDefinition(String procInstId,String elString){
+		//流程标示
+		String processDefinitionId = historyService.createHistoricProcessInstanceQuery().processInstanceId(procInstId).singleResult().getProcessDefinitionId();
+
+		ProcessDefinitionEntity def = (ProcessDefinitionEntity) ((RepositoryServiceImpl)repositoryService).getDeployedProcessDefinition(processDefinitionId);
+		//执行实例
+		ExecutionEntity execution = (ExecutionEntity) runtimeService.createProcessInstanceQuery().processInstanceId(procInstId).singleResult();
+		//当前实例的执行到哪个节点
+		String activitiId = execution.getActivityId();
+		//获得当前任务的所有节点
+		List<ActivityImpl> activitiList = def.getActivities();
+		String id = null;
+		for(ActivityImpl activityImpl:activitiList){
+			id = activityImpl.getId();
+			if(activitiId.equals(id)){
+				System.out.println("当前任务："+activityImpl.getProperty("name"));
+				return nextTaskDefinition(activityImpl, activityImpl.getId(),elString);//"${iscorrect==1}"
+//              System.out.println(taskDefinition.getCandidateGroupIdExpressions().toArray()[0]);
+//              return taskDefinition;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * 下一个任务节点
+	 * @param activityImpl
+	 * @param activityId
+	 * @param elString
+	 * @return
+	 */
+	private TaskDefinition nextTaskDefinition(ActivityImpl activityImpl, String activityId, String elString){
+		if("userTask".equals(activityImpl.getProperty("type")) && !activityId.equals(activityImpl.getId())){
+			TaskDefinition taskDefinition = ((UserTaskActivityBehavior)activityImpl.getActivityBehavior()).getTaskDefinition();
+//              taskDefinition.getCandidateGroupIdExpressions().toArray();
+			return taskDefinition;
+		}else{
+			List<PvmTransition> outTransitions = activityImpl.getOutgoingTransitions();
+			List<PvmTransition> outTransitionsTemp = null;
+			for(PvmTransition tr:outTransitions){
+				PvmActivity ac = tr.getDestination(); //获取线路的终点节点
+				if("exclusiveGateway".equals(ac.getProperty("type"))){
+					outTransitionsTemp = ac.getOutgoingTransitions();
+					if(outTransitionsTemp.size() == 1){
+						return nextTaskDefinition((ActivityImpl)outTransitionsTemp.get(0).getDestination(), activityId, elString);
+					}else if(outTransitionsTemp.size() > 1){
+						for(PvmTransition tr1 : outTransitionsTemp){
+							Object obj= tr1.getProperty("conditionText");
+							String elStr= StringUtils.replace(elString," ","");
+							String str=  StringUtils.replace(obj.toString()," ","");
+							if(elStr.equals(str)){
+								return nextTaskDefinition((ActivityImpl)tr1.getDestination(), activityId, elString);
+							}
+						}
+					}
+				}else if("userTask".equals(ac.getProperty("type"))){
+					return ((UserTaskActivityBehavior)((ActivityImpl)ac).getActivityBehavior()).getTaskDefinition();
+				}else{
+					logger.debug("nextTaskDefinition:",ac.getProperty("type"));
+				}
+			}
+			return null;
+		}
+	}
+
 }

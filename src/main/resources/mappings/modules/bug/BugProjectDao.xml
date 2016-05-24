@@ -6,6 +6,8 @@
 		a.id AS "id",
 		a.name AS "name",
 		a.summary AS "summary",
+		a.logo as "logo",
+		a.processKey as "processKey",
 		a.create_by AS "createBy.id",
 		a.create_date AS "createDate",
 		a.update_by AS "updateBy.id",
@@ -47,9 +49,12 @@
 			JOIN bug_project_user pu ON pu.project_id = a.id
 			AND pu.user_id=#{currentUser.id}
 		</if>
-		<where>
 
+		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="active">
+			a.processKey is not null
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
@@ -95,12 +100,20 @@
 			</otherwise>
 		</choose>
 	</select>
+
+	
+	<select id="getProcessKey" resultType="String">
+		select b.processKey from bug_project b
+		where b.id=#{id}
+	</select>
 	
 	<insert id="insert">
 		INSERT INTO bug_project(
 			id,
 			name,
 			summary,
+			logo,
+			processKey,
 			create_by,
 			create_date,
 			update_by,
@@ -111,6 +124,8 @@
 			#{id},
 			#{name},
 			#{summary},
+			#{logo},
+			#{processKey},
 			#{createBy.id},
 			#{createDate},
 			#{updateBy.id},
@@ -124,6 +139,8 @@
 		UPDATE bug_project SET 	
 			name = #{name},
 			summary = #{summary},
+			logo=#{logo},
+			processKey=#{processKey},
 			update_by = #{updateBy.id},
 			update_date = #{updateDate},
 			remarks = #{remarks}

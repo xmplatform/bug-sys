@@ -308,7 +308,8 @@ function openDialog(title,url,width,height,target){
 	         inputForm.attr("target",top_iframe);//表单提交成功后，从服务器返回的url在当前tab中展示
 	         
 	        if(iframeWin.contentWindow.doSubmit() ){
-	        	 top.layer.close(index);//关闭对话框。
+	        	//top.layer.close(index);//关闭对话框。
+				setTimeout(function(){top.layer.close(index)}, 100);//延时0.1秒，对应360 7.1版本bug
 	         }
 			
 		  },

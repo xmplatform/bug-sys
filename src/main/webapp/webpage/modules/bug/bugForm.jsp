@@ -202,7 +202,7 @@
 			<label class="col-sm-2 control-label">图片:</label>
 			<div class="col-sm-10">
                 <input type="hidden" id="image" name="image" value="${image}" />
-				<sys:ckfinder input="image" type="thumb" uploadPath="/bug/bug" selectMultiple="false"/>
+				<sys:ckfinder input="image" type="thumb" uploadPath="/bug/bug" selectMultiple="true"/>
 			</div>
 		</div>
 		
@@ -210,7 +210,7 @@
 			<label class="col-sm-2 control-label">附件:</label>
 			<div class="col-sm-10">
                 <input type="hidden" id="file" name="file" value="${file}" />
-				<sys:ckfinder input="file" type="thumb" uploadPath="/bug/bug" selectMultiple="false"/>
+				<sys:ckfinder input="file" type="thumb" uploadPath="/bug/bug" selectMultiple="true"/>
 			</div>
 		</div>
 		

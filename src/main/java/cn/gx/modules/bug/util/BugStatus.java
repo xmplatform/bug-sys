@@ -33,6 +33,7 @@ public enum  BugStatus {
     RETEST("RETEST","验证","验证开发人员修复的缺陷"),
 
     REOPEN("REOPEN","重新打开","依然存在缺陷,重新打开"),
+    V("REOPEN","重新打开","依然存在缺陷,重新打开"),
     CLOSED("CLOSED","关闭","缺陷已验证,缺陷关闭");
 
     private final String status;

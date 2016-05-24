@@ -57,7 +57,7 @@
 
 
 <!-- Gritter -->
-<link href="${ctxStatic}/css/plugins/gritter/jquery.gritter.css" rel="stylesheet">
+<link href="${ctxStatic}/js/plugins/gritter/jquery.gritter.css" rel="stylesheet">
 <script src="${ctxStatic}/js/plugins/gritter/jquery.gritter.min.js"></script>
 
 <!--引入webuploader-->

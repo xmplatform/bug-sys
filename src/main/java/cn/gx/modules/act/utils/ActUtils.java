@@ -195,4 +195,8 @@ public class ActUtils {
 		 User user = new User();
 		 System.out.println(getMobileEntity(user, "@"));
 	}
+
+	public static String createBusinessKey(String businessTable, String businessId) {
+		return businessTable+":"+businessId;
+	}
 }

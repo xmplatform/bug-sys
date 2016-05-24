@@ -82,6 +82,20 @@
 					</td>
 				</tr>
 				<tr>
+					<td class="width-15 active"><label class="pull-right"><font color="red">*</font>项目LOGO：</label></td>
+					<td class="width-35">
+						<form:hidden id="logo" path="logo" htmlEscape="false" maxlength="255" class="input-xlarge"/>
+						<sys:ckfinder input="logo" type="images" uploadPath="/project/logo" selectMultiple="false" maxWidth="100" maxHeight="100"/>
+					</td>
+					<td class="width-15 active"><label class="pull-right">指定流程：</label></td>
+					<td class="width-35">
+						<form:select path="processKey"  class="form-control">
+							<form:option value="" label="请选择流程"/>
+							<form:options items="${processList}" itemLabel="name" itemValue="key" htmlEscape="false"/>
+						</form:select>
+					</td>
+				</tr>
+				<tr>
 					<td class="width-15 active"><label class="pull-right">备注信息：</label></td>
 					<td class="width-35">
 						<form:textarea path="remarks" htmlEscape="false" rows="4" maxlength="255" class="form-control "/>

@@ -19,6 +19,7 @@
 			 validateForm = $("#inputForm").validate({
 				submitHandler: function(form){
 					loading('正在提交，请稍等...');
+					console.info(form);
 					form.submit();
 				},
 				errorContainer: "#messageBox",

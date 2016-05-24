@@ -10,6 +10,8 @@ import cn.gx.modules.bug.bean.StatusBug;
 import cn.gx.modules.bug.util.BugStatus;
 import cn.gx.modules.bug.bean.Charts;
 import cn.gx.modules.bug.util.Total;
+import cn.gx.modules.sys.dao.UserDao;
+import cn.gx.modules.sys.entity.Role;
 import cn.gx.modules.sys.entity.User;
 import cn.gx.modules.sys.service.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,9 +37,12 @@ public class BugProjectService extends CrudService<BugProjectDao, BugProject> {
 
 	@Autowired
 	private BugVersionDao bugVersionDao;
-
 	@Autowired
 	private SystemService systemService;
+
+	@Autowired
+	private UserDao userDao;
+
 	
 	public BugProject get(String id) {
 		BugProject bugProject = super.get(id);
@@ -258,5 +263,10 @@ public class BugProjectService extends CrudService<BugProjectDao, BugProject> {
 		User user=new User();
 		user.setBugProject(new BugProject(projectId));
 		return dao.getProjectPeople(user);
+	}
+
+	public List<User> findUserListByRole(String projectId, String enname) {
+		List<User> userList=userDao.findUserListByRoleEnname(projectId,enname);
+		return userList;
 	}
 }

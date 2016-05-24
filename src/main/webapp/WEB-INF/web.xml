@@ -19,6 +19,7 @@
     <filter-class>cn.gx.common.websocket.WebSockertFilter</filter-class>
   </filter>
 
+  <!--字符编码-->
   <filter>
     <filter-name>encodingFilter</filter-name>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -31,11 +32,13 @@
       <param-value>true</param-value>
     </init-param>
   </filter>
+
   <filter-mapping>
     <filter-name>encodingFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
+  <!--登录权限过滤器-->
   <filter>
     <filter-name>shiroFilter</filter-name>
     <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
@@ -49,6 +52,7 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
+  <!--布局框架过滤器-->
   <filter>
     <filter-name>sitemeshFilter</filter-name>
     <filter-class>com.opensymphony.sitemesh.webapp.SiteMeshFilter</filter-class>
@@ -62,7 +66,7 @@
     <url-pattern>/f/*</url-pattern>
   </filter-mapping>
 
-
+<!--spring mvc -->
   <servlet>
     <servlet-name>springServlet</servlet-name>
     <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
@@ -76,6 +80,8 @@
     <servlet-name>springServlet</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
+
+  <!--activiti rest 入口-->
   <servlet>
     <servlet-name>RestletServlet</servlet-name>
     <servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
@@ -88,6 +94,8 @@
     <servlet-name>RestletServlet</servlet-name>
     <url-pattern>/act/rest/service/*</url-pattern>
   </servlet-mapping>
+
+ <!--数据库监控-->
   <servlet>
     <servlet-name>DruidStatView</servlet-name>
     <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
@@ -100,6 +108,8 @@
     <servlet-name>DruidStatView</servlet-name>
     <url-pattern>/druid/*</url-pattern>
   </servlet-mapping>
+
+  <!--CkFiner 配置-->
   <servlet>
     <servlet-name>CKFinderConnectorServlet</servlet-name>
     <servlet-class>cn.gx.common.web.CKFinderConnectorServlet</servlet-class>
@@ -121,6 +131,8 @@
     <servlet-name>CKFinderConnectorServlet</servlet-name>
     <url-pattern>/static/ckfinder/core/connector/java/connector.java</url-pattern>
   </servlet-mapping>
+
+  <!--ckfinder 上传文件过滤-->
   <filter>
     <filter-name>FileUploadFilter</filter-name>
     <filter-class>com.ckfinder.connector.FileUploadFilter</filter-class>
@@ -137,6 +149,8 @@
     <filter-name>FileUploadFilter</filter-name>
     <url-pattern>/static/ckfinder/core/connector/java/connector.java</url-pattern>
   </filter-mapping>
+
+  <!--个人文件夹-->
   <servlet>
     <servlet-name>UserfilesDownloadServlet</servlet-name>
     <servlet-class>cn.gx.common.servlet.UserfilesDownloadServlet</servlet-class>
@@ -145,6 +159,8 @@
     <servlet-name>UserfilesDownloadServlet</servlet-name>
     <url-pattern>/userfiles/*</url-pattern>
   </servlet-mapping>
+
+  <!--验证码-->
   <servlet>
     <servlet-name>ValidateCodeServlet</servlet-name>
     <servlet-class>cn.gx.common.servlet.ValidateCodeServlet</servlet-class>
@@ -153,6 +169,9 @@
     <servlet-name>ValidateCodeServlet</servlet-name>
     <url-pattern>/servlet/validateCodeServlet</url-pattern>
   </servlet-mapping>
+
+
+  <!--错误页面-->
   <error-page>
     <error-code>500</error-code>
     <location>/webpage/error/500.jsp</location>

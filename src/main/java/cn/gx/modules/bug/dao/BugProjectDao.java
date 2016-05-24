@@ -33,4 +33,6 @@ public interface BugProjectDao extends CrudDao<BugProject> {
     List<Charts> totalProjectByDay(Charts charts);
 
     List<User> getProjectPeople(User user);
+
+    String getProcessKey(String id);
 }

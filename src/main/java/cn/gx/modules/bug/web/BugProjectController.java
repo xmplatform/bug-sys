@@ -3,14 +3,17 @@
  */
 package cn.gx.modules.bug.web;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import cn.gx.common.utils.Collections3;
 import cn.gx.modules.act.entity.Act;
+import cn.gx.modules.act.service.ActProcessService;
 import cn.gx.modules.act.service.ActTaskService;
 import cn.gx.modules.bug.bean.Json;
 import cn.gx.modules.bug.bean.StatusBug;
@@ -20,6 +23,8 @@ import cn.gx.modules.bug.bean.Charts;
 import cn.gx.modules.sys.entity.User;
 import cn.gx.modules.sys.service.OfficeService;
 import cn.gx.modules.sys.service.SystemService;
+import org.activiti.engine.delegate.Expression;
+import org.activiti.engine.impl.task.TaskDefinition;
 import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
@@ -63,6 +68,9 @@ public class BugProjectController extends BaseController {
 	@Autowired
 	private ActTaskService actTaskService;
 
+	@Autowired
+	private ActProcessService actProcessService;
+
 	@ModelAttribute
 	public BugProject get(@RequestParam(required=false) String id) {
 		BugProject entity = null;
@@ -96,6 +104,8 @@ public class BugProjectController extends BaseController {
 	@RequiresPermissions(value={"bug:bugProject:view","bug:bugProject:add","bug:bugProject:edit"},logical=Logical.OR)
 	@RequestMapping(value = "form")
 	public String form(BugProject bugProject, Model model) {
+
+		model.addAttribute("processList",actProcessService.processList());
 		model.addAttribute("bugProject", bugProject);
 		return "modules/bug/bugProjectForm";
 	}
@@ -300,6 +310,7 @@ public class BugProjectController extends BaseController {
 	@ResponseBody
 	public List<BugProject> selfAllList(BugProject bugProject){
 		bugProject.setSelf(true);
+		bugProject.setActive(true);
 		return bugProjectService.findList(bugProject);
 	}
 
@@ -310,8 +321,68 @@ public class BugProjectController extends BaseController {
 	 */
 	@RequestMapping(value = "findProjectVersionJson")
 	@ResponseBody
-	public List<BugVersion> findProjectVersionJson(String projectId, HttpServletRequest request, HttpServletResponse response, Model model){
-		return bugProjectService.findProjectVersionList(projectId);
+	@Deprecated
+	public List<BugVersion> getProjectVersion(String projectId, HttpServletRequest request){
+
+		return  bugProjectService.findProjectVersionList(projectId);
+	}
+
+	/**
+	 *
+	 * 指定项目版本列表
+	 * @return
+	 */
+	@RequestMapping(value = "loadProjectVersion")
+	@ResponseBody
+	public Json loadProjectVersion(String projectId, HttpServletRequest request){
+
+		Json json=new Json();
+		try {
+
+			List<BugVersion> bugVersionList=bugProjectService.findProjectVersionList(projectId);
+			json.setMsg("加载项目状态成功");
+			json.setSuccess(true);
+			json.setData(bugVersionList);
+		}catch (Exception e){
+			json.setMsg(e.getMessage());
+		}
+
+		return json;
+	}
+	/**
+	 *
+	 * 指定项目版本以及流程的下一个节点
+	 * @return
+	 */
+	@RequestMapping(value = "loadProjectVersionAndNextTask")
+	@ResponseBody
+	public Json loadProjectVersionAndNextTask(String projectId, HttpServletRequest request){
+
+		Json json=new Json();
+		try {
+
+			List<List> results=new ArrayList<List>();
+
+			List<BugVersion> bugVersionList=bugProjectService.findProjectVersionList(projectId);
+			results.add(bugVersionList);
+
+			BugProject bugProject = bugProjectService.get(projectId);
+
+			TaskDefinition taskDefinition = actTaskService.nextStartEvent(bugProject.getProcessKey());
+			Set<Expression> candidateGroupIdExpressions = taskDefinition.getCandidateGroupIdExpressions();
+			for (Expression e: candidateGroupIdExpressions) {
+				String group = e.getExpressionText();// group
+				List<User> groupUserList=bugProjectService.findUserListByRole(projectId,group);
+				results.add(groupUserList);
+			}
+			json.setMsg("加载项目状态成功");
+			json.setSuccess(true);
+			json.setData(results);
+		}catch (Exception e){
+			json.setMsg(e.getMessage());
+		}
+
+		return json;
 	}
 
 	/**

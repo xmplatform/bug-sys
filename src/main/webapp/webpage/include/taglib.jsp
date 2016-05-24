@@ -11,6 +11,3 @@
 <%@ taglib prefix="t" uri="/menu-tags"%>
 <c:set var="ctx" value="${pageContext.request.contextPath}${fns:getAdminPath()}"/>
 <c:set var="ctxStatic" value="${pageContext.request.contextPath}/static"/>
-<script type="text/javascript">
-    var bugCtx = '<%=request.getContextPath() %>'+'${fns:getAdminPath()}';
-</script>

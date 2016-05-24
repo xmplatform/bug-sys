@@ -1,3 +1,5 @@
+
+import cn.gx.common.utils.StringUtils;
 import org.junit.Test;
 
 import java.text.SimpleDateFormat;
@@ -39,5 +41,24 @@ public class Demo {
         Date monday = c.getTime();
         String preMonday = sdf.format(monday);
         return preMonday;
+    }
+
+    @Test
+    public void testequal(){
+
+        String elString="${status.equals('GENUINE')}";
+        String s="${status.equals( 'GENUINE') }";
+
+        String elTrim = StringUtils.replace(elString," ","");
+        String sTrim =  StringUtils.replace(s," ","");
+        System.out.println(elTrim.equals(sTrim));
+    }
+
+
+    @Test
+    public void testTrim(){
+        String trim=" shao s hahah ";// qbqb
+        String trim1 = StringUtils.trim(trim);
+        System.out.println(trim1);
     }
 }

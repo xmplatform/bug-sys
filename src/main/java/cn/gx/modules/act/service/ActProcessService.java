@@ -79,6 +79,20 @@ public class ActProcessService extends BaseService {
 		return page;
 	}
 
+
+	public List<ProcessDefinition> processList(){
+		ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery()
+				.latestVersion().orderByProcessDefinitionKey().asc();
+
+//		List<ProcessDefinition> processDefinitionList = processDefinitionQuery.list();
+//		for (ProcessDefinition processDefinition : processDefinitionList) {
+//			String deploymentId = processDefinition.getDeploymentId();
+//			Deployment deployment = repositoryService.createDeploymentQuery().deploymentId(deploymentId).singleResult();
+//		}
+
+		return  processDefinitionQuery.list();
+	}
+
 	/**
 	 * 流程定义列表
 	 */

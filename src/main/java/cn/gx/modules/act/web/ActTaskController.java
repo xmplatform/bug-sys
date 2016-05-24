@@ -140,7 +140,6 @@ public class ActTaskController extends BaseController {
 		
 		// 获取流程XML上的表单KEY
 		String formKey = actTaskService.getFormKey(act.getProcDefId(), act.getTaskDefKey());
-
 		// 获取流程实例对象
 		if (act.getProcInsId() != null){
 			act.setProcIns(actTaskService.getProcIns(act.getProcInsId()));

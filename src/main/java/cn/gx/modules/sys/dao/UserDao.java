@@ -139,4 +139,6 @@ UserDao extends CrudDao<User> {
 	void outUserInBugProject(@Param("userId")String userId, @Param("projectId")String projectId);
 
 	String getUserName(String userId);
+
+	List<User> findUserListByRoleEnname(@Param("projectId") String projectId, @Param("enname") String enname);
 }

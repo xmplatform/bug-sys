@@ -85,23 +85,27 @@
 			<tr>
 				<th> <input type="checkbox" class="i-checks"></th>
 				<th  class="sort-column name">项目名称</th>
+				<th  class="sort-column name">项目LOGO</th>
 				<th  class="sort-column summary">项目简介</th>
-				<th  class="sort-column remarks">备注信息</th>
 				<th>操作</th>
 			</tr>
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="bugProject">
+
 			<tr>
 				<td> <input type="checkbox" id="${bugProject.id}" class="i-checks"></td>
-				<td><a  href="#" onclick="openDialogView('查看项目', '${ctx}/bug/bugProject/form?id=${bugProject.id}','800px', '500px')">
-					${bugProject.name}
-				</a></td>
 				<td>
-					${bugProject.summary}
+					<a  href="#" onclick="openDialogView('查看项目', '${ctx}/bug/bugProject/form?id=${bugProject.id}','800px', '500px')">
+						<span  class=" label ${bugProject.active==true ? 'label-primary':''} ">${bugProject.name}</span>
+					</a>
+
 				</td>
 				<td>
-					${bugProject.remarks}
+					<img src="${bugProject.logo}" width="50" height="50">
+				</td>
+				<td>
+					${bugProject.summary}
 				</td>
 				<td>
 					<shiro:hasPermission name="bug:bugProject:view">

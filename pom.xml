@@ -37,6 +37,8 @@
     <dozer.version>5.5.1</dozer.version>
     <poi.version>3.9</poi.version>
     <freemarker.version>2.3.20</freemarker.version>
+    <ckfinder.version>2.3</ckfinder.version>
+    <!--<ckfinder.version>2.6.1</ckfinder.version>-->
 
     <!-- jdbc driver setting -->
     <mysql.driver.version>5.1.30</mysql.driver.version>
@@ -609,22 +611,22 @@
     <dependency>
       <groupId>com.ckfinder</groupId>
       <artifactId>apache-ant-zip</artifactId>
-      <version>2.3</version>
+      <version>${ckfinder.version}</version>
     </dependency>
     <dependency>
       <groupId>com.ckfinder</groupId>
       <artifactId>ckfinder</artifactId>
-      <version>2.3</version>
+      <version>${ckfinder.version}</version>
     </dependency>
     <dependency>
       <groupId>com.ckfinder</groupId>
       <artifactId>ckfinderplugin-fileeditor</artifactId>
-      <version>2.3</version>
+      <version>${ckfinder.version}</version>
     </dependency>
     <dependency>
       <groupId>com.ckfinder</groupId>
       <artifactId>ckfinderplugin-imageresize</artifactId>
-      <version>2.3</version>
+      <version>${ckfinder.version}</version>
     </dependency>
     <!-- CKFinder end -->
 

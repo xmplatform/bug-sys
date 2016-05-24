@@ -22,27 +22,40 @@ public class Bug extends ActEntity<Bug> {
 	private static final long serialVersionUID = 1L;
 	private BugVersion bugVersion;		// 项目版本主键
 	private BugProject bugProject;		// 项目主键
-	private String bugType;		// 缺陷类型（0：BUG;1:改进；2：任务；3：需求）
-	private String bugStatus;		// 缺陷状态（0：新建；1：进行中；2：重开；3：已解决；4：暂缓；5：不解决；6：已关闭）
-	private String bugLevel;		// 缺陷优先级（0：低；1：普通；2：高；3：紧急）
-	private String bugFrequency;   // 缺陷发生频率
+
 
 	private String name;		// 名称
+
+	private String bugPlatform; // 平台
+	private String bugSystemAndVersion; // 操作系统以及版本
+
+	private String bugType;		 	// 类型（0：BUG;1:改进；2：任务；3：需求）
+	private String bugLevel;		// 优先级（0：低；1：普通；2：高；3：紧急）
+	private String bugSerious;		// 严重（0:提示,1：一般；2：严重；3：致命）
+	private String bugFrequency;    // 发生频率（0:低,1:中,2:高）
+
 	private String summary;		// 简介
 
-	private String platform; // 平台
-	private String system; // 操作系统
-	private String systemVersion;//版本
 
-	private String description;	// 问题重现步骤
+	private String step2Reproduce;	// 问题重现步骤
+	private String behavior;	// 实际行为
+	private String expected;	// 期望结果
+
 	private String solution; // 解决办法
 
 	private String file;		// 缺陷文件
 	private String image;		// 缺陷图片
 
+	private String bugStatus;		// 状态（0：新建；1：进行中；2：重开；3：已解决；4：暂缓；5：不解决；6：已关闭）
+
+
+	private String assign;//分派
+
+
 	private String testerLeadText;		// 测试主管意见
 	private String developerLeadText;		// 开发主管意见
 	private String projectManagerText;		// 项目经理意见
+
 
 
 
@@ -124,15 +137,8 @@ public class Bug extends ActEntity<Bug> {
 		this.summary = summary;
 	}
 	
-	@ExcelField(title="内容详情", align=2, sort=8)
-	public String getDescription() {
-		return description;
-	}
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
-	
+
 	@Length(min=0, max=255, message="缺陷文件长度必须介于 0 和 255 之间")
 	@ExcelField(title="缺陷文件", align=2, sort=15)
 	public String getFile() {
@@ -162,25 +168,6 @@ public class Bug extends ActEntity<Bug> {
 		this.bugFrequency = bugFrequency;
 	}
 
-	public String getPlatform() {
-		return platform;
-	}
-
-	public void setPlatform(String platform) {
-		this.platform = platform;
-	}
-
-	public String getSystem() {
-		return system;
-	}
-
-	public void setSystem(String system) {
-		this.system = system;
-	}
-
-	public String getSystemVersion() {
-		return systemVersion;
-	}
 
 	public String getSolution() {
 		return solution;
@@ -192,10 +179,6 @@ public class Bug extends ActEntity<Bug> {
 
 	public void setProjectManagerText(String projectManagerText) {
 		this.projectManagerText = projectManagerText;
-	}
-
-	public void setSystemVersion(String systemVersion) {
-		this.systemVersion = systemVersion;
 	}
 
 	@Length(min=0, max=255, message="测试主管意见长度必须介于 0 和 255 之间")
@@ -235,6 +218,66 @@ public class Bug extends ActEntity<Bug> {
 	}
 
 	public void setBugStatusPhrase(String bugStatusPhrase) {
+
 		this.bugStatusPhrase = bugStatusPhrase;
+	}
+
+
+	public String getBugPlatform() {
+
+		return bugPlatform;
+	}
+
+	public void setBugPlatform(String bugPlatform) {
+		this.bugPlatform = bugPlatform;
+	}
+
+	public String getBugSystemAndVersion() {
+		return bugSystemAndVersion;
+	}
+
+	public void setBugSystemAndVersion(String bugSystemAndVersion) {
+		this.bugSystemAndVersion = bugSystemAndVersion;
+	}
+
+	public String getBugSerious() {
+		return bugSerious;
+	}
+
+	public void setBugSerious(String bugSerious) {
+		this.bugSerious = bugSerious;
+	}
+
+	@ExcelField(title="内容详情", align=2, sort=8)
+	public String getStep2Reproduce() {
+		return step2Reproduce;
+	}
+
+	public void setStep2Reproduce(String step2Reproduce) {
+		this.step2Reproduce = step2Reproduce;
+	}
+
+	public String getBehavior() {
+		return behavior;
+	}
+
+	public void setBehavior(String behavior) {
+		this.behavior = behavior;
+	}
+
+	public String getExpected() {
+		return expected;
+	}
+
+	public void setExpected(String expected) {
+		this.expected = expected;
+	}
+
+	public String getAssign() {
+		return assign;
+	}
+
+	public void setAssign(String assign) {
+		this.assign = assign;
 	}
 }

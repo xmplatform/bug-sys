@@ -9,12 +9,20 @@
 		bugVersion.build as "bugVersion.build",
 		a.bug_project_id AS "bugProject.id",
 		bugProject.name as "bugProject.name",
+		a.name AS "name",
 		a.bug_type AS "bugType",
 		a.bug_status AS "bugStatus",
 		a.bug_level AS "bugLevel",
-		a.name AS "name",
+		a.bug_platform AS "bugPlatform",
+		a.bug_systemAndVersion AS "bugSystemAndVersion",
+		a.bug_serious AS "bugSerious",
+		a.bug_frequency AS "bugFrequency",
 		a.summary AS "summary",
-		a.description AS "description",
+		a.step2Reproduce AS "step2Reproduce",
+		a.behavior AS "behavior",
+		a.expected AS "expected",
+		a.solution AS "solution",
+		a.assign AS "assign",
 		a.del_flag AS "delFlag",
 		a.create_by AS "createBy.id",
 		a.create_date AS "createDate",
@@ -40,6 +48,25 @@
 		FROM bug a
 		<include refid="bugJoins"/>
 		WHERE a.id = #{id}
+	</select>
+
+	<select id="getByProcInsId" resultType="Bug">
+		SELECT
+		<include refid="bugColumns"/>
+		FROM bug a
+		<include refid="bugJoins"/>
+		WHERE a.proc_ins_id = #{procInsId}
+	</select>
+
+	<select id="getApplyUser" resultType="User">
+			select
+			u.id as id,
+			u.name as name,
+			u.login_name as loginName
+		from sys_user as u
+	  	left join bug b on b.create_by = u.id
+	  	where b.proc_ins_id=#{procInsId}
+
 	</select>
 	
 	<select id="findList" resultType="Bug">
@@ -96,67 +123,140 @@
 	<insert id="insert">
 		INSERT INTO bug(
 			id,
-			bug_version_id,
 			bug_project_id,
-			bug_type,
-			bug_status,
-			bug_level,
+			bug_version_id,
 			name,
+			bug_platform,
+			bug_systemandversion,
+			bug_type,
+			bug_level,
+			bug_serious,
+			bug_frequency,
 			summary,
-			description,
+			step2reproduce,
+			behavior,
+			expected,
+			image,
+			file,
+			remarks,
+			bug_status,
+			assign,
 			del_flag,
 			create_by,
 			create_date,
 			update_by,
-			update_date,
-			remarks,
-			file,
-			image,
-			testerLeadText,
-			developerleadtext,
-			projectManagerText
+			update_date
 		) VALUES (
 			#{id},
-			#{bugVersion.id},
 			#{bugProject.id},
-			#{bugType},
-			#{bugStatus},
-			#{bugLevel},
+			#{bugVersion.id},
 			#{name},
+			#{bugPlatform},
+			#{bugSystemAndVersion},
+			#{bugType},
+			#{bugLevel},
+			#{bugSerious},
+			#{bugFrequency},
 			#{summary},
-			#{description},
+			#{step2Reproduce},
+			#{behavior},
+			#{expected},
+			#{image},
+			#{file},
+			#{remarks},
+			#{bugStatus},
+			#{assign},
 			#{delFlag},
 			#{createBy.id},
 			#{createDate},
 			#{updateBy.id},
-			#{updateDate},
-			#{remarks},
-			#{file},
-			#{image},
-			#{testerLeadText},
-			#{developerLeadText},
-			#{projectManagerText}
+			#{updateDate}
 		)
 	</insert>
 	
 	<update id="update">
-		UPDATE bug SET 	
-			bug_version_id = #{bugVersion.id},
-			bug_project_id = #{bugProject.id},
-			bug_type = #{bugType},
-			bug_status = #{bugStatus},
-			bug_level = #{bugLevel},
-			name = #{name},
-			summary = #{summary},
-			description = #{description},
-			update_by = #{updateBy.id},
-			update_date = #{updateDate},
-			remarks = #{remarks},
-			file = #{file},
-			image = #{image},
-			testerLeadText = #{testerLeadText},
-			developerleadtext = #{developerLeadText},
-			projectManagerText = #{projectManagerText}
+		UPDATE bug SET
+			bug_project_id=#{bugProject.id},
+			bug_version_id=#{bugVersion.id},
+			name=#{name},
+			bug_platform=#{bugPlatform},
+			bug_systemandversion=#{bugSystemAndVersion},
+			bug_type=#{bugType},
+			bug_level=#{bugLevel},
+			bug_serious=#{bugSerious},
+			bug_frequency=#{bugFrequency},
+			summary=#{summary},
+			step2reproduce=#{step2Reproduce},
+			behavior=#{behavior},
+			expected=#{expected},
+			image=#{image},
+			file=#{file},
+			remarks=#{remarks},
+			bug_status=#{bugStatus},
+			assign=#{assign},
+			del_flag=#{delFlag},
+			create_by=#{createBy.id},
+			create_date=#{createDate},
+			update_by=#{updateBy.id},
+			update_date=#{updateDate}
+		WHERE id = #{id}
+	</update>
+
+	<update id="completeBugTask">
+		UPDATE bug SET
+		bug_status=#{bugStatus},
+		assign=#{assign},
+		update_by = #{updateBy.id},
+		update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateSolution">
+		UPDATE bug SET
+		bug_status=#{bugStatus},
+		assign=#{assign},
+		solution=#{solution},
+		update_by = #{updateBy.id},
+		update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+
+
+	<update id="updateInsId">
+		UPDATE bug SET
+		proc_ins_id = #{procInsId},
+		update_by = #{updateBy.id},
+		update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateTesterLeadText">
+		UPDATE bug SET
+		bug_status=#{bugStatus},
+		assign=#{assign},
+		testerleadtext = #{testerLeadText},
+		update_by = #{updateBy.id},
+		update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateDeveloperLeadText">
+		UPDATE bug SET
+		bug_status=#{bugStatus},
+		assign=#{assign},
+		developerleadtext = #{developerLeadText},
+		update_by = #{updateBy.id},
+		update_date = #{updateDate}
+		WHERE id = #{id}
+	</update>
+
+	<update id="updateProjectManagerText">
+		UPDATE bug SET
+		bug_status=#{bugStatus},
+		assign=#{assign},
+		projectmanagertext = #{projectManagerText},
+		update_by = #{updateBy.id},
+		update_date = #{updateDate}
 		WHERE id = #{id}
 	</update>
 	
@@ -182,27 +282,27 @@
 
 
 
-	<update id="updateTesterLeadText">
-		UPDATE bug SET
-		testerLeadText = #{testerLeadText},
-		update_by = #{updateBy.id},
-		update_date = #{updateDate}
-		WHERE id = #{id}
-	</update>
+	<!--<update id="updateTesterLeadText">-->
+		<!--UPDATE bug SET-->
+		<!--testerLeadText = #{testerLeadText},-->
+		<!--update_by = #{updateBy.id},-->
+		<!--update_date = #{updateDate}-->
+		<!--WHERE id = #{id}-->
+	<!--</update>-->
 
-	<update id="updateDeveloperLeadText">
-		UPDATE bug SET
-		developerLeadText = #{developerLeadText},
-		update_by = #{updateBy.id},
-		update_date = #{updateDate}
-		WHERE id = #{id}
-	</update>
+	<!--<update id="updateDeveloperLeadText">-->
+		<!--UPDATE bug SET-->
+		<!--developerLeadText = #{developerLeadText},-->
+		<!--update_by = #{updateBy.id},-->
+		<!--update_date = #{updateDate}-->
+		<!--WHERE id = #{id}-->
+	<!--</update>-->
 
-	<update id="updateProjectManagerText">
-		UPDATE bug SET
-		projectManagerText = #{projectManagerText},
-		update_by = #{updateBy.id},
-		update_date = #{updateDate}
-		WHERE id = #{id}
-	</update>
+	<!--<update id="updateProjectManagerText">-->
+		<!--UPDATE bug SET-->
+		<!--projectManagerText = #{projectManagerText},-->
+		<!--update_by = #{updateBy.id},-->
+		<!--update_date = #{updateDate}-->
+		<!--WHERE id = #{id}-->
+	<!--</update>-->
 </mapper>
