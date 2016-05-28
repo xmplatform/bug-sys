@@ -228,7 +228,7 @@
 		<div class="form-group">
 			<label class="col-sm-2 control-label">操作：</label>
 			<div class="col-sm-10">
-				<form:select path="bugStatus" class="form-control input-xlarge required">
+				<form:select path="bugStatus" class="form-control input-xlarge required" id="getNextTaskGroup">
 					<form:option value="" label=""/>
 					<form:options items="${fns:getDictList('apply_task')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
@@ -275,15 +275,37 @@
 <script type="text/javascript">
 
 	$(function () {
-		var config={
+		var configVersion={
 			selectId:"selectSelfProject",
-			verionList:"selectVersion",
-			nextTaskGroup:"nextTaskGroup"
+			showId:"selectVersion"
 		}
-		loadProjectVersionAndNextTask(config);
+
+
+		var projectId=$("#"+configVersion.selectId).val();
+		var configNextTask={
+			projectSelect:"selectSelfProject",
+			selectId:"getNextTaskGroup",
+			showId:"nextTaskGroup",
+			url:"${ctx}/bug/bug/task/startNext",
+			postData:{
+				projectId:"",
+				status:""
+			}
+		};
+		loadProjectVersion(configVersion);
+
+		getStartEventNextTask(configNextTask);
+
+//		if(projectId==undefined||$.trim(projectId)==''){
+//			toastr.info('提示', '请选择项目');
+//		}else{
+//
+//		}
+
 	});
 </script>
- <script type="text/javascript" src="${ctxStatic}/modules/bug/projectSelectVersionAndNextTask.js"></script>
+ <script type="text/javascript" src="${ctxStatic}/modules/bug/projectSelectVersion.js"></script>
+ <script type="text/javascript" src="${ctxStatic}/modules/bug/bugtask.js"></script>
 </body>
 
 </html>

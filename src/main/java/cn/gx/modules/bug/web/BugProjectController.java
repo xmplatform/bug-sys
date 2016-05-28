@@ -17,9 +17,11 @@ import cn.gx.modules.act.service.ActProcessService;
 import cn.gx.modules.act.service.ActTaskService;
 import cn.gx.modules.bug.bean.Json;
 import cn.gx.modules.bug.bean.StatusBug;
+import cn.gx.modules.bug.bean.TaskCount;
 import cn.gx.modules.bug.entity.Bug;
 import cn.gx.modules.bug.entity.BugVersion;
 import cn.gx.modules.bug.bean.Charts;
+import cn.gx.modules.bug.service.BugService;
 import cn.gx.modules.sys.entity.User;
 import cn.gx.modules.sys.service.OfficeService;
 import cn.gx.modules.sys.service.SystemService;
@@ -70,6 +72,9 @@ public class BugProjectController extends BaseController {
 
 	@Autowired
 	private ActProcessService actProcessService;
+
+	@Autowired
+	private BugService bugService;
 
 	@ModelAttribute
 	public BugProject get(@RequestParam(required=false) String id) {
@@ -368,7 +373,7 @@ public class BugProjectController extends BaseController {
 
 			BugProject bugProject = bugProjectService.get(projectId);
 
-			TaskDefinition taskDefinition = actTaskService.nextStartEvent(bugProject.getProcessKey());
+			TaskDefinition taskDefinition = actTaskService.nextStartEvent(bugProject.getProcessKey(),"");
 			Set<Expression> candidateGroupIdExpressions = taskDefinition.getCandidateGroupIdExpressions();
 			for (Expression e: candidateGroupIdExpressions) {
 				String group = e.getExpressionText();// group
@@ -394,7 +399,6 @@ public class BugProjectController extends BaseController {
 	@RequestMapping(value = "detail")
 	public String projectBugDetail(String projectId,Model model){
 
-
 		BugProject bugProject = bugProjectService.get(projectId);
 
 		//bugProject
@@ -409,8 +413,9 @@ public class BugProjectController extends BaseController {
 
 		//当前用户,指定项目的 任务.
 		//指派,你提交,你参与
-		actTaskService.todoList(act);
+		//actTaskService.todoList(act);
 
+		TaskCount taskCount=bugService.totalTaskCount(projectId);
 
 
 
@@ -432,6 +437,7 @@ public class BugProjectController extends BaseController {
 		//model.addAllAttributes(totalList);
 		model.addAttribute(bugProject);
 
+		model.addAttribute("taskCount",taskCount);
 		return "modules/bug/projectDetail";
 	}
 

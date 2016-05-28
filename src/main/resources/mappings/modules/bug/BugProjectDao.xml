@@ -53,7 +53,7 @@
 		<where>
 			a.del_flag = #{DEL_FLAG_NORMAL}
 			<if test="active">
-			a.processKey is not null
+			 and a.processKey is not null
 			</if>
 		</where>
 		<choose>

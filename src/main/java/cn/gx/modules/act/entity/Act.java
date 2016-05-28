@@ -37,6 +37,8 @@ public class Act extends BaseEntity<Act> {
 	private String procDefId; 	// 流程定义ID
 	private String procDefKey; 	// 流程定义Key（流程定义标识）
 
+	private String executionId;//执行ID
+
 	private String businessTable;	// 业务绑定Table
 	private String businessId;		// 业务绑定ID
 	
@@ -53,6 +55,7 @@ public class Act extends BaseEntity<Act> {
 	private ProcessInstance procIns;	// 流程实例对象
 	private HistoricTaskInstance histTask; // 历史任务
 	private HistoricActivityInstance histIns;	//历史活动任务
+
 
 	private String assignee; // 任务执行人编号
 	private String assigneeName; // 任务执行人名称
@@ -379,6 +382,13 @@ public class Act extends BaseEntity<Act> {
 		
 	}
 
+	public String getExecutionId() {
+		return executionId;
+	}
+
+	public void setExecutionId(String executionId) {
+		this.executionId = executionId;
+	}
 }
 
 

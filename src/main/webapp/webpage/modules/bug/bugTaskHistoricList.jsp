@@ -55,7 +55,7 @@
 			<!--查询条件-->
 			<div class="row">
 				<div class="col-sm-12">
-					<form:form id="searchForm" modelAttribute="bug" action="${ctx}/bug/bug/task/todo" method="post" class="form-inline">
+					<form:form id="searchForm" modelAttribute="bug" action="${ctx}/bug/bug/task/historic" method="post" class="form-inline">
 						<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 						<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 						<table:sortColumn id="orderBy" name="orderBy" value="${page.orderBy}" callback="sortOrRefresh();"/><!-- 支持排序 -->
@@ -133,7 +133,7 @@
 					<th  class="sort-column ">当前环节</th>
 					<th  class="sort-column ">流程名称</th>
 					<th  class="sort-column ">流程版本</th>
-					<th  class="sort-column ">创建时间</th>
+					<th  class="sort-column ">完成时间</th>
 					<th>操作</th>
 				</tr>
 				</thead>
@@ -141,7 +141,7 @@
 				<c:forEach items="${page.list}" var="bug">
 					<c:set var="act" value="${bug.act}"></c:set>
 
-					<c:set var="task" value="${act.task}" />
+					<c:set var="task" value="${act.histTask}" />
 					<c:set var="taskId" value="${task.id}"/>
 					<c:set var="vars" value="${act.vars}" />
 					<c:set var="procDef" value="${act.procDef}" />
@@ -150,6 +150,7 @@
 
 					<tr>
 						<td> <input type="checkbox" id="${bug.id}" class="i-checks"></td>
+
 						<td>
 							<a  href="#" onclick="openDialogView('查看缺陷', '${ctx}/bug/bug/form?id=${bug.id}','800px', '500px')">
 								${bug.name}
@@ -159,6 +160,7 @@
 						<td>
 								${fns:getDictLabel(bug.bugType, 'bug_type', '')}
 						</td>
+
 						<td>
 								${fns:getDictLabel(bug.bugStatus, 'bug_status', '')}
 						</td>
@@ -189,25 +191,9 @@
 
 						<td>${procDef.name}</td>
 						<td><b title='流程版本号'>V: ${procDef.version}</b></td>
-						<td><fmt:formatDate value="${task.createTime}" type="both"/></td>
+						<td><fmt:formatDate value="${task.endTime}" type="both"/></td>
 						<td>
-							<c:if test="${empty task.assignee}">
-
-								<a href="javascript:claim('${task.id}');">签收任务</a>
-							</c:if>
-							<c:if test="${not empty task.assignee}">
-								<a href="#" onclick="openDialog('处理问题单', '${ctx}/bug/bug/task/view/${taskId}?id=${bug.id}','800px', '500px')" class="btn btn-info btn-xs" ><i class="fa fa-search-plus"></i>处理</a>
-								<%--<a href="${ctx}/act/task/view/${task.id}">任务办理</a>--%>
-							</c:if>
-							<shiro:hasPermission name="bug:bug:view">
-								<a href="#" onclick="openDialogView('查看缺陷', '${ctx}/bug/bug/form?id=${bug.id}','800px', '500px')" class="btn btn-info btn-xs" ><i class="fa fa-search-plus"></i> 查看</a>
-							</shiro:hasPermission>
-							<shiro:hasPermission name="bug:bug:edit">
-								<a href="#" onclick="openDialog('修改缺陷', '${ctx}/bug/bug/form?id=${bug.id}','800px', '500px')" class="btn btn-success btn-xs" ><i class="fa fa-edit"></i> 修改</a>
-							</shiro:hasPermission>
-							<shiro:hasPermission name="bug:bug:del">
-								<a href="${ctx}/bug/bug/delete?id=${bug.id}" onclick="return confirmx('确认要删除该缺陷吗？', this.href)"   class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> 删除</a>
-							</shiro:hasPermission>
+							<a href="${ctx}/act/task/form?taskId=${task.id}&taskName=${fns:urlEncode(task.name)}&taskDefKey=${task.taskDefinitionKey}&procInsId=${task.processInstanceId}&procDefId=${task.processDefinitionId}&status=${status}">详情</a>
 						</td>
 					</tr>
 				</c:forEach>

@@ -171,7 +171,7 @@
                         <li class="dropdown">
 							<a id="lang-switch" class="lang-selector dropdown-toggle" href="#" data-toggle="dropdown" aria-expanded="true">
 								<span class="lang-selected">
-										<img  class="lang-flag" src="${ctxStatic}/common/img/china.png" alt="中国">
+										<%--<img  class="lang-flag" src="${ctxStatic}/common/img/china.png" alt="中国"  width="25" height="15">--%>
 										<span class="lang-id">项目</span>
 										<span class="lang-name">选择项目</span>
 									</span>
@@ -185,7 +185,8 @@
                                     <li>
                                         <!--English-->
                                         <a class="lang-select J_menuItem" href="${ctx}/bug/bugProject/detail?projectId=${bugProject.id}">
-                                            <img class="lang-flag" src="${ctxStatic}/common/img/china.png" alt="中国">
+                                            <%--<img class="lang-flag" src="${bugProject.logo}" alt="${bugProject.name}" width="25" height="15">--%>
+                                            <%--<img class="lang-flag" src="${ctxStatic}/common/img/china.png" alt="中国">--%>
                                             <span class="lang-id">${bugProject.name}</span>
                                             <span class="lang-name"></span>
                                         </a>

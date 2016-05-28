@@ -110,10 +110,7 @@ public class BugProject extends DataEntity<BugProject> {
 	}
 
 	public boolean isActive() {
-		if(processKey!=null){
-			return true;
-		}
-		return  false;
+		return  active;
 
 	}
 

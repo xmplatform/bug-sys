@@ -10,20 +10,30 @@ import javax.servlet.http.HttpServletResponse;
 
 import cn.gx.modules.act.entity.Act;
 import cn.gx.modules.act.service.ActTaskService;
+import cn.gx.modules.act.utils.ActPage;
+import cn.gx.modules.act.utils.PageUtil;
 import cn.gx.modules.bug.bean.Charts;
 import cn.gx.modules.bug.bean.Json;
 import cn.gx.modules.bug.entity.BugProject;
+import cn.gx.modules.bug.exception.NoUserTaskToEndEventException;
 import cn.gx.modules.bug.service.BugProjectService;
 import cn.gx.modules.bug.util.BugStatus;
 import cn.gx.modules.sys.entity.User;
 import cn.gx.modules.sys.service.SystemService;
 import cn.gx.modules.sys.utils.UserUtils;
 import org.activiti.engine.ActivitiException;
+import org.activiti.engine.RepositoryService;
+import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.Expression;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.impl.identity.Authentication;
+import org.activiti.engine.impl.persistence.entity.ExecutionEntity;
 import org.activiti.engine.impl.task.TaskDefinition;
+import org.activiti.engine.repository.ProcessDefinition;
+import org.activiti.engine.repository.ProcessDefinitionQuery;
+import org.activiti.engine.runtime.Execution;
+import org.activiti.engine.runtime.NativeExecutionQuery;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.apache.shiro.authz.annotation.Logical;
@@ -61,6 +71,7 @@ public class BugController extends BaseController {
 	@Autowired
 	private BugService bugService;
 
+
 	@Autowired
 	private BugProjectService bugProjectService;
 
@@ -69,6 +80,12 @@ public class BugController extends BaseController {
 
 	@Autowired
 	private TaskService taskService;
+
+	@Autowired
+	private RuntimeService runtimeService;
+
+	@Autowired
+	private RepositoryService repositoryService;
 
 	
 	@ModelAttribute
@@ -117,9 +134,6 @@ public class BugController extends BaseController {
 	@RequestMapping(value = "form")
 	public String form(Bug bug, Model model) {
 
-//		bug.setBugStatus(BugStatus.NEW.getStatus());
-//		model.addAttribute("bug", bug);
-//		return "modules/bug/bugForm";
 
 
 		String view="bugForm";
@@ -160,7 +174,8 @@ public class BugController extends BaseController {
 	public String createForm(Bug bug,Model model){
 
 		BugProject bugProject=new BugProject();
-		bugProject.setSelf(true);
+		bugProject.setSelf(true);//自己参与的项目
+		bugProject.setActive(true);//有流程的项目
 		List<BugProject> bugProjectList = bugProjectService.findList(bugProject);
 		model.addAttribute("bug", bug);
 		model.addAttribute("bugProjectList", bugProjectList);
@@ -189,20 +204,6 @@ public class BugController extends BaseController {
 		act.setProcInsId(procInsId);
 
 		bug.setAct(act);
-//
-//		if (act.getProcInsId() != null){
-//			act.setProcIns(actTaskService.getProcIns(act.getProcInsId()));
-//		}
-
-		// 任务编号
-		//String taskDefKey=bug.getAct().getTaskDefKey();
-
-
-//		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-//		String processInstanceId = task.getProcessInstanceId();
-//		ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
-//		Leave leave = leaveManager.get(new Long(processInstance.getBusinessKey()));
-		//ModelAndView mav = new ModelAndView();
 		model.addAttribute("bug", bug);
 		return "modules/bug/bug_"+taskDefKey;
 	}
@@ -351,6 +352,117 @@ public class BugController extends BaseController {
 		return "modules/bug/bugTaskTodoList";
 	}
 
+	/**
+	 * 获取已办任务
+	 * @param page
+	 * @param procDefKey 流程定义标识
+	 * @return
+	 */
+	@RequestMapping(value = "task/historic")
+	public String historicList(Bug bug,Act act, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		bug.setAct(act);
+		Page<Bug> page = bugService.historicPage(new Page<Bug>(request,response), bug);
+		model.addAttribute("page", page);
+
+		return "modules/bug/bugTaskHistoricList";
+	}
+
+
+
+	@RequestMapping(value = "task/join")
+	public String joinList(Bug bug,HttpServletRequest request,HttpServletResponse response,Model model){
+
+		//ModelAndView mav = new ModelAndView("modules/bug/bugTaskJoinList");//"modules/bug/bug_"+taskDefKey;
+	    /* 标准查询
+	    List<ProcessInstance> processInstanceList = runtimeService.createProcessInstanceQuery().list();
+	    List<Execution> list = runtimeService.createExecutionQuery().list();
+	    mav.addObject("list", list);
+	    */
+
+
+		User user = UserUtils.getUser();
+
+		Page<Bug> page = new Page<Bug>(request, response);
+
+		NativeExecutionQuery nativeExecutionQuery = runtimeService.createNativeExecutionQuery();
+
+		String sql = "select distinct * from "
+				+ "(select RES.* from ACT_RU_EXECUTION RES "
+				+ " left join ACT_HI_TASKINST ART "
+				+ " on ART.PROC_INST_ID_ = RES.PROC_INST_ID_ "
+				+ " left join ACT_HI_PROCINST AHP on AHP.PROC_INST_ID_ = RES.PROC_INST_ID_ "
+				+ " where SUSPENSION_STATE_ = '1' "
+				+ " and (ART.ASSIGNEE_ = #{userLoginName} or AHP.START_USER_ID_ = #{userLoginName}) "
+				+ " and ACT_ID_ is not null "
+				+ " and IS_ACTIVE_ = '1' "
+				+ " order by ART.START_TIME_ desc"
+				+ ") as r";
+
+		nativeExecutionQuery.parameter("userLoginName", user.getLoginName());
+
+
+		// 查询流程定义对象
+		Map<String, ProcessDefinition> definitionMap = new HashMap<String, ProcessDefinition>();
+
+		// 任务的英文-中文对照
+		Map<String, Task> taskMap = new HashMap<String, Task>();
+
+		// 每个Execution的当前活动ID，可能为多个
+		Map<String, List<String>> currentActivityMap = new HashMap<String, List<String>>();
+
+		List<Execution> executionList = nativeExecutionQuery.sql(sql).listPage(page.getFirstResult(), page.getMaxResults());
+		//封装成bug
+		List<Bug> bugList=new ArrayList<Bug>();
+
+		// 设置每个Execution对象的当前活动节点
+		for (Execution execution : executionList) {
+
+			ExecutionEntity executionEntity = (ExecutionEntity) execution;
+			String processInstanceId = executionEntity.getProcessInstanceId();
+			String processDefinitionId = executionEntity.getProcessDefinitionId();
+
+			Bug dbBug = bugService.getByProcInsId(processInstanceId);
+			Act act = dbBug.getAct();
+			act.setExecutionId(execution.getId());
+			act.setProcDefId(processDefinitionId);
+			act.setProcInsId(processInstanceId);
+
+			bugList.add(dbBug);
+
+			// 缓存ProcessDefinition对象到Map集合
+			definitionCache(definitionMap, processDefinitionId);
+
+			// 查询当前流程的所有处于活动状态的活动ID，如果并行的活动则会有多个
+			List<String> activeActivityIds = runtimeService.getActiveActivityIds(execution.getId());
+			currentActivityMap.put(execution.getId(), activeActivityIds);
+
+			for (String activityId : activeActivityIds) {
+
+				// 查询处于活动状态的任务
+				Task task = taskService.createTaskQuery().taskDefinitionKey(activityId).executionId(execution.getId()).singleResult();
+
+				// 调用活动
+				if (task == null) {
+					ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
+							.superProcessInstanceId(processInstanceId).singleResult();
+					task = taskService.createTaskQuery().processInstanceId(processInstance.getProcessInstanceId()).singleResult();
+					definitionCache(definitionMap, processInstance.getProcessDefinitionId());
+				}
+				taskMap.put(activityId, task);
+			}
+		}
+
+		model.addAttribute("taskMap", taskMap);
+		model.addAttribute("definitions", definitionMap);
+		model.addAttribute("currentActivityMap", currentActivityMap);
+
+		page.setList(bugList);
+		page.setCount(nativeExecutionQuery.sql("select count(*) from (" + sql + ") as a").count());
+		model.addAttribute("page", page);
+
+		return "modules/bug/bugTaskJoinList";
+	}
+
 
 
 
@@ -383,28 +495,6 @@ public class BugController extends BaseController {
 
 
 
-	/**
-	 * 一个 任务完成
-	 * @param bug
-	 * @param model
-	 * @return
-	 */
-	@RequiresPermissions("bug:bug:edit")
-	@RequestMapping(value = "complete")
-	public String complete(Bug bug, Model model) throws Exception {
-		if (StringUtils.isBlank(bug.getBugStatus())
-				||StringUtils.isBlank(bug.getAct().getComment())){
-			addMessage(model, "请填写审核意见。");
-			return form(bug, model);
-		}
-		Bug t = bugService.get(bug.getId());//从数据库取出记录的值
-		MyBeanUtils.copyBeanNotNull2Bean(bug, t);//将编辑表单中的非NULL值覆盖数据库记录中的值
-
-		bugService.auditSave(bug);
-		return "redirect:" + adminPath + "/act/task/todo/";
-	}
-
-
 
 	/**
 	 * 根据当前任务条件,选择下一个节点任务中,用户组分配信息.
@@ -424,45 +514,58 @@ public class BugController extends BaseController {
 
 			TaskDefinition taskDefinition = actTaskService.nextTaskDefinition(proInstId, elString);
 
-			List<User> userList=new ArrayList<User>();
-			Expression assigneeExpression = taskDefinition.getAssigneeExpression();
-
-			if (assigneeExpression!=null){
-				String applyIdEL = assigneeExpression.getExpressionText();
-
-				if (StringUtils.contains(applyIdEL,"apply")){//如果是启动人的
-					User user=bugService.getApplyUser(proInstId);
-					userList.add(user);
-				}else{
-					//直接是分配的用户....类型太多了....不做考虑了.....
-					logger.debug("直接是分配的用户....类型太多了....不做考虑了.....");
-				}
-
-
-			}
-
-			Set<Expression> candidateGroupIdExpressions = taskDefinition.getCandidateGroupIdExpressions();
-
-			//Map<String,List<User>> groupMap=new HashMap<String, List<User>>();
-
-			for (Expression e: candidateGroupIdExpressions) {
-				String group = e.getExpressionText();// group
-
-				List<User> groupUserList=bugProjectService.findUserListByRole(projectId,group);
-				userList.addAll(groupUserList);
-				//groupMap.put(group,groupUserList);
-
-			}
+			List<User> userList = bugService.findNextTaskUserList(proInstId, projectId, taskDefinition);
 			json.setMsg("加载下一个节点成员成功");
-			json.setSuccess(true);
 			json.setData(userList);
+			json.setSuccess(true);
 
+		}catch (NoUserTaskToEndEventException e){//流程结束.
+			json.setMsg(e.getMessage());
 		}catch (Exception e){
 			json.setMsg(e.getMessage());
 		}
 
 		return json;
 	}
+/**
+	 * 根据当前任务条件,选择下一个节点任务中,用户组分配信息.
+	 * @param proInstId
+	 * @param status
+	 * @param projectId
+     * @return
+     */
+	@RequestMapping(value = "task/startNext")
+	@ResponseBody
+	public Json getStartEventNextTaskGroup(String projectId,String status){
+
+		Json json=new Json();
+		try {
+
+			String elString = String.format("${status.equals('%s')}", status);
+
+			BugProject bugProject = bugProjectService.get(projectId);
+			TaskDefinition taskDefinition = actTaskService.nextStartEvent(bugProject.getProcessKey(),elString);
+
+			List<User> userList=new ArrayList<User>();
+			Set<Expression> candidateGroupIdExpressions = taskDefinition.getCandidateGroupIdExpressions();
+			for (Expression e: candidateGroupIdExpressions) {
+				String group = e.getExpressionText();// group
+				List<User> groupUserList=bugProjectService.findUserListByRole(projectId,group);
+				userList.addAll(groupUserList);
+			}
+			json.setMsg("加载下一个节点成员成功");
+			json.setData(userList);
+			json.setSuccess(true);
+
+		}catch (NoUserTaskToEndEventException e){//流程结束.
+			json.setMsg(e.getMessage());
+		}catch (Exception e){
+			json.setMsg(e.getMessage());
+		}
+
+		return json;
+	}
+
 
 
 	/**
@@ -475,13 +578,6 @@ public class BugController extends BaseController {
 	@RequiresPermissions("bug:bug:edit")
 	@RequestMapping(value = "completeTask")
 	public String completeTask(Bug bug, Model model){
-//		if (StringUtils.isBlank(bug.getBugStatus())
-//				||StringUtils.isBlank(bug.getAct().getComment())){
-//			addMessage(model, "请填写审核意见。");
-//			return form(bug, model);
-//		}
-//		Bug t = bugService.get(bug.getId());//从数据库取出记录的值
-//		MyBeanUtils.copyBeanNotNull2Bean(bug, t);//将编辑表单中的非NULL值覆盖数据库记录中的值
 		if (!beanValidator(model, bug)){
 			return form(bug, model);
 		}
@@ -489,6 +585,26 @@ public class BugController extends BaseController {
 		return "redirect:" + adminPath + "/bug/bug/task/todo/";
 	}
 
+
+
+	/**
+	 * 流程定义对象缓存
+	 *
+	 * @param definitionMap
+	 * @param processDefinitionId
+	 *
+	 *
+	 */
+	private void definitionCache(Map<String, ProcessDefinition> definitionMap, String processDefinitionId) {
+		if (definitionMap.get(processDefinitionId) == null) {
+			ProcessDefinitionQuery processDefinitionQuery = repositoryService.createProcessDefinitionQuery();
+			processDefinitionQuery.processDefinitionId(processDefinitionId);
+			ProcessDefinition processDefinition = processDefinitionQuery.singleResult();
+
+			// 放入缓存
+			definitionMap.put(processDefinitionId, processDefinition);
+		}
+	}
 
 	
 

@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 import cn.gx.modules.bug.entity.Bug;
+import cn.gx.modules.bug.exception.NoUserTaskToEndEventException;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
@@ -746,21 +747,33 @@ public class ActTaskService extends BaseService {
 	 * @param processKey
 	 * @return
      */
-	public TaskDefinition nextStartEvent(String processKey){
+	public TaskDefinition nextStartEvent(String processKey,String elString)throws NoUserTaskToEndEventException {
 
 		//这个没有 activiti,只能通过 id 获取...可能也有更好的方法
 		ProcessDefinitionEntity  defold= (ProcessDefinitionEntity) repositoryService.createProcessDefinitionQuery().processDefinitionKey(processKey).latestVersion().singleResult();
 		ProcessDefinitionEntity def = (ProcessDefinitionEntity) ((RepositoryServiceImpl)repositoryService).getDeployedProcessDefinition(defold.getId());
 
 		List<ActivityImpl> activitiList = def.getActivities();
-//		for (ActivityImpl activityImpl:activitiList){
-//			//activityImpl.get
-//		}
-		// 获取 startEvent 下的第一个任务
-		// 无脑获取第一个...task..
-		TaskDefinition taskDefinition = ((UserTaskActivityBehavior)activitiList.get(0).getActivityBehavior()).getTaskDefinition();
 
-		return taskDefinition;
+		String id=null;
+		for (ActivityImpl activityImpl:activitiList){
+			//activityImpl.get
+			Object type = activityImpl.getProperty("type");
+			System.out.println(type);
+
+
+
+			if("startEvent".equals(type)){
+				return nextTaskDefinition(activityImpl, activityImpl.getId(),elString);//"${iscorrect==1}"
+			}
+//
+//			id = activityImpl.getId();
+//			if("start".equals(id)){
+//				System.out.println("当前任务："+activityImpl.getProperty("name"));
+//				return nextTaskDefinition(activityImpl, activityImpl.getId(),elString);//"${iscorrect==1}"
+//			}
+		}
+		return null;
 	}
 
 	/**
@@ -768,7 +781,7 @@ public class ActTaskService extends BaseService {
 	 * @param String procInstId ：实例编号
 	 * @return
 	 */
-	public TaskDefinition nextTaskDefinition(String procInstId,String elString){
+	public TaskDefinition nextTaskDefinition(String procInstId,String elString) throws NoUserTaskToEndEventException {
 		//流程标示
 		String processDefinitionId = historyService.createHistoricProcessInstanceQuery().processInstanceId(procInstId).singleResult().getProcessDefinitionId();
 
@@ -785,8 +798,6 @@ public class ActTaskService extends BaseService {
 			if(activitiId.equals(id)){
 				System.out.println("当前任务："+activityImpl.getProperty("name"));
 				return nextTaskDefinition(activityImpl, activityImpl.getId(),elString);//"${iscorrect==1}"
-//              System.out.println(taskDefinition.getCandidateGroupIdExpressions().toArray()[0]);
-//              return taskDefinition;
 			}
 		}
 		return null;
@@ -799,10 +810,9 @@ public class ActTaskService extends BaseService {
 	 * @param elString
 	 * @return
 	 */
-	private TaskDefinition nextTaskDefinition(ActivityImpl activityImpl, String activityId, String elString){
+	private TaskDefinition nextTaskDefinition(ActivityImpl activityImpl, String activityId, String elString) throws NoUserTaskToEndEventException {
 		if("userTask".equals(activityImpl.getProperty("type")) && !activityId.equals(activityImpl.getId())){
 			TaskDefinition taskDefinition = ((UserTaskActivityBehavior)activityImpl.getActivityBehavior()).getTaskDefinition();
-//              taskDefinition.getCandidateGroupIdExpressions().toArray();
 			return taskDefinition;
 		}else{
 			List<PvmTransition> outTransitions = activityImpl.getOutgoingTransitions();
@@ -822,6 +832,9 @@ public class ActTaskService extends BaseService {
 								return nextTaskDefinition((ActivityImpl)tr1.getDestination(), activityId, elString);
 							}
 						}
+					}else if (outTransitionsTemp.size()==0){
+						logger.info("流程图终点");
+						throw new NoUserTaskToEndEventException("流程结束-不必分配");
 					}
 				}else if("userTask".equals(ac.getProperty("type"))){
 					return ((UserTaskActivityBehavior)((ActivityImpl)ac).getActivityBehavior()).getTaskDefinition();
@@ -829,7 +842,7 @@ public class ActTaskService extends BaseService {
 					logger.debug("nextTaskDefinition:",ac.getProperty("type"));
 				}
 			}
-			return null;
+			throw new NoUserTaskToEndEventException("流程结束-不必分配");
 		}
 	}
 

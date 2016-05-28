@@ -7,6 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import cn.gx.modules.bug.bean.StatusBug;
+import cn.gx.modules.bug.bean.TaskCount;
+import cn.gx.modules.bug.dao.BugDao;
+import cn.gx.modules.bug.entity.Bug;
 import cn.gx.modules.bug.util.BugStatus;
 import cn.gx.modules.bug.bean.Charts;
 import cn.gx.modules.bug.util.Total;
@@ -42,6 +45,9 @@ public class BugProjectService extends CrudService<BugProjectDao, BugProject> {
 
 	@Autowired
 	private UserDao userDao;
+
+	@Autowired
+	private BugDao bugDao;
 
 	
 	public BugProject get(String id) {
@@ -266,7 +272,7 @@ public class BugProjectService extends CrudService<BugProjectDao, BugProject> {
 	}
 
 	public List<User> findUserListByRole(String projectId, String enname) {
-		List<User> userList=userDao.findUserListByRoleEnname(projectId,enname);
-		return userList;
+		return userDao.findUserListByRoleEnname(projectId,enname);
 	}
+
 }

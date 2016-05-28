@@ -4,6 +4,8 @@
 function loadProjectVersion(config){
 
     $("#"+config.selectId).change(function () {
+        var $show=$('#'+config.showId);
+        $show.empty();
         var projectId = $(this).val();
 
         if(projectId==undefined||$.trim(projectId)==''){
@@ -19,8 +21,7 @@ function loadProjectVersion(config){
             console.info(json);
             if(json.success) {
 
-                var $show=$('#'+config.showId);
-                $show.empty();
+             
                 console.info(json.data);
                 var data=json.data;
                 $.each(data, function(i, v) {

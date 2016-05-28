@@ -141,4 +141,19 @@ UserDao extends CrudDao<User> {
 	String getUserName(String userId);
 
 	List<User> findUserListByRoleEnname(@Param("projectId") String projectId, @Param("enname") String enname);
+
+
+	/**
+	 * 修改是否进行邮件通知
+	 * @param id
+	 * @param openEmail
+     */
+	public void updateOpenEmail(@Param("id") String id,@Param("openEmail")String openEmail);
+
+	/**
+	 * 修改是否进行站内通知
+	 * @param id
+	 * @param openNotify
+     */
+	public void updateOpenNotify(@Param("id") String id,@Param("openNotify")String openNotify);
 }

@@ -58,7 +58,7 @@
 
 				<div class="ibox-content">
 					<div class="row">
-			<form:form id="inputForm" modelAttribute="bug" action="${ctx}/bug/bug/saveAudit" method="post" class="form-horizontal">
+			<form:form id="inputForm" modelAttribute="bug" action="${ctx}/bug/bug/completeTask" method="post" class="form-horizontal">
 
 
 				<form:hidden path="id"/>

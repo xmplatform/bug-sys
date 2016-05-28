@@ -211,7 +211,7 @@
 		WHERE id = #{id}
 	</update>
 
-	<update id="updateSolution">
+	<update id="solutionBug">
 		UPDATE bug SET
 		bug_status=#{bugStatus},
 		assign=#{assign},

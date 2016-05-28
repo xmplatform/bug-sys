@@ -47,7 +47,10 @@ public class User extends DataEntity<User> {
 	private String qrCode;	//二维码
 	private String oldLoginName;// 原登录名
 	private String newPassword;	// 新密码
-	
+
+
+	private int openEmail=1;// 默认 0 开启,1 关闭
+	private int openNotify=1; //
 	private String oldLoginIp;	// 上次登陆IP
 	private Date oldLoginDate;	// 上次登陆日期
 	
@@ -391,5 +394,21 @@ public class User extends DataEntity<User> {
 
 	public void setBugProject(BugProject bugProject) {
 		this.bugProject = bugProject;
+	}
+
+	public int getOpenEmail() {
+		return openEmail;
+	}
+
+	public void setOpenEmail(int openEmail) {
+		this.openEmail = openEmail;
+	}
+
+	public int getOpenNotify() {
+		return openNotify;
+	}
+
+	public void setOpenNotify(int openNotify) {
+		this.openNotify = openNotify;
 	}
 }

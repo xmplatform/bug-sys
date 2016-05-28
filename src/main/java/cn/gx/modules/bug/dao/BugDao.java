@@ -32,7 +32,7 @@ public interface BugDao extends CrudDao<Bug> {
      * @param bug
      * @return
      */
-    public int updateSolution(Bug bug);
+    public int solutionBug(Bug bug);
 
     /**
      * 完成任务
@@ -47,4 +47,7 @@ public interface BugDao extends CrudDao<Bug> {
      * @return
      */
     User getApplyUser(String procInsId);
+
+
+
 }

@@ -97,7 +97,7 @@
 				<td> <input type="checkbox" id="${bugProject.id}" class="i-checks"></td>
 				<td>
 					<a  href="#" onclick="openDialogView('查看项目', '${ctx}/bug/bugProject/form?id=${bugProject.id}','800px', '500px')">
-						<span  class=" label ${bugProject.active==true ? 'label-primary':''} ">${bugProject.name}</span>
+						<span  class=" label ${bugProject.processKey != null ? 'label-primary':''} ">${bugProject.name}</span>
 					</a>
 
 				</td>

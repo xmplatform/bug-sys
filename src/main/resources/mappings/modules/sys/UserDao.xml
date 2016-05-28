@@ -437,6 +437,20 @@
 			login_Date = #{loginDate} 
 		WHERE id = #{id}
 	</update>
+
+	<!-- 打开/关闭 邮件-->
+	<update id="updateOpenEmail">
+		UPDATE sys_user SET
+		openemail = #{openEmail}
+		WHERE id = #{id}
+	</update>
+
+	<!-- 打开/关闭 邮件-->
+	<update id="updateOpenNotify">
+		UPDATE sys_user SET
+		opennotify = #{openNotify}
+		WHERE id = #{id}
+	</update>
 	
 	<!-- 物理删除用户 -->
 	<update id="delete">
