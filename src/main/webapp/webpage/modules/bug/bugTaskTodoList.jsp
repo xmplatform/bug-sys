@@ -151,7 +151,7 @@
 					<tr>
 						<td> <input type="checkbox" id="${bug.id}" class="i-checks"></td>
 						<td>
-							<a  href="#" onclick="openDialogView('查看缺陷', '${ctx}/bug/bug/form?id=${bug.id}','800px', '500px')">
+							<a  href="#" onclick="openDialogView('查看缺陷', ''${ctx}/bug/bug/task/view/${taskId}?id=${bug.id}','800px', '500px')">
 								${bug.name}
 							</a>
 						</td>
@@ -196,18 +196,22 @@
 								<a href="javascript:claim('${task.id}');">签收任务</a>
 							</c:if>
 							<c:if test="${not empty task.assignee}">
-								<a href="#" onclick="openDialog('处理问题单', '${ctx}/bug/bug/task/view/${taskId}?id=${bug.id}','800px', '500px')" class="btn btn-info btn-xs" ><i class="fa fa-search-plus"></i>处理</a>
+								<a href="#" onclick="openDialog('处理问题单', '${ctx}/bug/bug/task/view/${taskId}?id=${bug.id}','800px', '500px')" class="btn btn-success btn-xs" ><i class="fa fa-search-plus"></i>处理</a>
 								<%--<a href="${ctx}/act/task/view/${task.id}">任务办理</a>--%>
 							</c:if>
 							<shiro:hasPermission name="bug:bug:view">
-								<a href="#" onclick="openDialogView('查看缺陷', '${ctx}/bug/bug/form?id=${bug.id}','800px', '500px')" class="btn btn-info btn-xs" ><i class="fa fa-search-plus"></i> 查看</a>
+								<a href="#" onclick="openDialogView('查看缺陷', '${ctx}/bug/bug/task/view/${taskId}?id=${bug.id}','800px', '500px')" class="btn btn-info btn-xs" ><i class="fa fa-search-plus"></i> 查看</a>
 							</shiro:hasPermission>
-							<shiro:hasPermission name="bug:bug:edit">
-								<a href="#" onclick="openDialog('修改缺陷', '${ctx}/bug/bug/form?id=${bug.id}','800px', '500px')" class="btn btn-success btn-xs" ><i class="fa fa-edit"></i> 修改</a>
+							<%--<a target="_blank" href="${ctx}/act/task/trace/photo/${task.processDefinitionId}/${task.executionId}">跟踪2</a>--%>
+							<shiro:hasPermission name="bug:bug:view">
+								<a href="#" onclick="openDialogView('追踪缺陷', '${ctx}//act/task/trace/photo/${task.processDefinitionId}/${task.executionId}','800px', '500px')" class="btn btn-danger btn-xs" ><i class="fa fa-search-plus"></i> 追踪</a>
 							</shiro:hasPermission>
-							<shiro:hasPermission name="bug:bug:del">
+							<%--<shiro:hasPermission name="bug:bug:edit">--%>
+								<%--<a href="#" onclick="openDialog('修改缺陷', '${ctx}/bug/bug/form?id=${bug.id}','800px', '500px')" class="btn btn-success btn-xs" ><i class="fa fa-edit"></i> 修改</a>--%>
+							<%--</shiro:hasPermission>--%>
+						<%--	<shiro:hasPermission name="bug:bug:del">
 								<a href="${ctx}/bug/bug/delete?id=${bug.id}" onclick="return confirmx('确认要删除该缺陷吗？', this.href)"   class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> 删除</a>
-							</shiro:hasPermission>
+							</shiro:hasPermission>--%>
 						</td>
 					</tr>
 				</c:forEach>

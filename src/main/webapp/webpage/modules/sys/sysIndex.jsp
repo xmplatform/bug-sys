@@ -280,10 +280,13 @@ function changeStyle(str){
 	var currentName = '${fns:getUser().name}';
 	var currentFace ='${fns:getUser().photo}';
 	var url="${ctx}";
-	var wsServer = 'ws://'+window.document.domain+':8668';
+	//var wsServer = 'ws://'+document.location.host+'/chatSocket';
+    //console.info(wsServer);
+    var wsServer = 'ws://'+window.document.domain+':8668';
 
 </script>
 <script src="${ctxStatic}/layer-v2.0/layim/layer.min.js"></script>
 <script src="${ctxStatic}/layer-v2.0/layim/layim.js"></script>
+<script src="${ctxStatic}/modules/bug/websocket.js"></script>
 
 </html>

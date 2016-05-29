@@ -553,8 +553,11 @@ xxim.socket = {
 			if (!window.WebSocket){
 				alert("你的浏览器不支持websocket，请升级到IE10以上浏览器，或者使用谷歌、火狐、360浏览器。");
 			}
+            console.info(wsServer);
 			webSocket =   new WebSocket(wsServer);
 			webSocket.onerror = function(event) {
+                console.info("websocket error");
+                console.info(event+"sdf");
 				  alert("websockt连接发生错误，请刷新页面重试!")
 			};
 

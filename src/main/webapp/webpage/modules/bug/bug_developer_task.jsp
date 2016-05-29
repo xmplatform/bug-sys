@@ -183,7 +183,7 @@
 
 				<div class="form-group">
 					<label class="col-sm-2 control-label">实际行为:</label>
-					<div class="col-sm-10">
+					<div class="col-sm-10" >
 							<%--<form:textarea id="behavior" htmlEscape="true" path="behavior" rows="4" maxlength="200" class=" form-control input-xxlarge" disabled="true"/>--%>
 							<%--<sys:ckeditor replace="behavior" uploadPath="/bug/bug" />--%>
 							${bug.behavior}
@@ -283,6 +283,9 @@
 <script type="text/javascript">
 
 	$(function () {
+
+		console.info($(".ckeditor"));
+		$(".ckeditor").html($(".ckeditor").text());
 		var config={
 			selectId:"getNextTaskGroup",
 			showLabel:"showLabel",
@@ -298,5 +301,7 @@
 </script>
 
 <script type="text/javascript" src="${ctxStatic}/modules/bug/bugtask.js"></script>
+
+
 </body>
 </html>
