@@ -44,25 +44,35 @@
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<table:sortColumn id="orderBy" name="orderBy" value="${page.orderBy}" callback="sortOrRefresh();"/><!-- 支持排序 -->
 		<div class="form-group">
-			<span>项目版本主键：</span>
-				<sys:treeselect id="bugVersion" name="bugVersion.id" value="${bug.bugVersion.id}" labelName="" labelValue="${bug.bugVersion.version}"
-					title="用户" url="/sys/office/treeData?type=3" cssClass="form-control input-sm" allowClear="true" notAllowSelectParent="true"/>
-			<span>缺陷类型（0：BUG;1:改进；2：任务；3：需求）：</span>
+			<span>缺陷类型：</span>
 				<form:select path="bugType"  class="form-control m-b">
 					<form:option value="" label=""/>
 					<form:options items="${fns:getDictList('bug_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
-			<span>缺陷状态（0：新建；1：进行中；2：重开；3：已解决；4：暂缓；5：不解决；6：已关闭）：</span>
+			<span>状态：</span>
 				<form:select path="bugStatus"  class="form-control m-b">
 					<form:option value="" label=""/>
 					<form:options items="${fns:getDictList('bug_status')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
-			<span>缺陷优先级（0：低；1：普通；2：高；3：紧急）：</span>
-				<form:select path="bugLevel"  class="form-control m-b">
+
+			<span>严重：</span>
+				<form:select path="bugSerious"  class="form-control m-b">
 					<form:option value="" label=""/>
-					<form:options items="${fns:getDictList('bug_level')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+					<form:options items="${fns:getDictList('bug_serious')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
-		 </div>	
+
+			<span>频率：</span>
+				<form:select path="bugFrequency"  class="form-control m-b">
+					<form:option value="" label=""/>
+					<form:options items="${fns:getDictList('bug_frequency')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+				</form:select>
+
+			<span>优先级：</span>
+			<form:select path="bugLevel"  class="form-control m-b">
+				<form:option value="" label=""/>
+				<form:options items="${fns:getDictList('bug_level')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
+			</form:select>
+		</div>
 	</form:form>
 	<br/>
 	</div>
@@ -72,12 +82,7 @@
 	<div class="row">
 	<div class="col-sm-12">
 		<div class="pull-left">
-			<shiro:hasPermission name="bug:bug:add">
-				<table:addRow url="${ctx}/bug/bug/form" title="缺陷"></table:addRow><!-- 增加按钮 -->
-			</shiro:hasPermission>
-			<shiro:hasPermission name="bug:bug:edit">
-			    <table:editRow url="${ctx}/bug/bug/form" title="缺陷" id="contentTable"></table:editRow><!-- 编辑按钮 -->
-			</shiro:hasPermission>
+
 			<shiro:hasPermission name="bug:bug:del">
 				<table:delRow url="${ctx}/bug/bug/deleteAll" id="contentTable"></table:delRow><!-- 删除按钮 -->
 			</shiro:hasPermission>
@@ -99,82 +104,109 @@
 	
 	<!-- 表格 -->
 	<table id="contentTable" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
+
 		<thead>
-			<tr>
-				<th> <input type="checkbox" class="i-checks"></th>
-				<th  class="sort-column ">项目版本主键</th>
-				<th  class="sort-column ">项目主键</th>
-				<th  class="sort-column bugType">缺陷类型（0：BUG;1:改进；2：任务；3：需求）</th>
-				<th  class="sort-column bugStatus">缺陷状态（0：新建；1：进行中；2：重开；3：已解决；4：暂缓；5：不解决；6：已关闭）</th>
-				<th  class="sort-column bugLevel">缺陷优先级（0：低；1：普通；2：高；3：紧急）</th>
-				<th  class="sort-column name">名称</th>
-				<th  class="sort-column summary">简介</th>
-				<th  class="sort-column description">内容详情</th>
-				<th  class="sort-column remarks">备注信息</th>
-				<th  class="sort-column file">缺陷文件</th>
-				<th  class="sort-column image">缺陷图片</th>
-				<th  class="sort-column testerLeadText">测试主管意见</th>
-				<th  class="sort-column developerLeadText">开发主管意见</th>
-				<th  class="sort-column projectManagerText">项目经理意见</th>
-				<th>操作</th>
-			</tr>
+		<tr>
+			<th> <input type="checkbox" class="i-checks"></th>
+
+			<th  class="sort-column name">问题单</th>
+
+			<th  class="sort-column bugType">问题类型</th>
+			<th  class="sort-column bugStatus">状态</th>
+			<th  class="sort-column bugLevel">优先级</th>
+			<th  class="sort-column bugSerious">严重度</th>
+			<th  class="sort-column bugFrequency">频率</th>
+
+			<th  class="sort-column ">项目</th>
+			<th  class="sort-column ">版本</th>
+
+
+				<%--<th  class="sort-column " >标题</th>--%>
+			<th  class="sort-column ">当前环节</th>
+			<th  class="sort-column ">流程名称</th>
+			<th  class="sort-column ">流程版本</th>
+			<th  class="sort-column ">创建时间</th>
+			<th>操作</th>
+		</tr>
 		</thead>
 		<tbody>
 		<c:forEach items="${page.list}" var="bug">
+			<c:set var="act" value="${bug.act}"></c:set>
+
+			<c:set var="task" value="${act.task}" />
+			<c:set var="taskId" value="${task.id}"/>
+			<c:set var="vars" value="${act.vars}" />
+			<c:set var="procDef" value="${act.procDef}" />
+			<c:set var="status" value="${act.status}" />
+
+
 			<tr>
 				<td> <input type="checkbox" id="${bug.id}" class="i-checks"></td>
-				<td><a  href="#" onclick="openDialogView('查看缺陷', '${ctx}/bug/bug/form?id=${bug.id}','800px', '500px')">
-					${bug.bugVersion.version}
-				</a></td>
 				<td>
-					${bug.bugProject.name}
+
+							${bug.name}
+				</td>
+
+				<td>
+						${fns:getDictLabel(bug.bugType, 'bug_type', '')}
 				</td>
 				<td>
-					${fns:getDictLabel(bug.bugType, 'bug_type', '')}
+						${fns:getDictLabel(bug.bugStatus, 'bug_status', '')}
 				</td>
 				<td>
-					${fns:getDictLabel(bug.bugStatus, 'bug_status', '')}
+						${fns:getDictLabel(bug.bugLevel, 'bug_level', '')}
+				</td>
+
+				<td>
+						${fns:getDictLabel(bug.bugSerious, 'bug_serious', '')}
 				</td>
 				<td>
-					${fns:getDictLabel(bug.bugLevel, 'bug_level', '')}
+						${fns:getDictLabel(bug.bugFrequency, 'bug_frequency', '')}
+				</td>
+
+				<td>
+						${bug.bugProject.name}
 				</td>
 				<td>
-					${bug.name}
+						${bug.bugVersion.version}
 				</td>
+
+					<%--<td>--%>
+					<%--<c:if test="${empty task.assignee}">--%>
+					<%--<a href="javascript:claim('${task.id}');" title="签收任务">${fns:abbr(not empty act.vars.map.title ? act.vars.map.title : task.id, 60)}</a>--%>
+					<%--</c:if>--%>
+					<%--<c:if test="${not empty task.assignee}">--%>
+					<%--<a href="${ctx}/act/task/form?taskId=${task.id}&taskName=${fns:urlEncode(task.name)}&taskDefKey=${task.taskDefinitionKey}&procInsId=${task.processInstanceId}&procDefId=${task.processDefinitionId}&status=${status}">${fns:abbr(not empty vars.map.title ? vars.map.title : task.id, 60)}</a>--%>
+					<%--</c:if>--%>
+					<%--</td>--%>
 				<td>
-					${bug.summary}
+					${task.name}
 				</td>
+
+					<%--
+            <td>${task.description}</td> --%>
+
+				<td>${procDef.name}</td>
+				<td><b title='流程版本号'>V: ${procDef.version}</b></td>
+				<td><fmt:formatDate value="${task.createTime}" type="both"/></td>
 				<td>
-					${bug.description}
-				</td>
-				<td>
-					${bug.remarks}
-				</td>
-				<td>
-					${bug.file}
-				</td>
-				<td>
-					${bug.image}
-				</td>
-				<td>
-					${bug.testerLeadText}
-				</td>
-				<td>
-					${bug.developerLeadText}
-				</td>
-				<td>
-					${bug.projectManagerText}
-				</td>
-				<td>
-					<shiro:hasPermission name="bug:bug:view">
-						<a href="#" onclick="openDialogView('查看缺陷', '${ctx}/bug/bug/form?id=${bug.id}','800px', '500px')" class="btn btn-info btn-xs" ><i class="fa fa-search-plus"></i> 查看</a>
-					</shiro:hasPermission>
-					<shiro:hasPermission name="bug:bug:edit">
-    					<a href="#" onclick="openDialog('修改缺陷', '${ctx}/bug/bug/form?id=${bug.id}','800px', '500px')" class="btn btn-success btn-xs" ><i class="fa fa-edit"></i> 修改</a>
-    				</shiro:hasPermission>
-    				<shiro:hasPermission name="bug:bug:del">
+
+
+
+
+					<c:if test="${not empty task}">
+						<shiro:hasPermission name="bug:bug:task">
+							<a href="#" onclick="openDialogView('查看缺陷', '${ctx}/bug/bug/task/view/${taskId}?id=${bug.id}','800px', '500px')" class="btn btn-info btn-xs" ><i class="fa fa-search-plus"></i> 查看</a>
+						</shiro:hasPermission>
+						<shiro:hasPermission name="bug:bug:task">
+							<a href="#" onclick="openDialogView('追踪缺陷', '${ctx}/act/task/trace/photo/${task.processDefinitionId}/${task.executionId}','800px', '500px')" class="btn btn-success btn-xs" ><i class="fa fa-s"></i> 追踪</a>
+						</shiro:hasPermission>
+					</c:if>
+
+					<shiro:hasPermission name="bug:bug:del">
 						<a href="${ctx}/bug/bug/delete?id=${bug.id}" onclick="return confirmx('确认要删除该缺陷吗？', this.href)"   class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> 删除</a>
 					</shiro:hasPermission>
+
 				</td>
 			</tr>
 		</c:forEach>

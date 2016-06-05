@@ -96,8 +96,23 @@
 			<tr>
 				<td> <input type="checkbox" id="${bugProject.id}" class="i-checks"></td>
 				<td>
+
+
 					<a  href="#" onclick="openDialogView('查看项目', '${ctx}/bug/bugProject/form?id=${bugProject.id}','800px', '500px')">
-						<span  class=" label ${bugProject.processKey != null ? 'label-primary':''} ">${bugProject.name}</span>
+
+						<%--<c:if test="${not empty bugProject.processKey}">--%>
+							<%----%>
+						<%--</c:if>--%>
+
+						<c:if test="${empty bugProject.processKey}">
+							<span  class=" label ">${bugProject.name}</span>
+						</c:if>
+
+							<c:if test="${!empty bugProject.processKey}">
+								<span  class=" label label-primary">${bugProject.name}</span>
+							</c:if>
+
+
 					</a>
 
 				</td>

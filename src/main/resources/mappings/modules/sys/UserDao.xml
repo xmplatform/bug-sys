@@ -125,14 +125,14 @@
 		/*LEFT JOIN sys_user_role ur ON ur.user_id = a.id
         LEFT JOIN sys_role r ON r.id = ur.role_id*/
     </sql>
-	
+
 	<!-- 根据编号获得用户 -->
 	<select id="get" resultType="User">
 		SELECT
 			<include refid="userColumns"/><!-- ,
 			ro.office_id AS "roleList.officeList.id" -->
 		FROM sys_user a
-		<include refid="userJoins"/><!-- 
+		<include refid="userJoins"/><!--
 		LEFT JOIN sys_role_office ro ON ro.role_id = r.id -->
 		WHERE a.id = #{id}
 	</select>
@@ -158,7 +158,7 @@
 			JOIN sys_user_role ur ON ur.user_id = a.id AND ur.role_id = #{role.id}
 		</if>
 		<if test="bugProject != null and bugProject.id != null and bugProject.id != ''">
-			JOIN bug_project_user ur ON ur.user_id = a.id AND ur.project_id = #{bugProject.id}
+			JOIN bug_project_user bpu ON bpu.user_id = a.id AND bpu.project_id = #{bugProject.id}
 		</if>
 		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
 		<if test="company != null and company.id != null and company.id != ''">

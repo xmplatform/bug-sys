@@ -227,6 +227,21 @@ public class ContactController extends BaseController {
 
 		User currentUser=UserUtils.getUser();
 
+		//我的好友--->常用联系人
+		List<User>  friends = userDao.findFriends(currentUser);
+		Group friendGroup = new Group();
+		friendGroup.setName("我的好友");
+		friendGroup.setId(1);
+		friendGroup.setNums(friends.size());
+		for(User u : friends){
+			Friend friend = new Friend();
+			friend.setId(u.getLoginName());
+			friend.setName(u.getName());
+			friend.setFace(u.getPhoto());
+			friendGroup.getItem().add(friend);
+		}
+		j.getData().add(friendGroup);
+
 		BugProject bugProject=new BugProject();
 		if (!currentUser.isAdmin()){
 			bugProject.setSelf(true);
@@ -252,7 +267,7 @@ public class ContactController extends BaseController {
 			}
 			j.getData().add(group);
 		}
-		//
+
 		return j;
 	}
 	/**

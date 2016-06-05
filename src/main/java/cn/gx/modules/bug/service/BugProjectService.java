@@ -119,23 +119,23 @@ public class BugProjectService extends CrudService<BugProjectDao, BugProject> {
 		List<StatusBug> statusBugsNEW = dao.totalBugStatusNum(statusBug);
 		totalList.add(statusBugsNEW);
 		// 重开
-		statusBug.setBugStatus(BugStatus.REOPEN.getStatus());
+		statusBug.setBugStatus(BugStatus.REOPENED.getStatus());
 		List<StatusBug> statusBugsREOPEN = dao.totalBugStatusNum(statusBug);
 		totalList.add(statusBugsREOPEN);
 		// 待测试
-		statusBug.setBugStatus(BugStatus.RETEST.getStatus());
+		statusBug.setBugStatus(BugStatus.TEST.getStatus());
 		List<StatusBug> statusBugsRETEST=dao.totalBugStatusNum(statusBug);
 		totalList.add(statusBugsRETEST);
 		// 暂缓
 		statusBug.setBugStatus(BugStatus.DEFERRED.getStatus());
 		List<StatusBug> statusBugsDEFERRED=dao.totalBugStatusNum(statusBug);
 		totalList.add(statusBugsDEFERRED);
-		// 不解决
-		statusBug.setBugStatus(BugStatus.REJECTED_NOT_BUG.getStatus());
+		// 拒绝
+		statusBug.setBugStatus(BugStatus.REJECTED.getStatus());
 		List<StatusBug> statusBugsREJECTED=dao.totalBugStatusNum(statusBug);
 		totalList.add(statusBugsRETEST);
-		// 已修复
-		statusBug.setBugStatus(BugStatus.FIXED.getStatus());
+		// 验证
+		statusBug.setBugStatus(BugStatus.VERIFIED.getStatus());
 		List<StatusBug> statusBugsFIXED=dao.totalBugStatusNum(statusBug);
 		totalList.add(statusBugsDEFERRED);
 
@@ -189,7 +189,7 @@ public class BugProjectService extends CrudService<BugProjectDao, BugProject> {
 
 			// 初始化 7天内的默认数据为 0
 			LinkedHashMap<String,Integer> initValues=new LinkedHashMap<String,Integer>();
-			for (int j= day; j>0; j--) {
+			for (int j= day; j>=0; j--) {
 				//Calendar.get(Calendar.DAY_OF_WEEK);
 				String dateStr=getBeforeDay(j);
 				initValues.put(dateStr,0);

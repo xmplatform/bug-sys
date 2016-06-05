@@ -8,33 +8,20 @@ import org.springframework.http.HttpStatus;
  */
 public enum  BugStatus {
 
-    // poster_task 提交
+
     NEW("NEW","新建","新建"),
-    RENEW("RENEW","重新新建","重复新建"),
-
-    //testerLead_task
     GENUINE("GENUINE","有效","有效"),
-    NOGENUINE("NOGENUINE","无效","无效"),
-
-    //projectManager_task
-    REJECTED_DUPLICATE("REJECTED_DUPLICATE","拒绝","拒绝原因:已经重现了"),
-    REJECTED_NOT_BUG("REJECTED_NOT_BUG","拒绝","拒绝原因:不属于缺陷"),
-    REJECTED_NOT_REPRODUCIBLE("REJECTED_NOT_REPRODUCIBLE","拒绝","拒绝原因:难以复现"),
-    DEFERRED("DEFERRED","延迟","延迟:日后修复"),
-
     ASSIGNED("ASSIGNED","分配","分配给开发人员"),
+    TEST("TEST","已解决","开发人员已解决，待重新测试"),
+    VERIFIED("VERIFIED","已验证","问题经过检验，被修复了"),
 
-    //developer_task
-    OPEN("OPEN","打开","接受任务,打开缺陷"),
-    FIXED("FIXED","修复","开发人员修复缺陷,待测试组检测"),
-    NOFIXED("NOFIXED","无法修复","开发人员修复不了"),
+    DEFERRED("DEFERRED","延迟","延迟:日后修复"),
+    REJECTED("REJECTED","拒绝","不是Bug;Bug 重复;Bug 难以复现"),
+    REOPENED("REOPENED","重开","依然存在缺陷,重新打开");
 
-    //tester_task
-    RETEST("RETEST","验证","验证开发人员修复的缺陷"),
 
-    REOPEN("REOPEN","重新打开","依然存在缺陷,重新打开"),
-    V("REOPEN","重新打开","依然存在缺陷,重新打开"),
-    CLOSED("CLOSED","关闭","缺陷已验证,缺陷关闭");
+
+
 
     private final String status;
     private final String statusPhrase;

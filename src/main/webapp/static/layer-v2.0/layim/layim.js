@@ -10,13 +10,13 @@
 
 
 var config = {
-    msgurl: url+'/iim/mailBox/list',
+    msgurl: url+'/bug/bug/task/todo',
     chatlogurl: url+'/iim/chatHistory?userid1='+currentId+"&userid2=",
     aniTime: 200,
     right: -232,
     api: {
-	   friend: url+'/iim/contact/friend', //好友列表接口
-        group:  url+'/iim/contact/group', //群组列表接口 
+	   friend: url+'/iim/contact/group', //好友列表接口
+        // group:  url+'/iim/contact/group', //群组列表接口
         chatlog:  url+'/iim/contact/chatLog', //聊天记录接口
         groups:  url+'/iim/contact/groups', //群组成员接口
         sendurl: '' //发送消息接口
@@ -918,7 +918,7 @@ xxim.view = (function(){
                     +'<span class="xxim_setoffline"><i class="fa fa-check-circle"></i>隐身</span>'
                 +'</div>'
             +'</li>'
-            +'<li class="xxim_mymsg" id="xxim_mymsg" title="我的私信"><i class="fa fa-comment"></i><a onclick=\'top.openTab("'+config.msgurl+'","信箱", false)\''+'></a></li>'
+            +'<li class="xxim_mymsg" id="xxim_mymsg" title="我的任务"><i class="fa fa-tasks"></i><a onclick=\'top.openTab("'+config.msgurl+'","分配给我", false)\''+'></a></li>'
             +'<li class="xxim_seter" id="xxim_seter" title="设置">'
                 +'<i class="fa fa-gear"></i>'
                 +'<div>'

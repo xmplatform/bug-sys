@@ -98,6 +98,33 @@ public class BugService extends CrudService<BugDao, Bug> {
 	}
 
 	public Page<Bug> findPage(Page<Bug> page, Bug bug) {
+
+		bug.setPage(page);
+		List<Bug> list = dao.findList(bug);
+
+		for (Bug b :list){
+			String procInsId = b.getProcInsId();
+
+			if(procInsId!=null){
+				Task task = taskService.createTaskQuery().processInstanceId(b.getProcInsId()).active().singleResult();
+
+				if (task!=null){
+					String processDefinitionId = task.getProcessDefinitionId();
+					ProcessDefinition processDefinition = ProcessDefCache.get(processDefinitionId);
+
+					Act e = new Act();
+					e.setProcDef(processDefinition);//processDefinition
+					e.setTask(task);//task
+					b.setAct(e);
+				}
+			}
+
+
+
+		}
+
+		page.setList(list);
+
 		return super.findPage(page, bug);
 	}
 
@@ -113,46 +140,62 @@ public class BugService extends CrudService<BugDao, Bug> {
 	 *
 	 */
 	@Transactional(readOnly = false)
-	public void save(Bug bug) {
+	public void save(Bug bug,String url) {
 
 
+
+
+//		//申请发起
+//		if (StringUtils.isBlank(bug.getId())){
+//			bug.preInsert();
+//			dao.insert(bug);
+//			// 启动流程
+//			Map vars=new HashMap();
+//			vars.put("status",bug.getBugStatus());
+//			String procInsId = actTaskService.startProcess(processKey, "bug", bug.getId(), "", vars);// 和流程建立关联关系
+//
+//			// 刚才的任务到达下一组
+//			Task task = taskService.createTaskQuery().processInstanceId(procInsId).taskCandidateUser(bug.getAssign()).singleResult();
+//			if(task!=null){
+//				actTaskService.claim(task.getId(), bug.getAssign());
+//
+//				//发送邮件和通知
+//				notifyAndEmail(bug.getAssign(),bug.getName());
+//			}
+//
+//		}
+//		//重新编辑
+//		else{
+//			bug.preUpdate();
+//			dao.update(bug);
+//			bug.getAct().setComment(BugStatus.reasonPhraseOf(bug.getBugStatus())+bug.getAct().getComment());
+//
+//			// 完成任务流程
+//			Map<String,Object> vars= Maps.newHashMap();
+//			vars.put("status",bug.getBugStatus());
+//
+//			actTaskService.complete(bug.getAct().getTaskId(), bug.getAct().getProcInsId(), bug.getAct().getComment(), bug.getSummary(),null);
+//		}
 		/**
 		 * 配置多流程 则要在这边进行更改 TODO
 		 */
 		BugProject bugProject = bug.getBugProject();
 		String processKey=bugProjectDao.getProcessKey(bugProject.getId());
+		bug.preInsert();
+		dao.insert(bug);
+		// 启动流程
+		Map vars=new HashMap();
+		vars.put("status",bug.getBugStatus());
+		String procInsId = actTaskService.startProcess(processKey, "bug", bug.getId(), "", vars);// 和流程建立关联关系
 
-		//申请发起
-		if (StringUtils.isBlank(bug.getId())){
-			bug.preInsert();
-			dao.insert(bug);
-			// 启动流程
-			Map vars=new HashMap();
-			vars.put("status",bug.getBugStatus());
-			String procInsId = actTaskService.startProcess(processKey, "bug", bug.getId(), "", vars);// 和流程建立关联关系
+		// 刚才的任务到达下一组
+		Task task = taskService.createTaskQuery().processInstanceId(procInsId).taskCandidateUser(bug.getAssign()).singleResult();
+		if(task!=null){
+			actTaskService.claim(task.getId(), bug.getAssign());
 
-			// 刚才的任务到达下一组
-			Task task = taskService.createTaskQuery().processInstanceId(procInsId).taskCandidateUser(bug.getAssign()).singleResult();
-			if(task!=null){
-				actTaskService.claim(task.getId(), bug.getAssign());
-
-			}
-
+			//发送邮件和通知
+			notifyAndEmail(bug.getAssign(),bug.getName(),url);
 		}
-		//重新编辑
-		else{
-			bug.preUpdate();
-			dao.update(bug);
-			bug.getAct().setComment(BugStatus.reasonPhraseOf(bug.getBugStatus())+bug.getAct().getComment());
-
-			// 完成任务流程
-			Map<String,Object> vars= Maps.newHashMap();
-			vars.put("status",bug.getBugStatus());
-
-			actTaskService.complete(bug.getAct().getTaskId(), bug.getAct().getProcInsId(), bug.getAct().getComment(), bug.getSummary(),null);
-		}
-
-		super.save(bug);
 	}
 
 	/**
@@ -223,6 +266,7 @@ public class BugService extends CrudService<BugDao, Bug> {
 
 
 	public Page<Bug> historicPage(Page<Bug> page, Bug bug) {
+
 		String userId = UserUtils.getUser().getLoginName();//ObjectUtils.toString(UserUtils.getUser().getId());
 
 		Act act=bug.getAct();
@@ -306,7 +350,7 @@ public class BugService extends CrudService<BugDao, Bug> {
 			String processDefinitionId = task.getProcessDefinitionId();
 			ProcessDefinition processDefinition = ProcessDefCache.get(processDefinitionId);
 			Map<String, Object> processVariables = task.getProcessVariables();
-			ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+			//ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
 
 			Bug bug = dao.getByProcInsId(processInstanceId);
 
@@ -323,38 +367,38 @@ public class BugService extends CrudService<BugDao, Bug> {
 
 
 		// =============== 等待签收的任务  ===============
-		TaskQuery toClaimQuery = taskService.createTaskQuery().taskCandidateUser(userId)
-				.includeProcessVariables().active().orderByTaskCreateTime().desc();
-
-		// 设置查询条件
-		if (StringUtils.isNotBlank(act.getProcDefKey())){
-			toClaimQuery.processDefinitionKey(act.getProcDefKey());
-		}
-		if (act.getBeginDate() != null){
-			toClaimQuery.taskCreatedAfter(act.getBeginDate());
-		}
-		if (act.getEndDate() != null){
-			toClaimQuery.taskCreatedBefore(act.getEndDate());
-		}
-
-		// 查询列表
-		List<Task> toClaimList = toClaimQuery.list();
-		for (Task task : toClaimList) {
-			String processInstanceId = task.getProcessInstanceId();
-			String processDefinitionId = task.getProcessDefinitionId();
-			ProcessDefinition processDefinition = ProcessDefCache.get(processDefinitionId);
-			Map<String, Object> processVariables = task.getProcessVariables();
-			ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
-			Bug bug = dao.getByProcInsId(processInstanceId);
-
-
-			Act e = new Act();
-			e.setVars(processVariables);
-			e.setProcDef(processDefinition);//processDefinition
-			e.setTask(task);//task
-			e.setStatus("claim");
-			result.add(bug);
-		}
+//		TaskQuery toClaimQuery = taskService.createTaskQuery().taskCandidateUser(userId)
+//				.includeProcessVariables().active().orderByTaskCreateTime().desc();
+//
+//		// 设置查询条件
+//		if (StringUtils.isNotBlank(act.getProcDefKey())){
+//			toClaimQuery.processDefinitionKey(act.getProcDefKey());
+//		}
+//		if (act.getBeginDate() != null){
+//			toClaimQuery.taskCreatedAfter(act.getBeginDate());
+//		}
+//		if (act.getEndDate() != null){
+//			toClaimQuery.taskCreatedBefore(act.getEndDate());
+//		}
+//
+//		// 查询列表
+//		List<Task> toClaimList = toClaimQuery.list();
+//		for (Task task : toClaimList) {
+//			String processInstanceId = task.getProcessInstanceId();
+//			String processDefinitionId = task.getProcessDefinitionId();
+//			ProcessDefinition processDefinition = ProcessDefCache.get(processDefinitionId);
+//			Map<String, Object> processVariables = task.getProcessVariables();
+//			ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+//			Bug bug = dao.getByProcInsId(processInstanceId);
+//
+//
+//			Act e = new Act();
+//			e.setVars(processVariables);
+//			e.setProcDef(processDefinition);//processDefinition
+//			e.setTask(task);//task
+//			e.setStatus("claim");
+//			result.add(bug);
+//		}
 
 
 		return result;
@@ -383,14 +427,80 @@ public class BugService extends CrudService<BugDao, Bug> {
 
 	public  Page<Bug> todoPage(Page<Bug> page, Bug bug) {
 		bug.setPage(page);
-		List<Bug> bugs = this.todoList(bug.getAct());
-		page.setList(bugs);
+		Act act =bug.getAct();
+		String userId = UserUtils.getUser().getLoginName();
+
+		List<Bug> result = new ArrayList<Bug>();
+
+		// 根据当前人的ID查询
+		TaskQuery todoTaskQuery = taskService.createTaskQuery().taskAssignee(userId).active()
+				.includeProcessVariables().orderByTaskCreateTime().desc();
+
+		// 设置查询条件
+		if (StringUtils.isNotBlank(act.getProcDefKey())){
+			todoTaskQuery.processDefinitionKey(act.getProcDefKey());
+		}
+		if (act.getBeginDate() != null){
+			todoTaskQuery.taskCreatedAfter(act.getBeginDate());
+		}
+		if (act.getEndDate() != null){
+			todoTaskQuery.taskCreatedBefore(act.getEndDate());
+		}
+
+		// 查询列表
+		//List<Task> todoList = todoTaskQuery.list();
+		List<Task> todoList = todoTaskQuery.listPage(page.getFirstResult(),page.getMaxResults());
+		for (Task task : todoList) {
+
+			String processInstanceId = task.getProcessInstanceId();
+			String processDefinitionId = task.getProcessDefinitionId();
+			ProcessDefinition processDefinition = ProcessDefCache.get(processDefinitionId);
+			Map<String, Object> processVariables = task.getProcessVariables();
+			ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+
+			Bug dbBug = dao.getByProcInsId(processInstanceId);
+
+
+			Act e = new Act();
+			e.setVars(processVariables);
+			e.setProcDef(processDefinition);//processDefinition
+			e.setTask(task);//task
+			e.setStatus("todo");
+
+			dbBug.setAct(e);
+			result.add(dbBug);
+		}
+
+		//List<Bug> bugs = this.todoList(bug.getAct());
+		page.setList(result);
+		page.setCount(result.size());
 		return page;
 	}
 
 
-	public void startWorkflow(Bug bug) {
-		this.save(bug);
+	@Transactional(readOnly = false)
+	public void startWorkflow(Bug bug,String url) {
+		/**
+		 * 配置多流程 则要在这边进行更改 TODO
+		 */
+		BugProject bugProject = bug.getBugProject();
+		String processKey=bugProjectDao.getProcessKey(bugProject.getId());
+
+
+
+		// 启动流程
+		Map vars=new HashMap();
+		vars.put("status",bug.getBugStatus());
+		String procInsId = actTaskService.startProcess(processKey, "bug", bug.getId(), "", vars);// 和流程建立关联关系
+
+		// 刚才的任务到达下一组
+		Task task = taskService.createTaskQuery().processInstanceId(procInsId).taskCandidateUser(bug.getAssign()).singleResult();
+		if(task!=null){
+			actTaskService.claim(task.getId(), bug.getAssign());
+
+			//发送邮件和通知
+			notifyAndEmail(bug.getAssign(),bug.getName(),url);
+		}
 	}
 
 	public User getApplyUser(String procInsId) {
@@ -398,7 +508,7 @@ public class BugService extends CrudService<BugDao, Bug> {
 		return dao.getApplyUser(procInsId);
 	}
 	@Transactional(readOnly = false)
-	public void completeBugTask(Bug bug) {
+	public void completeBugTask(Bug bug,String url) {
 
 		Act act = bug.getAct();
 
@@ -432,7 +542,8 @@ public class BugService extends CrudService<BugDao, Bug> {
 		// 更新 activiti 记录
 		String statusLabel = DictUtils.getDictLabel(currentStatus, "bug_status", "通过");
 		// 设置意见
-		act.setComment(statusLabel+act.getComment());
+		String comment=String.format("「%s」:%s",statusLabel,act.getComment());
+		act.setComment(comment);
 		//dao.update(bug);
 		// 提交流程任务
 		Map<String, Object> vars = Maps.newHashMap();
@@ -445,42 +556,47 @@ public class BugService extends CrudService<BugDao, Bug> {
 		if(task!=null){
 			actTaskService.claim(task.getId(), bug.getAssign());
 
-			User user=new User();
-			user.setLoginName(bug.getAssign());
-			user = userDao.getByLoginName(user);
-			String address=user.getEmail();
-			// 邮件通知
-			if (user.getOpenEmail()==1&&StringUtils.isNotEmpty(address)){
-				SystemConfig config = systemConfigService.get("1");
-				String title="Bug 任务";
-				String html="<html>\n" +
-						"<body>\n" +
-						"  你好 %s,<br/><br/>\n" +
-						"  <p>您有项目为「%s」的 Bug 任务要进行处理</p>\n" +
-						"  <hr/>\n" +
-						"</body>\n" +
-						"</html>";
-				String content = String.format(html, user.getName(), bug.getName());
-				boolean issuccess = MailSendUtils.sendEmail(config.getSmtp(), config.getPort(), config.getMailName(), config.getMailPassword(), address, title, content, "0");
-				System.out.println("邮件发送:"+issuccess);
-
-			}
-			// 站内通知
-			if(user.getOpenNotify()==1){
-
-				OaNotify oaNotify=new OaNotify();
-
-				oaNotify.setTitle("Bug 任务");
-				String str="您好%s,您有项目为「%s」的 Bug 任务要进行处理";
-				String content= String.format(str,user.getName(),bug.getName());
-				oaNotify.setContent(content);
-				oaNotify.setStatus("1");
-				oaNotify.setOaNotifyRecordIds(user.getId());
-				oaNotifyService.save(oaNotify);
-			}
+			notifyAndEmail(bug.getAssign(),bug.getName(),url);
 
 		}
 
+	}
+
+	private void notifyAndEmail(String assgin,String bugName,String url) {
+		User user=new User();
+		user.setLoginName(assgin);
+		user = userDao.getByLoginName(user);
+		String address=user.getEmail();
+		// 邮件通知
+		if (user.getOpenEmail()==1&& StringUtils.isNotEmpty(address)){
+            SystemConfig config = systemConfigService.get("1");
+            String title="Bug 任务";
+            String html="<html>\n" +
+                    "<body>\n" +
+                    "  你好 %s,<br/><br/>\n" +
+                    "  <p>您有问题单为「%s」的 Bug 任务要进行处理</p>\n" +
+					" 点击进行访问:<a href='%s'>Bug 管理系统</>"+
+                    "  <hr/>\n" +
+                    "</body>\n" +
+                    "</html>";
+            String content = String.format(html, user.getName(), bugName,url);
+            boolean issuccess = MailSendUtils.sendEmail(config.getSmtp(), config.getPort(), config.getMailName(), config.getMailPassword(), address, title, content, "0");
+            System.out.println("邮件发送:"+issuccess);
+
+        }
+		// 站内通知
+		if(user.getOpenNotify()==1){
+
+            OaNotify oaNotify=new OaNotify();
+
+            oaNotify.setTitle("Bug 任务");
+            String str="您好%s,您有问题单为「%s」的 Bug 任务要进行处理";
+            String content= String.format(str,user.getName(),bugName);
+            oaNotify.setContent(content);
+            oaNotify.setStatus("1");
+            oaNotify.setOaNotifyRecordIds(user.getId());
+            oaNotifyService.save(oaNotify);
+        }
 	}
 
 	public List<User> findNextTaskUserList(String proInstId, String projectId, TaskDefinition taskDefinition) {
@@ -537,7 +653,7 @@ public class BugService extends CrudService<BugDao, Bug> {
 				todoCount++;
 			}
 
-			if (userId.equals(dbBug.getCreateBy())){
+			if (userId.equals(dbBug.getCreateBy().getId())){
 				applyCount++;
 			}
 

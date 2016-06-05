@@ -203,6 +203,8 @@
 	<select id="getProjectPeople" resultType="User">
 
 		select
+			su.id as id,
+			su.login_name as loginName,
 			su.`photo` as photo,
 			su.name as name
 from sys_user su

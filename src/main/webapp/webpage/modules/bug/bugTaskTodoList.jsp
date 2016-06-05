@@ -53,36 +53,33 @@
 			<sys:message content="${message}"/>
 
 			<!--查询条件-->
-			<div class="row">
-				<div class="col-sm-12">
-					<form:form id="searchForm" modelAttribute="bug" action="${ctx}/bug/bug/task/todo" method="post" class="form-inline">
-						<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
-						<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
-						<table:sortColumn id="orderBy" name="orderBy" value="${page.orderBy}" callback="sortOrRefresh();"/><!-- 支持排序 -->
-						<div class="form-group">
-							<span>项目版本主键：</span>
-							<sys:treeselect id="bugVersion" name="bugVersion.id" value="${bug.bugVersion.id}" labelName="" labelValue="${bug.bugVersion.version}"
-											title="用户" url="/sys/office/treeData?type=3" cssClass="form-control input-sm" allowClear="true" notAllowSelectParent="true"/>
-							<span>缺陷类型：</span>
-							<form:select path="bugType"  class="form-control m-b">
-								<form:option value="" label=""/>
-								<form:options items="${fns:getDictList('bug_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-							</form:select>
-							<span>缺陷状态：</span>
-							<form:select path="bugStatus"  class="form-control m-b">
-								<form:option value="" label=""/>
-								<form:options items="${fns:getDictList('bug_status')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-							</form:select>
-							<span>缺陷优先级：</span>
-							<form:select path="bugLevel"  class="form-control m-b">
-								<form:option value="" label=""/>
-								<form:options items="${fns:getDictList('bug_level')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-							</form:select>
-						</div>
-					</form:form>
-					<br/>
-				</div>
-			</div>
+			<%--<div class="row">--%>
+				<%--<div class="col-sm-12">--%>
+					<%--<form:form id="searchForm" modelAttribute="bug" action="${ctx}/bug/bug/task/todo" method="post" class="form-inline">--%>
+						<%--<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>--%>
+						<%--<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>--%>
+						<%--<table:sortColumn id="orderBy" name="orderBy" value="${page.orderBy}" callback="sortOrRefresh();"/><!-- 支持排序 -->--%>
+						<%--<div class="form-group">--%>
+							<%--<span>缺陷状态：</span>--%>
+							<%--<form:select path="bugType"  class="form-control m-b">--%>
+								<%--<form:option value="" label=""/>--%>
+								<%--<form:options items="${fns:getDictList('bug_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>--%>
+							<%--</form:select>--%>
+							<%--<span>缺陷状态：</span>--%>
+							<%--<form:select path="bugStatus"  class="form-control m-b">--%>
+								<%--<form:option value="" label=""/>--%>
+								<%--<form:options items="${fns:getDictList('bug_status')}" itemLabel="label" itemValue="value" htmlEscape="false"/>--%>
+							<%--</form:select>--%>
+							<%--<span>缺陷优先级：</span>--%>
+							<%--<form:select path="bugLevel"  class="form-control m-b">--%>
+								<%--<form:option value="" label=""/>--%>
+								<%--<form:options items="${fns:getDictList('bug_level')}" itemLabel="label" itemValue="value" htmlEscape="false"/>--%>
+							<%--</form:select>--%>
+						<%--</div>--%>
+					<%--</form:form>--%>
+					<%--<br/>--%>
+				<%--</div>--%>
+			<%--</div>--%>
 
 			<!-- 工具栏 -->
 			<div class="row">
@@ -91,9 +88,9 @@
 						<%--<shiro:hasPermission name="bug:bug:add">--%>
 							<%--<table:addRow url="${ctx}/bug/bug/form" title="新建问题单"></table:addRow><!-- 增加按钮 -->--%>
 						<%--</shiro:hasPermission>--%>
-						<shiro:hasPermission name="bug:bug:edit">
-							<table:editRow url="${ctx}/bug/bug/form" title="处理问题单" id="contentTable"></table:editRow><!-- 编辑按钮 -->
-						</shiro:hasPermission>
+						<%--<shiro:hasPermission name="bug:bug:edit">--%>
+							<%--<table:editRow url="${ctx}/bug/bug/form" title="处理问题单" id="contentTable"></table:editRow><!-- 编辑按钮 -->--%>
+						<%--</shiro:hasPermission>--%>
 						<%--<shiro:hasPermission name="bug:bug:del">--%>
 							<%--<table:delRow url="${ctx}/bug/bug/deleteAll" id="contentTable"></table:delRow><!-- 删除按钮 -->--%>
 						<%--</shiro:hasPermission>--%>
@@ -106,10 +103,10 @@
 						<button class="btn btn-white btn-sm " data-toggle="tooltip" data-placement="left" onclick="sortOrRefresh()" title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新</button>
 
 					</div>
-					<div class="pull-right">
-						<button  class="btn btn-primary btn-rounded btn-outline btn-sm " onclick="search()" ><i class="fa fa-search"></i> 查询</button>
-						<button  class="btn btn-primary btn-rounded btn-outline btn-sm " onclick="reset()" ><i class="fa fa-refresh"></i> 重置</button>
-					</div>
+					<%--<div class="pull-right">--%>
+						<%--<button  class="btn btn-primary btn-rounded btn-outline btn-sm " onclick="search()" ><i class="fa fa-search"></i> 查询</button>--%>
+						<%--<button  class="btn btn-primary btn-rounded btn-outline btn-sm " onclick="reset()" ><i class="fa fa-refresh"></i> 重置</button>--%>
+					<%--</div>--%>
 				</div>
 			</div>
 
@@ -118,18 +115,20 @@
 				<thead>
 				<tr>
 					<th> <input type="checkbox" class="i-checks"></th>
+
 					<th  class="sort-column name">问题单</th>
 
 					<th  class="sort-column bugType">问题类型</th>
-					<th  class="sort-column bugStatus">问题状态</th>
-					<th  class="sort-column bugLevel">问题优先级</th>
+					<th  class="sort-column bugStatus">状态</th>
+					<th  class="sort-column bugLevel">优先级</th>
+					<th  class="sort-column bugSerious">严重度</th>
+					<th  class="sort-column bugFrequency">频率</th>
 
 					<th  class="sort-column ">项目</th>
 					<th  class="sort-column ">版本</th>
 
 
-
-					<th  class="sort-column " >标题</th>
+					<%--<th  class="sort-column " >标题</th>--%>
 					<th  class="sort-column ">当前环节</th>
 					<th  class="sort-column ">流程名称</th>
 					<th  class="sort-column ">流程版本</th>
@@ -165,6 +164,14 @@
 						<td>
 								${fns:getDictLabel(bug.bugLevel, 'bug_level', '')}
 						</td>
+
+						<td>
+								${fns:getDictLabel(bug.bugSerious, 'bug_serious', '')}
+						</td>
+						<td>
+								${fns:getDictLabel(bug.bugFrequency, 'bug_frequency', '')}
+						</td>
+
 						<td>
 								${bug.bugProject.name}
 						</td>
@@ -172,14 +179,14 @@
 								${bug.bugVersion.version}
 						</td>
 
-						<td>
-							<c:if test="${empty task.assignee}">
-								<a href="javascript:claim('${task.id}');" title="签收任务">${fns:abbr(not empty act.vars.map.title ? act.vars.map.title : task.id, 60)}</a>
-							</c:if>
-							<c:if test="${not empty task.assignee}">
-								<a href="${ctx}/act/task/form?taskId=${task.id}&taskName=${fns:urlEncode(task.name)}&taskDefKey=${task.taskDefinitionKey}&procInsId=${task.processInstanceId}&procDefId=${task.processDefinitionId}&status=${status}">${fns:abbr(not empty vars.map.title ? vars.map.title : task.id, 60)}</a>
-							</c:if>
-						</td>
+						<%--<td>--%>
+							<%--<c:if test="${empty task.assignee}">--%>
+								<%--<a href="javascript:claim('${task.id}');" title="签收任务">${fns:abbr(not empty act.vars.map.title ? act.vars.map.title : task.id, 60)}</a>--%>
+							<%--</c:if>--%>
+							<%--<c:if test="${not empty task.assignee}">--%>
+								<%--<a href="${ctx}/act/task/form?taskId=${task.id}&taskName=${fns:urlEncode(task.name)}&taskDefKey=${task.taskDefinitionKey}&procInsId=${task.processInstanceId}&procDefId=${task.processDefinitionId}&status=${status}">${fns:abbr(not empty vars.map.title ? vars.map.title : task.id, 60)}</a>--%>
+							<%--</c:if>--%>
+						<%--</td>--%>
 						<td>
 							<a target="_blank" href="${pageContext.request.contextPath}/act/rest/diagram-viewer?processDefinitionId=${task.processDefinitionId}&processInstanceId=${task.processInstanceId}">${task.name}</a>
 						</td>
@@ -191,20 +198,23 @@
 						<td><b title='流程版本号'>V: ${procDef.version}</b></td>
 						<td><fmt:formatDate value="${task.createTime}" type="both"/></td>
 						<td>
-							<c:if test="${empty task.assignee}">
+							<%--<c:if test="${empty task.assignee}">--%>
 
-								<a href="javascript:claim('${task.id}');">签收任务</a>
-							</c:if>
-							<c:if test="${not empty task.assignee}">
+								<%--<a href="javascript:claim('${task.id}');">签收任务</a>--%>
+							<%--</c:if>--%>
+							<%--<c:if test="${not empty task.assignee}">--%>
+								<%----%>
+								<%--&lt;%&ndash;<a href="${ctx}/act/task/view/${task.id}">任务办理</a>&ndash;%&gt;--%>
+							<%--</c:if>--%>
+								<shiro:hasPermission name="bug:bug:task">
 								<a href="#" onclick="openDialog('处理问题单', '${ctx}/bug/bug/task/view/${taskId}?id=${bug.id}','800px', '500px')" class="btn btn-success btn-xs" ><i class="fa fa-search-plus"></i>处理</a>
-								<%--<a href="${ctx}/act/task/view/${task.id}">任务办理</a>--%>
-							</c:if>
-							<shiro:hasPermission name="bug:bug:view">
+								</shiro:hasPermission>
+							<shiro:hasPermission name="bug:bug:task">
 								<a href="#" onclick="openDialogView('查看缺陷', '${ctx}/bug/bug/task/view/${taskId}?id=${bug.id}','800px', '500px')" class="btn btn-info btn-xs" ><i class="fa fa-search-plus"></i> 查看</a>
 							</shiro:hasPermission>
 							<%--<a target="_blank" href="${ctx}/act/task/trace/photo/${task.processDefinitionId}/${task.executionId}">跟踪2</a>--%>
-							<shiro:hasPermission name="bug:bug:view">
-								<a href="#" onclick="openDialogView('追踪缺陷', '${ctx}//act/task/trace/photo/${task.processDefinitionId}/${task.executionId}','800px', '500px')" class="btn btn-danger btn-xs" ><i class="fa fa-search-plus"></i> 追踪</a>
+								<shiro:hasPermission name="bug:bug:task">
+								<a href="#" onclick="openDialogView('追踪缺陷', '${ctx}/act/task/trace/photo/${task.processDefinitionId}/${task.executionId}','800px', '500px')" class="btn btn-danger btn-xs" ><i class="fa fa-search-plus"></i> 追踪</a>
 							</shiro:hasPermission>
 							<%--<shiro:hasPermission name="bug:bug:edit">--%>
 								<%--<a href="#" onclick="openDialog('修改缺陷', '${ctx}/bug/bug/form?id=${bug.id}','800px', '500px')" class="btn btn-success btn-xs" ><i class="fa fa-edit"></i> 修改</a>--%>

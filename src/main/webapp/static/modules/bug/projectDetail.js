@@ -93,7 +93,7 @@ function initProjectData2(baseUrl,id) {
 
              //self.location.href=url;
 
-             top.openTab(url,"应用状态「${e.statusPhrase}」", false)
+             top.openTab(url,"应用状态「"+statusPhrase+"」", false)
 
          }
      )

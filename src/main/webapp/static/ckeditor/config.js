@@ -1,95 +1,49 @@
-﻿/**
- * @license Copyright (c) 2003-2016, CKSource - Frederico Knabben. All rights reserved.
+/**
+ * @license Copyright (c) 2003-2015, CKSource - Frederico Knabben. All rights reserved.
  * For licensing, see LICENSE.md or http://ckeditor.com/license
  */
 
-/**
- * This file was added automatically by CKEditor builder.
- * You may re-use it at any time to build CKEditor again.
- *
- * If you would like to build CKEditor online again
- * (for example to upgrade), visit one the following links:
- *
- * (1) http://ckeditor.com/builder
- *     Visit online builder to build CKEditor from scratch.
- *
- * (2) http://ckeditor.com/builder/4e06b696ed3d875fa84283da95e29ffb
- *     Visit online builder to build CKEditor, starting with the same setup as before.
- *
- * (3) http://ckeditor.com/builder/download/4e06b696ed3d875fa84283da95e29ffb
- *     Straight download link to the latest version of CKEditor (Optimized) with the same setup as before.
- *
- * NOTE:
- *    This file is not used by CKEditor, you may remove it.
- *    Changing this file will not change your CKEditor configuration.
- */
+CKEDITOR.editorConfig = function( config ) {
+	// Define changes to default configuration here.
+	// For complete reference see:
+	// http://docs.ckeditor.com/#!/api/CKEDITOR.config
 
-var CKBUILDER_CONFIG = {
-	skin: 'bootstrapck',
-	preset: 'standard',
-	ignore: [
-		'.bender',
-		'bender.js',
-		'bender-err.log',
-		'bender-out.log',
-		'dev',
-		'.DS_Store',
-		'.editorconfig',
-		'.gitattributes',
-		'.gitignore',
-		'gruntfile.js',
-		'.idea',
-		'.jscsrc',
-		'.jshintignore',
-		'.jshintrc',
-		'less',
-		'.mailmap',
-		'node_modules',
-		'package.json',
-		'README.md',
-		'tests'
-	],
-	plugins : {
-		'a11yhelp' : 1,
-		'about' : 1,
-		'basicstyles' : 1,
-		'blockquote' : 1,
-		'clipboard' : 1,
-		'contextmenu' : 1,
-		'elementspath' : 1,
-		'enterkey' : 1,
-		'entities' : 1,
-		'filebrowser' : 1,
-		'floatingspace' : 1,
-		'format' : 1,
-		'horizontalrule' : 1,
-		'htmlwriter' : 1,
-		'image' : 1,
-		'indentlist' : 1,
-		'link' : 1,
-		'list' : 1,
-		'magicline' : 1,
-		'maximize' : 1,
-		'pastefromword' : 1,
-		'pastetext' : 1,
-		'removeformat' : 1,
-		'resize' : 1,
-		'scayt' : 1,
-		'showborders' : 1,
-		'sourcearea' : 1,
-		'specialchar' : 1,
-		'stylescombo' : 1,
-		'tab' : 1,
-		'table' : 1,
-		'tabletools' : 1,
-		'toolbar' : 1,
-		'undo' : 1,
-		'wsc' : 1,
-		'wysiwygarea' : 1
-	},
-	languages : {
-		'en' : 1,
-		'zh' : 1,
-		'zh-cn' : 1
+	// The toolbar groups arrangement, optimized for two toolbar rows.
+	config.toolbarGroups = [
+		{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+		{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
+		{ name: 'links' },
+		{ name: 'insert' },
+		{ name: 'forms' },
+		{ name: 'tools' },
+		{ name: 'document',	   groups: [ 'mode', 'document', 'doctools' ] },
+		{ name: 'others' },
+		'/',
+		{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+		{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ] },
+		{ name: 'styles' },
+		{ name: 'colors' },
+		{ name: 'about' }
+	];
+
+	// Remove some buttons provided by the standard plugins, which are
+	// not needed in the Standard(s) toolbar.
+	config.removeButtons = 'Underline,Subscript,Superscript';
+
+	// Set the most common block elements.
+	config.format_tags = 'p;h1;h2;h3;pre';
+
+	// Simplify the dialog windows.
+	config.removeDialogTabs = 'image:advanced;link:advanced';
+
+	if(config.ckfinderPath){
+		config.filebrowserBrowseUrl = config.ckfinderPath+'/ckfinder.html?type=files&start=files:'+config.ckfinderUploadPath;
+		config.filebrowserImageBrowseUrl = config.ckfinderPath+'/ckfinder.html?type=images&start=images:'+config.ckfinderUploadPath;
+		config.filebrowserFlashBrowseUrl = config.ckfinderPath+'/ckfinder.html?type=flash&start=flash:'+config.ckfinderUploadPath;
+		config.filebrowserUploadUrl = config.ckfinderPath+'/core/connector/java/connector.java?command=QuickUpload&type=files&currentFolder='+config.ckfinderUploadPath;
+		config.filebrowserImageUploadUrl = config.ckfinderPath+'/core/connector/java/connector.java?command=QuickUpload&type=images&currentFolder='+config.ckfinderUploadPath;
+		config.filebrowserFlashUploadUrl = config.ckfinderPath+'/core/connector/java/connector.java?command=QuickUpload&type=flash&currentFolder='+config.ckfinderUploadPath;
+		config.filebrowserWindowWidth = '1000';
+		config.filebrowserWindowHeight = '700';
 	}
 };

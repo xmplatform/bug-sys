@@ -8,10 +8,12 @@ import java.util.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import cn.gx.common.utils.CacheUtils;
 import cn.gx.modules.act.entity.Act;
 import cn.gx.modules.act.service.ActTaskService;
 import cn.gx.modules.act.utils.ActPage;
 import cn.gx.modules.act.utils.PageUtil;
+import cn.gx.modules.act.utils.ProcessDefCache;
 import cn.gx.modules.bug.bean.Charts;
 import cn.gx.modules.bug.bean.Json;
 import cn.gx.modules.bug.entity.BugProject;
@@ -21,10 +23,7 @@ import cn.gx.modules.bug.util.BugStatus;
 import cn.gx.modules.sys.entity.User;
 import cn.gx.modules.sys.service.SystemService;
 import cn.gx.modules.sys.utils.UserUtils;
-import org.activiti.engine.ActivitiException;
-import org.activiti.engine.RepositoryService;
-import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
+import org.activiti.engine.*;
 import org.activiti.engine.delegate.Expression;
 import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.impl.identity.Authentication;
@@ -87,6 +86,9 @@ public class BugController extends BaseController {
 	@Autowired
 	private RepositoryService repositoryService;
 
+	@Autowired
+	private HistoryService historyService;
+
 	
 	@ModelAttribute
 	public Bug get(@RequestParam(required=false) String id) {
@@ -106,9 +108,24 @@ public class BugController extends BaseController {
 	@RequiresPermissions("bug:bug:list")
 	@RequestMapping(value = {"list", ""})
 	public String list(Bug bug, HttpServletRequest request, HttpServletResponse response, Model model) {
-		Page<Bug> page = bugService.findPage(new Page<Bug>(request, response), bug); 
+		Page<Bug> page = bugService.findPage(new Page<Bug>(request, response), bug);
 		model.addAttribute("page", page);
 		return "modules/bug/bugList";
+	}
+
+
+	/**
+	 * 草稿箱列表页面
+	 */
+	@RequiresPermissions("bug:bug:task")
+	@RequestMapping(value = "draft")
+	public String draftList(Bug bug, HttpServletRequest request, HttpServletResponse response, Model model) {
+
+		bug.setSelf(true);
+		bug.setBugStatus("DRAFT");//草稿
+		Page<Bug> page = bugService.findPage(new Page<Bug>(request, response), bug);
+		model.addAttribute("page", page);
+		return "modules/bug/bugDraftList";
 	}
 
 
@@ -164,49 +181,7 @@ public class BugController extends BaseController {
 		return "modules/bug/"+view;
 	}
 
-	/**
-	 *  提交问题单
-	 * @param bug
-	 * @param model
-     * @return
-     */
-	@RequestMapping(value ="apply")
-	public String createForm(Bug bug,Model model){
 
-		BugProject bugProject=new BugProject();
-		bugProject.setSelf(true);//自己参与的项目
-		bugProject.setActive(true);//有流程的项目
-		List<BugProject> bugProjectList = bugProjectService.findList(bugProject);
-		model.addAttribute("bug", bug);
-		model.addAttribute("bugProjectList", bugProjectList);
-		return "modules/bug/bug_apply";
-	}
-
-	/**
-	 * 到达处理 bug 页面
-	 *
-	 * @param bug
-	 */
-	@RequestMapping(value = "task/view/{taskId}")
-	public String showTaskView(@PathVariable("taskId") String taskId,Bug bug,Model model) {
-
-		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
-		String taskName = task.getName();
-		String taskDefKey = task.getTaskDefinitionKey();
-		String procDefId = task.getProcessDefinitionId();
-		String procInsId=task.getProcessInstanceId();
-
-		Act act=new Act();
-		act.setTaskId(taskId);
-		act.setTaskName(taskName);
-		act.setTaskDefKey(taskDefKey);
-		act.setProcDefId(procDefId);
-		act.setProcInsId(procInsId);
-
-		bug.setAct(act);
-		model.addAttribute("bug", bug);
-		return "modules/bug/bug_"+taskDefKey;
-	}
 
 
 
@@ -343,6 +318,7 @@ public class BugController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "task/todo")
+	@RequiresPermissions("bug:bug:task")
 	public String todoList(Bug bug,Act act,HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 
 		bug.setAct(act);
@@ -359,6 +335,7 @@ public class BugController extends BaseController {
 	 * @return
 	 */
 	@RequestMapping(value = "task/historic")
+	@RequiresPermissions("bug:bug:task")
 	public String historicList(Bug bug,Act act, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		bug.setAct(act);
 		Page<Bug> page = bugService.historicPage(new Page<Bug>(request,response), bug);
@@ -369,96 +346,55 @@ public class BugController extends BaseController {
 
 
 
+	// TODO
 	@RequestMapping(value = "task/join")
 	public String joinList(Bug bug,HttpServletRequest request,HttpServletResponse response,Model model){
-
-		//ModelAndView mav = new ModelAndView("modules/bug/bugTaskJoinList");//"modules/bug/bug_"+taskDefKey;
-	    /* 标准查询
-	    List<ProcessInstance> processInstanceList = runtimeService.createProcessInstanceQuery().list();
-	    List<Execution> list = runtimeService.createExecutionQuery().list();
-	    mav.addObject("list", list);
-	    */
-
-
-		User user = UserUtils.getUser();
-
-		Page<Bug> page = new Page<Bug>(request, response);
-
-		NativeExecutionQuery nativeExecutionQuery = runtimeService.createNativeExecutionQuery();
-
-		String sql = "select distinct * from "
-				+ "(select RES.* from ACT_RU_EXECUTION RES "
-				+ " left join ACT_HI_TASKINST ART "
-				+ " on ART.PROC_INST_ID_ = RES.PROC_INST_ID_ "
-				+ " left join ACT_HI_PROCINST AHP on AHP.PROC_INST_ID_ = RES.PROC_INST_ID_ "
-				+ " where SUSPENSION_STATE_ = '1' "
-				+ " and (ART.ASSIGNEE_ = #{userLoginName} or AHP.START_USER_ID_ = #{userLoginName}) "
-				+ " and ACT_ID_ is not null "
-				+ " and IS_ACTIVE_ = '1' "
-				+ " order by ART.START_TIME_ desc"
-				+ ") as r";
-
-		nativeExecutionQuery.parameter("userLoginName", user.getLoginName());
-
-
-		// 查询流程定义对象
-		Map<String, ProcessDefinition> definitionMap = new HashMap<String, ProcessDefinition>();
-
-		// 任务的英文-中文对照
-		Map<String, Task> taskMap = new HashMap<String, Task>();
-
-		// 每个Execution的当前活动ID，可能为多个
-		Map<String, List<String>> currentActivityMap = new HashMap<String, List<String>>();
-
-		List<Execution> executionList = nativeExecutionQuery.sql(sql).listPage(page.getFirstResult(), page.getMaxResults());
-		//封装成bug
-		List<Bug> bugList=new ArrayList<Bug>();
-
-		// 设置每个Execution对象的当前活动节点
-		for (Execution execution : executionList) {
-
-			ExecutionEntity executionEntity = (ExecutionEntity) execution;
-			String processInstanceId = executionEntity.getProcessInstanceId();
-			String processDefinitionId = executionEntity.getProcessDefinitionId();
-
-			Bug dbBug = bugService.getByProcInsId(processInstanceId);
-			Act act = dbBug.getAct();
-			act.setExecutionId(execution.getId());
-			act.setProcDefId(processDefinitionId);
-			act.setProcInsId(processInstanceId);
-
-			bugList.add(dbBug);
-
-			// 缓存ProcessDefinition对象到Map集合
-			definitionCache(definitionMap, processDefinitionId);
-
-			// 查询当前流程的所有处于活动状态的活动ID，如果并行的活动则会有多个
-			List<String> activeActivityIds = runtimeService.getActiveActivityIds(execution.getId());
-			currentActivityMap.put(execution.getId(), activeActivityIds);
-
-			for (String activityId : activeActivityIds) {
-
-				// 查询处于活动状态的任务
-				Task task = taskService.createTaskQuery().taskDefinitionKey(activityId).executionId(execution.getId()).singleResult();
-
-				// 调用活动
-				if (task == null) {
-					ProcessInstance processInstance = runtimeService.createProcessInstanceQuery()
-							.superProcessInstanceId(processInstanceId).singleResult();
-					task = taskService.createTaskQuery().processInstanceId(processInstance.getProcessInstanceId()).singleResult();
-					definitionCache(definitionMap, processInstance.getProcessDefinitionId());
-				}
-				taskMap.put(activityId, task);
-			}
-		}
-
-		model.addAttribute("taskMap", taskMap);
-		model.addAttribute("definitions", definitionMap);
-		model.addAttribute("currentActivityMap", currentActivityMap);
-
-		page.setList(bugList);
-		page.setCount(nativeExecutionQuery.sql("select count(*) from (" + sql + ") as a").count());
-		model.addAttribute("page", page);
+//
+//		//ModelAndView mav = new ModelAndView("modules/bug/bugTaskJoinList");//"modules/bug/bug_"+taskDefKey;
+//	    /* 标准查询
+//	    List<ProcessInstance> processInstanceList = runtimeService.createProcessInstanceQuery().list();
+//	    List<Execution> list = runtimeService.createExecutionQuery().list();
+//	    mav.addObject("list", list);
+//	    */
+//
+//
+//
+//
+//		User user = UserUtils.getUser();
+//
+//		Page<Bug> page = new Page<Bug>(request, response);
+//
+//		//查询指定用户参与的流程信息 （流程历史  用户参与 ）
+//		List<HistoricProcessInstance> historicProcessInstances = historyService
+//				.createHistoricProcessInstanceQuery().involvedUser(user.getLoginName())
+//				.orderByProcessInstanceStartTime().desc().listPage(page.getFirstResult(), page.getMaxResults());
+//		//封装成bug
+//		List<Bug> result=new ArrayList<Bug>();
+//
+//		for (HistoricProcessInstance hpi:historicProcessInstances){
+//			String processInstanceId = hpi.getId();
+//			String processDefinitionId = hpi.getProcessDefinitionId();
+//			ProcessDefinition processDefinition = ProcessDefCache.get(processDefinitionId);
+//			Map<String, Object> processVariables = hpi.getProcessVariables();
+//			ProcessInstance processInstance = runtimeService.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
+//
+//			Bug dbBug = bugService.getByProcInsId(processInstanceId);
+//
+//
+//			Act e = new Act();
+//			e.setVars(processVariables);
+//			e.setProcDef(processDefinition);//processDefinition
+//			e.setTask(task);//task
+//			e.setStatus("todo");
+//
+//			bug.setAct(e);
+//			result.add(dbBug);
+//		}
+//
+//
+//		page.setList(bugList);
+//		page.setCount(result.size());
+//		model.addAttribute("page", page);
 
 		return "modules/bug/bugTaskJoinList";
 	}
@@ -467,17 +403,73 @@ public class BugController extends BaseController {
 
 
 
+	/**
+	 *  提交问题单
+	 * @param bug
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value ="apply")
+	@RequiresPermissions("bug:bug:task")
+	public String createForm(Bug bug,Model model){
+
+		BugProject bugProject=new BugProject();
+		bugProject.setSelf(true);//自己参与的项目
+		bugProject.setActive(true);//有流程的项目
+		List<BugProject> bugProjectList = bugProjectService.findList(bugProject);
+		model.addAttribute("bug", bug);
+		model.addAttribute("bugProjectList", bugProjectList);
+		return "modules/bug/bug_apply";
+	}
+
+	/**
+	 * 到达处理 bug 页面
+	 *
+	 * @param bug
+	 */
+
+	@RequestMapping(value = "task/view/{taskId}")
+	@RequiresPermissions("bug:bug:task")
+	public String showTaskView(@PathVariable("taskId") String taskId,Bug bug,Model model) {
+
+		Task task = taskService.createTaskQuery().taskId(taskId).singleResult();
+		String taskName = task.getName();
+		String taskDefKey = task.getTaskDefinitionKey();
+		String procDefId = task.getProcessDefinitionId();
+		String procInsId=task.getProcessInstanceId();
+
+		Act act=new Act();
+		act.setTaskId(taskId);
+		act.setTaskName(taskName);
+		act.setTaskDefKey(taskDefKey);
+		act.setProcDefId(procDefId);
+		act.setProcInsId(procInsId);
+
+		bug.setAct(act);
+		model.addAttribute("bug", bug);
+		return "modules/bug/bug_"+taskDefKey;
+	}
+
 
 
 	/**
 	 * 启动流程,提交 bug 单
 	 */
 	@RequestMapping(value = "start", method = RequestMethod.POST)
-	public String  start(Bug bug,RedirectAttributes redirectAttributes){
+	@RequiresPermissions("bug:bug:task")
+	public String  start(Bug bug,HttpServletRequest request,RedirectAttributes redirectAttributes){
 		try {
-			Map<String, Object> variables = new HashMap<String, Object>();
-			bugService.startWorkflow(bug);// + processInstance.getId()
-			addMessage(redirectAttributes,"message", "问题单提交成功");
+
+			bugService.save(bug);
+			if ("DRAFT".equals(bug.getBugStatus())){// 草稿只保存,退出
+				addMessage(redirectAttributes,"message", "问题单草稿已保存");
+			}else{
+				Map<String, Object> variables = new HashMap<String, Object>();
+				bugService.startWorkflow(bug,request.getContextPath());// + processInstance.getId()
+				addMessage(redirectAttributes,"message", "问题单提交成功,流程启动");
+			}
+
+
 		} catch (ActivitiException e) {
 			if (e.getMessage().indexOf("no processes deployed with key") != -1) {
 				logger.warn("没有部署流程!", e);
@@ -490,7 +482,7 @@ public class BugController extends BaseController {
 			logger.error("启动请假流程失败：", e);
 			addMessage(redirectAttributes,"error", "系统内部错误！");
 		}
-		return "redirect:/bug/bug/apply";
+		return "redirect:"+Global.getAdminPath()+"/bug/bug/apply";
 	}
 
 
@@ -575,13 +567,13 @@ public class BugController extends BaseController {
 	 * @param model
 	 * @return
 	 */
-	@RequiresPermissions("bug:bug:edit")
+	@RequiresPermissions("bug:bug:task")
 	@RequestMapping(value = "completeTask")
-	public String completeTask(Bug bug, Model model){
+	public String completeTask(Bug bug, Model model,HttpServletRequest request){
 		if (!beanValidator(model, bug)){
 			return form(bug, model);
 		}
-		bugService.completeBugTask(bug);
+		bugService.completeBugTask(bug,request.getContextPath());
 		return "redirect:" + adminPath + "/bug/bug/task/todo/";
 	}
 

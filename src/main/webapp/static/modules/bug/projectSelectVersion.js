@@ -25,7 +25,7 @@ function loadProjectVersion(config){
                 console.info(json.data);
                 var data=json.data;
                 $.each(data, function(i, v) {
-                    $("<option value='" + v.id + "' >"
+                    $("<option value='" + v.id + "' >"  
                         + v.version + ":"+v.build+"</option><br>").appendTo($show);
                 });
 

@@ -36,7 +36,7 @@
 </head>
 <body>
  <div class="ibox-content">
-		<form:form id="inputForm" modelAttribute="bug" action="${ctx}/bug/bug/save" method="post" class="form-horizontal">
+		<form:form id="inputForm" modelAttribute="bug" action="${ctx}/bug/bug/start" method="post" class="form-horizontal">
 			<form:hidden path="id"/>
 			<form:hidden path="act.taskId"/>
 			<form:hidden path="act.taskName"/>
@@ -66,11 +66,9 @@
 			<div class="col-sm-4">
 				<div class ="row">
 					<div class="col-sm-10">
-						<select name="bugVersion.id"  id="selectVersion" class=" form-control required"></select>
-					</div>
-
-					<div class="col-sm-2">
-						<span class="help-inline"><font color="red">*</font> </span>
+						<select name="bugVersion.id"  id="selectVersion" class=" form-control required">
+							<option value="${bug.bugVersion.id}" label="${bug.bugVersion.version}:${bug.bugVersion.build}"></option>
+						</select>
 					</div>
 
 				</div>
@@ -87,7 +85,6 @@
 			<label class="col-sm-2 control-label">名称：</label>
 			<div class="col-sm-10">
 				<form:input path="name" htmlEscape="false" maxlength="64" class=" form-control input-xlarge required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 
@@ -98,7 +95,6 @@
 					<form:option value="" label=""/>
 					<form:options items="${fns:getDictList('bug_platform')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
-				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 
@@ -110,7 +106,6 @@
 					<form:option value="" label=""/>
 					<form:options items="${fns:getDictList('bug_systemandversion')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
-				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 
@@ -124,7 +119,6 @@
 					<form:option value="" label=""/>
 					<form:options items="${fns:getDictList('bug_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
-				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		<div class="form-group">
@@ -134,7 +128,6 @@
 					<form:option value="" label=""/>
 					<form:options items="${fns:getDictList('bug_level')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
-				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 
@@ -145,7 +138,6 @@
 					<form:option value="" label=""/>
 					<form:options items="${fns:getDictList('bug_serious')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
-				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 
@@ -156,7 +148,6 @@
 					<form:option value="" label=""/>
 					<form:options items="${fns:getDictList('bug_frequency')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
-				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		
@@ -170,7 +161,6 @@
 			<label class="col-sm-2 control-label">简介：</label>
 			<div class="col-sm-10">
 				<form:textarea path="summary" htmlEscape="false" rows="4" maxlength="255" class=" form-control input-xxlarge required"/>
-				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 		
@@ -203,7 +193,7 @@
 			<label class="col-sm-2 control-label">截图:</label>
 			<div class="col-sm-10">
                 <input type="hidden" id="image" name="image" value="${image}" />
-				<sys:ckfinder input="image" type="thumb" uploadPath="/bug/bug" selectMultiple="true"/>
+				<sys:ckfinder input="image" type="thumb" uploadPath="/bug/image" selectMultiple="true"/>
 			</div>
 		</div>
 		
@@ -211,7 +201,7 @@
 			<label class="col-sm-2 control-label">附件:</label>
 			<div class="col-sm-10">
                 <input type="hidden" id="file" name="file" value="${file}" />
-				<sys:ckfinder input="file" type="thumb" uploadPath="/bug/bug" selectMultiple="true"/>
+				<sys:ckfinder input="file" type="files" uploadPath="/bug/file" selectMultiple="true"/>
 			</div>
 		</div>
 		
@@ -232,7 +222,6 @@
 					<form:option value="" label=""/>
 					<form:options items="${fns:getDictList('apply_task')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select>
-				<span class="help-inline"><font color="red">*</font> </span>
 			</div>
 		</div>
 
@@ -249,11 +238,8 @@
 	  
 		<div class="form-group">
 			<div class="col-sm-4 col-sm-offset-2">
-				<shiro:hasPermission name="bug:bug:edit">
-					<input id="btnSubmit" class="btn btn-primary" type="submit" value="提交" onclick="$('#flag').val('NEW')"/>&nbsp;
-					<c:if test="${not empty bug.id}">
-						<input id="btnSubmit2" class="btn btn-inverse" type="submit" value="丢弃" onclick="$('#flag').val('RENEW')"/>&nbsp;
-					</c:if>
+				<shiro:hasPermission name="bug:bug:task">
+					<input id="btnSubmit" class="btn btn-primary" type="submit" value="提交"/>&nbsp;
 				</shiro:hasPermission>
 				<input id="btnCancel" class="btn btn-white" type="button" value="返 回" onclick="history.go(-1)"/>
 			</div>
@@ -275,6 +261,13 @@
 <script type="text/javascript">
 
 	$(function () {
+
+		$("#behavior").html($("#behavior").text());
+		$("#expected").html($("#expected").text());
+		$("#step2Reproduce").html($("#step2Reproduce").text());
+
+
+
 		var configVersion={
 			selectId:"selectSelfProject",
 			showId:"selectVersion"

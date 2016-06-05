@@ -7,6 +7,7 @@ import cn.gx.common.persistence.ActEntity;
 import cn.gx.modules.bug.entity.BugVersion;
 import cn.gx.modules.bug.entity.BugProject;
 import cn.gx.modules.bug.util.BugStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
 
 import cn.gx.common.persistence.DataEntity;
@@ -57,7 +58,7 @@ public class Bug extends ActEntity<Bug> {
 	private String projectManagerText;		// 项目经理意见
 
 
-
+	private boolean isSelf;		// 是否只查询自己的项目
 
 	private String bugStatusPhrase;
 	
@@ -69,26 +70,46 @@ public class Bug extends ActEntity<Bug> {
 		super(id);
 	}
 
-	@ExcelField(title="项目版本主键", fieldType=BugVersion.class, value="", align=2, sort=1)
+	@JsonIgnore
 	public BugVersion getBugVersion() {
 		return bugVersion;
+	}
+	@ExcelField(title="项目版本", align=2, sort=2)
+	public String getBugVersionName() {
+		return bugVersion.getVersion()+":build"+bugVersion.getBuild();
 	}
 
 	public void setBugVersion(BugVersion bugVersion) {
 		this.bugVersion = bugVersion;
 	}
-	
-	@ExcelField(title="项目主键", fieldType=BugProject.class, value="", align=2, sort=2)
+
+	@JsonIgnore
+
 	public BugProject getBugProject() {
 		return bugProject;
 	}
+
+	@ExcelField(title="项目", value="", align=2, sort=1)
+	public String getBugProjectName() {
+		return bugProject.getName();
+	}
+
+
+
+
+	@Length(min=0, max=64, message="名称长度必须介于 0 和 64 之间")
+	@ExcelField(title="名称", align=2, sort=3)
+	public String getName() {
+		return name;
+	}
+
 
 	public void setBugProject(BugProject bugProject) {
 		this.bugProject = bugProject;
 	}
 	
 	@Length(min=1, max=64, message="缺陷类型（0：BUG;1:改进；2：任务；3：需求）长度必须介于 1 和 64 之间")
-	@ExcelField(title="缺陷类型（0：BUG;1:改进；2：任务；3：需求）", dictType="bug_type", align=2, sort=3)
+	@ExcelField(title="缺陷类型", dictType="bug_type", align=2, sort=4)
 	public String getBugType() {
 		return bugType;
 	}
@@ -97,8 +118,8 @@ public class Bug extends ActEntity<Bug> {
 		this.bugType = bugType;
 	}
 	
-	@Length(min=1, max=64, message="缺陷状态（0：新建；1：进行中；2：重开；3：已解决；4：暂缓；5：不解决；6：已关闭）长度必须介于 1 和 64 之间")
-	@ExcelField(title="缺陷状态（0：新建；1：进行中；2：重开；3：已解决；4：暂缓；5：不解决；6：已关闭）", dictType="bug_status", align=2, sort=4)
+	@Length(min=1, max=64, message="缺陷状态长度必须介于 1 和 64 之间")
+	@ExcelField(title="状态", dictType="bug_status", align=2, sort=5)
 	public String getBugStatus() {
 		return bugStatus;
 	}
@@ -107,28 +128,28 @@ public class Bug extends ActEntity<Bug> {
 		this.bugStatus = bugStatus;
 	}
 	
-	@Length(min=1, max=64, message="缺陷优先级（0：低；1：普通；2：高；3：紧急）长度必须介于 1 和 64 之间")
-	@ExcelField(title="缺陷优先级（0：低；1：普通；2：高；3：紧急）", dictType="bug_level", align=2, sort=5)
+	@Length(min=1, max=64, message="缺陷优先级长度必须介于 1 和 64 之间")
+	@ExcelField(title="优先级", dictType="bug_level", align=2, sort=6)
 	public String getBugLevel() {
 		return bugLevel;
+	}
+
+	@ExcelField(title="发生频率", dictType="bug_frequency", align=2, sort=7)
+	public String getBugFrequency() {
+		return bugFrequency;
 	}
 
 	public void setBugLevel(String bugLevel) {
 		this.bugLevel = bugLevel;
 	}
 	
-	@Length(min=0, max=64, message="名称长度必须介于 0 和 64 之间")
-	@ExcelField(title="名称", align=2, sort=6)
-	public String getName() {
-		return name;
-	}
 
 	public void setName(String name) {
 		this.name = name;
 	}
 	
 	@Length(min=0, max=255, message="简介长度必须介于 0 和 255 之间")
-	@ExcelField(title="简介", align=2, sort=7)
+	@ExcelField(title="简介", align=2, sort=8)
 	public String getSummary() {
 		return summary;
 	}
@@ -160,15 +181,12 @@ public class Bug extends ActEntity<Bug> {
 	}
 
 
-	public String getBugFrequency() {
-		return bugFrequency;
-	}
 
 	public void setBugFrequency(String bugFrequency) {
 		this.bugFrequency = bugFrequency;
 	}
 
-
+	@ExcelField(title="解决办法", align=2, sort=12)
 	public String getSolution() {
 		return solution;
 	}
@@ -182,7 +200,6 @@ public class Bug extends ActEntity<Bug> {
 	}
 
 	@Length(min=0, max=255, message="测试主管意见长度必须介于 0 和 255 之间")
-	@ExcelField(title="测试主管意见", align=2, sort=17)
 	public String getTesterLeadText() {
 		return testerLeadText;
 	}
@@ -192,7 +209,6 @@ public class Bug extends ActEntity<Bug> {
 	}
 
 	@Length(min=0, max=255, message="开发主管意见长度必须介于 0 和 255 之间")
-	@ExcelField(title="开发主管意见", align=2, sort=18)
 	public String getDeveloperLeadText() {
 		return developerLeadText;
 	}
@@ -202,7 +218,6 @@ public class Bug extends ActEntity<Bug> {
 	}
 	
 	@Length(min=0, max=255, message="项目经理意见长度必须介于 0 和 255 之间")
-	@ExcelField(title="项目经理意见", align=2, sort=19)
 	public String getProjectManagerText() {
 		return projectManagerText;
 	}
@@ -248,7 +263,7 @@ public class Bug extends ActEntity<Bug> {
 		this.bugSerious = bugSerious;
 	}
 
-	@ExcelField(title="内容详情", align=2, sort=8)
+	@ExcelField(title="重现步骤", align=2, sort=9)
 	public String getStep2Reproduce() {
 		return step2Reproduce;
 	}
@@ -256,7 +271,7 @@ public class Bug extends ActEntity<Bug> {
 	public void setStep2Reproduce(String step2Reproduce) {
 		this.step2Reproduce = step2Reproduce;
 	}
-
+	@ExcelField(title="实际行为", align=2, sort=10)
 	public String getBehavior() {
 		return behavior;
 	}
@@ -264,7 +279,7 @@ public class Bug extends ActEntity<Bug> {
 	public void setBehavior(String behavior) {
 		this.behavior = behavior;
 	}
-
+	@ExcelField(title="期望结果", align=2, sort=11)
 	public String getExpected() {
 		return expected;
 	}
@@ -278,6 +293,17 @@ public class Bug extends ActEntity<Bug> {
 	}
 
 	public void setAssign(String assign) {
+
+
 		this.assign = assign;
+	}
+
+
+	public boolean isSelf() {
+		return isSelf;
+	}
+
+	public void setSelf(boolean self) {
+		isSelf = self;
 	}
 }

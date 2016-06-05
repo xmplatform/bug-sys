@@ -18,15 +18,19 @@ public class Total {
         List<Charts> bugStatuseList=new ArrayList<Charts>();
 
         Charts newChart=new Charts(BugStatus.NEW,"#F7464A","#FF5A5E");
-        Charts reopenChart=new Charts(BugStatus.REOPEN,"#46BFBD","#5AD3D1");
-        Charts retestChart=new Charts(BugStatus.RETEST,"#FDB45C","#FFC870");
+        Charts assignChart=new Charts(BugStatus.ASSIGNED,"#F7464A","#FF5A5E");
+
+        Charts retestChart=new Charts(BugStatus.TEST,"#FDB45C","#FFC870");
+        Charts fixedChart=new Charts(BugStatus.VERIFIED,"#FFFFF0","#FFFFF0");
 
         Charts deferredChart=new Charts(BugStatus.DEFERRED,"#00FFFF","#00FFFF");
-        Charts rejectedChart=new Charts(BugStatus.REJECTED_NOT_BUG,"#00008B","#00008B");
-        Charts fixedChart=new Charts(BugStatus.FIXED,"#FFFFF0","#FFFFF0");
+        Charts rejectedChart=new Charts(BugStatus.REJECTED,"#00008B","#00008B");
+        Charts reopenChart=new Charts(BugStatus.REOPENED,"#46BFBD","#5AD3D1");
+
 
 
         bugStatuseList.add(newChart);
+        bugStatuseList.add(assignChart);
         bugStatuseList.add(reopenChart);
         bugStatuseList.add(retestChart);
         bugStatuseList.add(deferredChart);

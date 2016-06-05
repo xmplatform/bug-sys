@@ -91,51 +91,51 @@
             <div class="row border-bottom">
                 <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
                     <div class="navbar-header"><a class="navbar-minimalize minimalize-styl-2 btn btn-primary " href="#"><i class="fa fa-bars"></i> </a>
-                        <form role="search" class="navbar-form-custom" method="post" action="search_results.html">
-                            <div class="form-group">
-                                <input type="text" placeholder="请输入您需要查找的内容 …" class="form-control" name="top-search" id="top-search">
-                            </div>
-                        </form>
+                        <%--<form role="search" class="navbar-form-custom" method="post" action="search_results.html">--%>
+                            <%--<div class="form-group">--%>
+                                <%--<input type="text" placeholder="请输入您需要查找的内容 …" class="form-control" name="top-search" id="top-search">--%>
+                            <%--</div>--%>
+                        <%--</form>--%>
                     </div>
                     <ul class="nav navbar-top-links navbar-right">
 
-                        <li class="dropdown">
-                            <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
-                                <i class="fa fa-envelope"></i> <span class="label label-warning">${noReadCount}</span>
-                            </a>
-                            <ul class="dropdown-menu dropdown-messages">
-                            	 <c:forEach items="${mailPage.list}" var="mailBox">
-	                                <li class="m-t-xs">
-	                                    <div class="dropdown-messages-box">
-	                                   
-	                                        <a  href="#" onclick='top.openTab("${ctx}/iim/contact/index?name=${mailBox.sender.name }","通讯录", false)' class="pull-left">
-	                                            <img alt="image" class="img-circle" src="${mailBox.sender.photo }">
-	                                        </a>
-	                                        <div class="media-body">
-	                                            <small class="pull-right">${fns:getTime(mailBox.sendtime)}前</small>
-	                                            <strong>${mailBox.sender.name }</strong>
-	                                            <a class="J_menuItem" href="${ctx}/iim/mailBox/detail?id=${mailBox.id}"> ${fns:abbr(mailBox.mail.title,50)}</a>
-	                                            <br>
-	                                            <a class="J_menuItem" href="${ctx}/iim/mailBox/detail?id=${mailBox.id}">
-	                                             ${mailBox.mail.overview}
-	                                            </a>
-	                                            <br>
-	                                            <small class="text-muted">
-	                                            <fmt:formatDate value="${mailBox.sendtime}" pattern="yyyy-MM-dd HH:mm:ss"/></small>
-	                                        </div>
-	                                    </div>
-	                                </li>
-	                                <li class="divider"></li>
-                                </c:forEach>
-                                <li>
-                                    <div class="text-center link-block">
-                                        <a class="J_menuItem" href="${ctx}/iim/mailBox/list?orderBy=sendtime desc">
-                                            <i class="fa fa-envelope"></i> <strong> 查看所有邮件</strong>
-                                        </a>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
+                        <%--<li class="dropdown">--%>
+                            <%--<a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">--%>
+                                <%--<i class="fa fa-envelope"></i> <span class="label label-warning">${noReadCount}</span>--%>
+                            <%--</a>--%>
+                            <%--<ul class="dropdown-menu dropdown-messages">--%>
+                            	 <%--<c:forEach items="${mailPage.list}" var="mailBox">--%>
+	                                <%--<li class="m-t-xs">--%>
+	                                    <%--<div class="dropdown-messages-box">--%>
+	                                   <%----%>
+	                                        <%--<a  href="#" onclick='top.openTab("${ctx}/iim/contact/index?name=${mailBox.sender.name }","通讯录", false)' class="pull-left">--%>
+	                                            <%--<img alt="image" class="img-circle" src="${mailBox.sender.photo }">--%>
+	                                        <%--</a>--%>
+	                                        <%--<div class="media-body">--%>
+	                                            <%--<small class="pull-right">${fns:getTime(mailBox.sendtime)}前</small>--%>
+	                                            <%--<strong>${mailBox.sender.name }</strong>--%>
+	                                            <%--<a class="J_menuItem" href="${ctx}/iim/mailBox/detail?id=${mailBox.id}"> ${fns:abbr(mailBox.mail.title,50)}</a>--%>
+	                                            <%--<br>--%>
+	                                            <%--<a class="J_menuItem" href="${ctx}/iim/mailBox/detail?id=${mailBox.id}">--%>
+	                                             <%--${mailBox.mail.overview}--%>
+	                                            <%--</a>--%>
+	                                            <%--<br>--%>
+	                                            <%--<small class="text-muted">--%>
+	                                            <%--<fmt:formatDate value="${mailBox.sendtime}" pattern="yyyy-MM-dd HH:mm:ss"/></small>--%>
+	                                        <%--</div>--%>
+	                                    <%--</div>--%>
+	                                <%--</li>--%>
+	                                <%--<li class="divider"></li>--%>
+                                <%--</c:forEach>--%>
+                                <%--<li>--%>
+                                    <%--<div class="text-center link-block">--%>
+                                        <%--<a class="J_menuItem" href="${ctx}/iim/mailBox/list?orderBy=sendtime desc">--%>
+                                            <%--<i class="fa fa-envelope"></i> <strong> 查看所有邮件</strong>--%>
+                                        <%--</a>--%>
+                                    <%--</div>--%>
+                                <%--</li>--%>
+                            <%--</ul>--%>
+                        <%--</li>--%>
                         <li class="dropdown">
                             <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
                                 <i class="fa fa-bell"></i> <span class="label label-primary">${count }</span>
@@ -225,7 +225,9 @@
                 <a href="${ctx}/logout" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 退出</a>
             </div>
             <div class="row J_mainContent" id="content-main">
-                <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="${ctx}/home" frameborder="0" data-id="${ctx}/home" seamless></iframe>
+                <%--TODO--%>
+                <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="${ctx}/sys/user/info" frameborder="0" data-id="${ctx}/home" seamless></iframe>
+                <%--<iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="${ctx}/home" frameborder="0" data-id="${ctx}/home" seamless></iframe>--%>
             </div>
             <div class="footer">
                 <div class="pull-left"><a href="http://guanxine.github.io">http://guanxine.github.io</a> &copy; 2016</div>
@@ -250,7 +252,8 @@ $(document).ready(function(){
             showMethod: 'slideDown',
             timeOut: 4000
         };
-        toastr.success('Responsive Admin Theme', 'Welcome to INSPINIA');
+        toastr.success('Bug 管理系统', '欢迎使用');
+
 
     }, 1300);
 
@@ -287,6 +290,6 @@ function changeStyle(str){
 </script>
 <script src="${ctxStatic}/layer-v2.0/layim/layer.min.js"></script>
 <script src="${ctxStatic}/layer-v2.0/layim/layim.js"></script>
-<script src="${ctxStatic}/modules/bug/websocket.js"></script>
+<%--<script src="${ctxStatic}/modules/bug/websocket.js"></script>--%>
 
 </html>

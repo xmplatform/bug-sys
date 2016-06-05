@@ -66,7 +66,7 @@
                              </div>
                              <div class="ibox-content">
                                  <h1 class="no-margins">${taskCount.todo}</h1>
-                                 <div class="stat-percent font-bold text-navy">20% <i class="fa fa-level-up"></i></div>
+                                 <%--<div class="stat-percent font-bold text-navy">20% <i class="fa fa-level-up"></i></div>--%>
                                  <small>指派给你的 bug </small>
                              </div>
                          </div>
@@ -82,7 +82,7 @@
                              </div>
                              <div class="ibox-content">
                                  <h1 class="no-margins">${taskCount.apply}</h1>
-                                 <div class="stat-percent font-bold text-info">40% <i class="fa fa-level-up"></i></div>
+                                 <%--<div class="stat-percent font-bold text-info">40% <i class="fa fa-level-up"></i></div>--%>
                                  <small>你提交的 bug</small>
                              </div>
                          </div>
@@ -95,7 +95,7 @@
                              </div>
                              <div class="ibox-content">
                                  <h1 class="no-margins">${taskCount.join}</h1>
-                                 <div class="stat-percent font-bold text-warning">16% <i class="fa fa-level-up"></i></div>
+                                 <%--<div class="stat-percent font-bold text-warning">16% <i class="fa fa-level-up"></i></div>--%>
                                  <small>你追踪的 bug</small>
                              </div>
                          </div>
@@ -216,7 +216,7 @@
 
             // 初始化 图表 projectDetail.js
             initProjectData2("${ctx}","${bugProject.id}");
-            initProjectTotalByDay("${bugProject.id}",7);
+            initProjectTotalByDay("${bugProject.id}",6);
 
             loadProjectUserImage();
 

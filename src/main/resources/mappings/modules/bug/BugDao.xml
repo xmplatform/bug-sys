@@ -91,6 +91,16 @@
 			<if test="bugLevel != null and bugLevel != ''">
 				AND a.bug_level = #{bugLevel}
 			</if>
+			<if test="bugFrequency != null and bugFrequency != ''">
+				AND a.bug_frequency = #{bugFrequency}
+			</if>
+			<if test="bugSerious != null and bugSerious != ''">
+				AND a.bug_serious = #{bugSerious}
+			</if>
+
+			<if test="isSelf">
+				AND a.create_by=#{currentUser.id}
+			</if>
 		</where>
 		<choose>
 			<when test="page !=null and page.orderBy != null and page.orderBy != ''">

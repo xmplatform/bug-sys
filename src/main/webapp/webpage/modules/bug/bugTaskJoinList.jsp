@@ -160,8 +160,7 @@
                         <td>
                             <c:forEach items="${currentActivityMap[act.executionId]}" var="acid">
                                 <c:set var="task" value="${taskMap[acid]}" />
-
-                                <a onclick='top.openTab("${ctx }/act/trace/view/${task.executionId}","流程跟踪--${act.procInsId}", false)'>
+                                <a href="#" onclick="openDialogView('流程跟踪','${ctx }/act/trace/view/${task.executionId}','800px', '500px')">
                                         <%--<a   target="_blank" href="${ctx }/act/trace/view/${task.executionId}">--%>
                                         <%-- 处理[调用活动] --%>
                                     <c:if test="${task.processDefinitionId != act.procDefId}">
