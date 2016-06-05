@@ -1,10 +1,4 @@
-/*!
- * Copyright &copy; 2015-2020 <a href="http://www.jeeplus.org/">Bug</a> All rights reserved.
- * 
- * 通用公共方法
- * @author jeeplus
- * @version 2014-4-29
- */
+
 $(document).ready(function() {
 	try{
 		// 链接去掉虚框

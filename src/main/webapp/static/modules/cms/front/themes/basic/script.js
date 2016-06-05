@@ -1,6 +1,4 @@
-/*!
- * Copyright &copy; 2012-2013 <a href="http://www.jeeplus.org/">JeeSite</a> All rights reserved.
- */
+
 
 // 添加收藏
 function addFavorite(sURL, sTitle){

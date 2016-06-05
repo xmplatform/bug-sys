@@ -1,10 +1,4 @@
-/*!
- * Copyright &copy; 2015-2020 <a href="http://www.jeeplus.org/">Bug</a> All rights reserved.
- * 
- * 主框架窗口大小调整
- * @author jeeplus
- * @version 2013-11-09
- */
+
 
 $("#left").width(leftWidth);
 $("#openClose").click(function(){
